@@ -14,8 +14,8 @@ export default function Home() {
               <Card>
                 <Card.Body>
                   <Card.Title>Visitantes por período</Card.Title>
+                  <BarCharts />
                   <Card.Text>
-                    <BarCharts />
                     Gráfico com total de visitantes por dia/mes/ano
                   </Card.Text>
                 </Card.Body>
@@ -25,8 +25,8 @@ export default function Home() {
               <Card>
                 <Card.Body>
                   <Card.Title>Visitantes por página</Card.Title>
+                  <AreaCharts />
                   <Card.Text>
-                    <AreaCharts />
                     Gráfico com total de visitantes por página
                   </Card.Text>
                 </Card.Body>
