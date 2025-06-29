@@ -44,7 +44,7 @@ export default function Menu() {
                 }
               >
                 <a
-                  href='/dashboard'
+                  href='/'
                   style={{
                     border: '3px solid #BBB',
                     borderRadius: '5px',
