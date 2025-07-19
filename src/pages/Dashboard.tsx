@@ -1,6 +1,6 @@
 import { Row, Col } from 'react-bootstrap'
 
-import Main from './Main'
+import { Main } from './Main'
 
 import BarCharts from '../charts/BarCharts'
 import AreaCharts from '../charts/AreaCharts'

@@ -6,7 +6,7 @@ import { useWebsiteStore } from '../stores/UseWebsiteStore'
 
 import type { PageType } from 'website-lib'
 
-import Main from './Main'
+import { Main } from './Main'
 
 import { ComponentSettings } from '../components/ComponentSettings'
 import { WebsitePreview } from '../components/WebsitePreview'
