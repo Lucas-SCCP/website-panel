@@ -1,20 +1,12 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 
 const data = [
   { name: 'Página inicial', visitas: 400 },
   { name: 'Sobre', visitas: 300 },
   { name: 'Lojas', visitas: 500 },
   { name: 'Serviços', visitas: 200 },
-  { name: 'Contato', visitas: 350 },
-];
+  { name: 'Contato', visitas: 350 }
+]
 
 const BarCharts = () => {
   return (
@@ -29,7 +21,7 @@ const BarCharts = () => {
         </BarChart>
       </ResponsiveContainer>
     </div>
-  );
-};
+  )
+}
 
-export default BarCharts;
+export default BarCharts

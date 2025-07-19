@@ -24,24 +24,25 @@ export const useUserStore = create<UserStore>()(
         const currentUser = get().user
         if (!currentUser) return
         set({ user: { ...currentUser, [key]: value } })
-      },
+      }
     }),
     {
       name: 'user-storage',
-      storage: typeof window !== 'undefined'
-        ? {
-            getItem: (name) => {
-              const item = localStorage.getItem(name)
-              return item ? JSON.parse(item) : null
-            },
-            setItem: (name, value) => {
-              localStorage.setItem(name, JSON.stringify(value))
-            },
-            removeItem: (name) => {
-              localStorage.removeItem(name)
+      storage:
+        typeof window !== 'undefined'
+          ? {
+              getItem: (name) => {
+                const item = localStorage.getItem(name)
+                return item ? JSON.parse(item) : null
+              },
+              setItem: (name, value) => {
+                localStorage.setItem(name, JSON.stringify(value))
+              },
+              removeItem: (name) => {
+                localStorage.removeItem(name)
+              }
             }
-          }
-        : undefined,
+          : undefined
     }
   )
 )

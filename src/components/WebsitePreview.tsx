@@ -1,21 +1,19 @@
-import { useState } from 'react';
-import { Container, Row, Col, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { useState } from 'react'
+import { Container, Row, Col, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap'
 
-import type { PageType, ComponentType } from 'website-lib';
-import { PageRenderer } from 'website-lib';
+import type { PageType, ComponentType } from 'website-lib'
+import { PageRenderer } from 'website-lib'
 
-import { FaSearchPlus } from "react-icons/fa";
-import { MdOutlineFindInPage } from "react-icons/md";
+import { FaSearchPlus } from 'react-icons/fa'
+import { MdOutlineFindInPage } from 'react-icons/md'
 
 export default function WebsitePreview(page: PageType) {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false)
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
 
-  const components = page.components as ComponentType[];
-
-  console.log('WebsitePreview rendered with page:', page.components);
+  const components = page.components as ComponentType[]
 
   return (
     <>
@@ -100,16 +98,16 @@ export default function WebsitePreview(page: PageType) {
         `}
       </style>
       <Row>
-        <Col lg={12} className='mb-3'>
-          <div 
-            className='krona'
+        <Col lg={12} className="mb-3">
+          <div
+            className="krona"
             style={{
               backgroundColor: '#FFF',
               borderRadius: '5px',
               padding: '14px',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              justifyContent: 'space-between'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -118,11 +116,7 @@ export default function WebsitePreview(page: PageType) {
             </div>
             <OverlayTrigger
               placement="left"
-              overlay={
-                <Tooltip id="tooltip-initial-page">
-                  Visualizar a página em tela cheia
-                </Tooltip>
-              }
+              overlay={<Tooltip id="tooltip-initial-page">Visualizar a página em tela cheia</Tooltip>}
             >
               <div onClick={handleShow} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                 <span onClick={handleShow}>
@@ -133,13 +127,9 @@ export default function WebsitePreview(page: PageType) {
           </div>
         </Col>
         <Col lg={12}>
-          <main className='root background-image' style={{ borderRadius: '5px' }}>
+          <main className="root background-image" style={{ borderRadius: '5px' }}>
             <Container>
-              <PageRenderer
-                ga4='T'
-                title=''
-                components={components}
-              />
+              <PageRenderer ga4="T" title="" components={components} />
             </Container>
           </main>
         </Col>
@@ -149,13 +139,9 @@ export default function WebsitePreview(page: PageType) {
           <Modal.Title>Pré visualização da página</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <main className='root background-image'>
+          <main className="root background-image">
             <Container>
-              <PageRenderer
-                ga4='T'
-                title=''
-                components={components}
-              />
+              <PageRenderer ga4="T" title="" components={components} />
             </Container>
           </main>
         </Modal.Body>

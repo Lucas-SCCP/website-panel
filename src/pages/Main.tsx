@@ -1,10 +1,10 @@
-import React from 'react';
-import Menu from '../components/Menu';
-import { Container } from 'react-bootstrap';
+import React from 'react'
+import Menu from '../components/Menu'
+import { Container } from 'react-bootstrap'
 
 type MainProps = {
-  children: React.ReactNode;
-};
+  children: React.ReactNode
+}
 
 const Main: React.FC<MainProps> = ({ children }) => {
   return (
@@ -12,7 +12,7 @@ const Main: React.FC<MainProps> = ({ children }) => {
       <Menu />
       {children}
     </Container>
-  );
-};
+  )
+}
 
-export default Main;
+export default Main

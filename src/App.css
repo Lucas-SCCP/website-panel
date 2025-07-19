@@ -1,5 +1,5 @@
 body {
-  background-color: #DDD;
+  background-color: #ddd;
 }
 
 /** FONTS **/
@@ -21,18 +21,18 @@ body {
 }
 
 .website-login-card {
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 .website-login-logo {
-   font-size: 8em;
-   color: #DDD;
+  font-size: 8em;
+  color: #ddd;
 }
 
 /** NAVBAR **/
 .website-navbar {
-  background-color: #FFF;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 .website-navbar-brand {
@@ -94,7 +94,7 @@ body {
 
 /** ACCORDION **/
 .website-accordion-selected {
-  border: 3px solid #EEE !important;
+  border: 3px solid #eee !important;
 }
 
 .website-accordion-header-border-radius {
@@ -106,7 +106,7 @@ body {
 }
 
 .website-accordion-header-button-bg-gray button {
-  background-color: #EEE;
+  background-color: #eee;
   border: none !important;
 }
 
@@ -135,28 +135,28 @@ body {
 
 /** TABS **/
 .website-tabs {
-  border-left: 1px solid #DDD;
-  border-right: 1px solid #DDD;
-  border-bottom: 1px solid #DDD;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
   padding: 10px;
 }
 
 /** INFO **/
 .website-info {
-   cursor: pointer;
-   color: #A1A1A1;
+  cursor: pointer;
+  color: #a1a1a1;
 }
 
 /** CARD **/
 .website-card {
-  background: #FFF;
+  background: #fff;
   border-radius: 5px;
   padding: 10px;
   min-height: 30vh;
 }
 
 .website-card-header {
-  background-color: #EEE;
+  background-color: #eee;
   border-radius: 5px;
   padding: 10px;
   display: flex;

@@ -1,33 +1,32 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Row, Col, Form, OverlayTrigger, Tooltip, Accordion } from 'react-bootstrap';
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Row, Col, Form, OverlayTrigger, Tooltip, Accordion } from 'react-bootstrap'
 
-import { useWebsiteStore } from '../stores/UseWebsiteStore';
+import { useWebsiteStore } from '../stores/UseWebsiteStore'
 
 import type { PageType } from 'website-lib'
 
-import Main from './Main';
+import Main from './Main'
 
-import Component from '../components/Component';
-import WebsitePreview from '../components/WebsitePreview';
+import Component from '../components/Component'
+import WebsitePreview from '../components/WebsitePreview'
 
-import { FaInfoCircle } from "react-icons/fa";
-import { LuLayoutDashboard } from "react-icons/lu";
-import { GrConfigure } from "react-icons/gr";
-
+import { FaInfoCircle } from 'react-icons/fa'
+import { LuLayoutDashboard } from 'react-icons/lu'
+import { GrConfigure } from 'react-icons/gr'
 
 export default function Pages() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const [name, setName] = useState<string | undefined>();
-  const [title, setTitle] = useState<string | undefined>();
-  const [path, setPath] = useState<string | undefined>();
-  const [menu, setMenu] = useState<number | undefined>();
-  const [menuOrder, setMenuOrder] = useState<number | undefined>();
-  const [enabled, setEnabled] = useState<boolean | undefined>();
+  const [name, setName] = useState<string | undefined>()
+  const [title, setTitle] = useState<string | undefined>()
+  const [path, setPath] = useState<string | undefined>()
+  const [menu, setMenu] = useState<number | undefined>()
+  const [menuOrder, setMenuOrder] = useState<number | undefined>()
+  const [enabled, setEnabled] = useState<boolean | undefined>()
 
-  const selectedWebsite = useWebsiteStore(state => state.selectedWebsite);
-  const selectedPage: PageType | null = useWebsiteStore(state => state.selectedPage);
+  const selectedWebsite = useWebsiteStore((state) => state.selectedWebsite)
+  const selectedPage: PageType | null = useWebsiteStore((state) => state.selectedPage)
 
   useEffect(() => {
     if (selectedPage) {
@@ -38,39 +37,39 @@ export default function Pages() {
       setMenuOrder(selectedPage.menu_order)
       setEnabled(selectedPage.enabled)
     }
-  }, [selectedPage]);
+  }, [selectedPage])
 
   if (!selectedWebsite) {
     navigate('/')
   }
 
   if (!selectedPage) {
-    console.log('Paginas nao carregaram');
-    return null;
+    console.log('Paginas nao carregaram')
+    return null
   }
 
   function setCheckedPage(checked: boolean): void {
     if (checked) {
-      setPath('/');
+      setPath('/')
     }
   }
 
   function setCheckedMenu(checked: boolean): void {
-    setMenu(checked ? 1 : 0);
+    setMenu(checked ? 1 : 0)
   }
 
   function setCheckedInitialPage(checked: boolean): void {
-    setEnabled(checked);
+    setEnabled(checked)
   }
 
   return (
     <Main>
-      <Row className='mt-3 mb-3'>
+      <Row className="mt-3 mb-3">
         <Col sm={12} md={12} lg={4}>
           <Accordion defaultActiveKey="0">
-            <Accordion.Item eventKey="0" className='mb-3 website-accordion-header-border-radius'>
-              <Accordion.Header className='website-accordion-header-border-radius'>
-                <div className='krona website-accordion-header'>
+            <Accordion.Item eventKey="0" className="mb-3 website-accordion-header-border-radius">
+              <Accordion.Header className="website-accordion-header-border-radius">
+                <div className="krona website-accordion-header">
                   <GrConfigure size={18} />
                   <b>CONFIGURAÇÕES DA PÁGINA</b>
                 </div>
@@ -108,7 +107,7 @@ export default function Pages() {
                       <Form.Check
                         type="switch"
                         checked={path === '/'}
-                        onChange={e => setCheckedPage(e.target.checked)}
+                        onChange={(e) => setCheckedPage(e.target.checked)}
                         id="initialPageSwitch"
                         label={
                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
@@ -135,7 +134,7 @@ export default function Pages() {
                       <Form.Check
                         type="switch"
                         checked={menu === 1}
-                        onChange={e => setCheckedMenu(e.target.checked)}
+                        onChange={(e) => setCheckedMenu(e.target.checked)}
                         id="menuSwitch"
                         label={
                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
@@ -162,7 +161,7 @@ export default function Pages() {
                       <Form.Check
                         type="switch"
                         checked={enabled}
-                        onChange={e => setCheckedInitialPage(e.target.checked)}
+                        onChange={(e) => setCheckedInitialPage(e.target.checked)}
                         id="enabledSwitch"
                         label={
                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
@@ -170,9 +169,7 @@ export default function Pages() {
                             <OverlayTrigger
                               placement="bottom"
                               overlay={
-                                <Tooltip id="tooltip-initial-page">
-                                  Ative para publicar essa página no site.
-                                </Tooltip>
+                                <Tooltip id="tooltip-initial-page">Ative para publicar essa página no site.</Tooltip>
                               }
                             >
                               <span style={{ cursor: 'pointer', color: '#A1A1A1' }}>
@@ -208,9 +205,9 @@ export default function Pages() {
               </Accordion.Body>
             </Accordion.Item>
 
-            <Accordion.Item eventKey="1" className='mb-3 website-accordion-header-border-radius'>
-              <Accordion.Header className='website-accordion-header-border-radius'>
-                <div className='krona website-accordion-header'>
+            <Accordion.Item eventKey="1" className="mb-3 website-accordion-header-border-radius">
+              <Accordion.Header className="website-accordion-header-border-radius">
+                <div className="krona website-accordion-header">
                   <LuLayoutDashboard size={18} />
                   <b>COMPONENTES DA PÁGINA</b>
                 </div>
@@ -225,10 +222,10 @@ export default function Pages() {
             </Accordion.Item>
           </Accordion>
         </Col>
-        <Col sm={12} md={12} lg={8} className='ps-0'>
+        <Col sm={12} md={12} lg={8} className="ps-0">
           <WebsitePreview {...selectedPage} />
         </Col>
       </Row>
     </Main>
-  );
+  )
 }

@@ -1,9 +1,9 @@
 import { Row, Col, Form } from 'react-bootstrap'
 import type { ElementType } from 'website-lib'
 
-export default function TextElement({ element, showSettings }: { element: ElementType, showSettings: boolean }) {
+export default function TextElement({ element, showSettings }: { element: ElementType; showSettings: boolean }) {
   function setValue(value: string): void {
-    console.log('Setting value:', value);
+    console.log('Setting value:', value)
   }
 
   return (
@@ -12,14 +12,12 @@ export default function TextElement({ element, showSettings }: { element: Elemen
         <Row>
           <Col lg={12}>
             <Form.Group className="mb-3" controlId="pageName">
-              <Form.Label>
-                Texto
-              </Form.Label>
+              <Form.Label>Texto</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Digite o texto"
                 value={element.properties.text}
-                onChange={e => setValue(e.target.value)}
+                onChange={(e) => setValue(e.target.value)}
               />
             </Form.Group>
           </Col>
@@ -31,27 +29,23 @@ export default function TextElement({ element, showSettings }: { element: Elemen
             <Row>
               <Col lg={6}>
                 <Form.Group className="mb-3" controlId="pageName">
-                  <Form.Label>
-                    Posição do elemento
-                  </Form.Label>
+                  <Form.Label>Posição do elemento</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Digite o texto"
                     value={element.sort}
-                    onChange={e => setValue(e.target.value)}
+                    onChange={(e) => setValue(e.target.value)}
                   />
                 </Form.Group>
               </Col>
               <Col lg={6}>
                 <Form.Group className="mb-3" controlId="pageName">
-                  <Form.Label>
-                    Tamanho do elemento
-                  </Form.Label>
+                  <Form.Label>Tamanho do elemento</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Digite o texto"
                     value={element.size}
-                    onChange={e => setValue(e.target.value)}
+                    onChange={(e) => setValue(e.target.value)}
                   />
                 </Form.Group>
               </Col>
@@ -63,53 +57,45 @@ export default function TextElement({ element, showSettings }: { element: Elemen
             <Row>
               <Col lg={6}>
                 <Form.Group className="mb-3" controlId="pageName">
-                  <Form.Label>
-                    Cor
-                  </Form.Label>
+                  <Form.Label>Cor</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Digite o texto"
                     value={element.properties.style.color ? element.properties.style.color : ''}
-                    onChange={e => setValue(e.target.value)}
+                    onChange={(e) => setValue(e.target.value)}
                   />
                 </Form.Group>
               </Col>
               <Col lg={6}>
                 <Form.Group className="mb-3" controlId="pageName">
-                  <Form.Label>
-                    Tamanho da fonte
-                  </Form.Label>
+                  <Form.Label>Tamanho da fonte</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Digite o texto"
                     value={element.properties.style.fontSize}
-                    onChange={e => setValue(e.target.value)}
+                    onChange={(e) => setValue(e.target.value)}
                   />
                 </Form.Group>
               </Col>
               <Col lg={6}>
                 <Form.Group className="mb-3" controlId="pageName">
-                  <Form.Label>
-                    Alinhamento do texto
-                  </Form.Label>
+                  <Form.Label>Alinhamento do texto</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Digite o texto"
                     value={element.properties.style.textAlign}
-                    onChange={e => setValue(e.target.value)}
+                    onChange={(e) => setValue(e.target.value)}
                   />
                 </Form.Group>
               </Col>
               <Col lg={6}>
                 <Form.Group className="mb-3" controlId="pageName">
-                  <Form.Label>
-                    Peso da fonte
-                  </Form.Label>
+                  <Form.Label>Peso da fonte</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Digite o texto"
                     value={element.properties.style.fontWeight}
-                    onChange={e => setValue(e.target.value)}
+                    onChange={(e) => setValue(e.target.value)}
                   />
                 </Form.Group>
               </Col>

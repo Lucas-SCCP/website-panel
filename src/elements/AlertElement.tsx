@@ -6,30 +6,29 @@ export default function AlertElement({ element }: { element: ElementType }) {
     <Row>
       <Col lg={12}>
         <Form.Group className="mb-3" controlId="pageName">
-          <Form.Label>
-            Nome da mensagem
-          </Form.Label>
+          <Form.Label>Nome da mensagem</Form.Label>
           <Form.Control type="text" placeholder="Digite o nome da mensagem" value={element.properties.name} />
         </Form.Group>
       </Col>
       <Col lg={12}>
         <Form.Group className="mb-3" controlId="pageName">
-          <Form.Label>
-            Título da mensagem
-          </Form.Label>
+          <Form.Label>Título da mensagem</Form.Label>
           <Form.Control type="text" placeholder="Digite o título da mensagem" value={element.properties.title} />
         </Form.Group>
       </Col>
       <Col lg={12}>
         <Form.Group className="mb-3" controlId="pageName">
-          <Form.Label>
-            Texto da mensagem
-          </Form.Label>
-          <Form.Control as="textarea" rows={3} placeholder="Digite o texto da mensagem" value={element.properties.message} />
+          <Form.Label>Texto da mensagem</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            placeholder="Digite o texto da mensagem"
+            value={element.properties.message}
+          />
         </Form.Group>
       </Col>
       <Col lg={6}>
-        <Dropdown className='mb-3'>
+        <Dropdown className="mb-3">
           <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
             Tipo de mensagem
           </Dropdown.Toggle>

@@ -1,18 +1,18 @@
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap'
 
-import Main from './Main';
+import Main from './Main'
 
-import { GrConfigure } from "react-icons/gr";
+import { GrConfigure } from 'react-icons/gr'
 
 export default function Settings() {
   return (
     <Main>
-      <Row className='mt-3 mb-3'>
+      <Row className="mt-3 mb-3">
         <Col sm={12} md={12} lg={4}>
-          <div className='website-card'>
+          <div className="website-card">
             <Row>
-              <Col lg={12} className='mb-2'>
-                <div className='website-card-header krona'>
+              <Col lg={12} className="mb-2">
+                <div className="website-card-header krona">
                   <GrConfigure size={18} />
                   <b>CONFIGURAÇÕES DO SITE</b>
                 </div>
@@ -20,11 +20,11 @@ export default function Settings() {
             </Row>
           </div>
         </Col>
-        <Col sm={12} md={12} lg={4} className='ps-0'>
-          <div className='website-card'>
+        <Col sm={12} md={12} lg={4} className="ps-0">
+          <div className="website-card">
             <Row>
-              <Col lg={12} className='mb-2'>
-                <div className='website-card-header krona'>
+              <Col lg={12} className="mb-2">
+                <div className="website-card-header krona">
                   <GrConfigure size={18} />
                   <b>CONFIGURAÇÕES DE USUÁRIOS</b>
                 </div>
@@ -32,11 +32,11 @@ export default function Settings() {
             </Row>
           </div>
         </Col>
-        <Col sm={12} md={12} lg={4} className='ps-0'>
-          <div className='website-card'>
+        <Col sm={12} md={12} lg={4} className="ps-0">
+          <div className="website-card">
             <Row>
-              <Col lg={12} className='mb-2'>
-                <div className='website-card-header krona'>
+              <Col lg={12} className="mb-2">
+                <div className="website-card-header krona">
                   <GrConfigure size={18} />
                   <b></b>
                 </div>
@@ -46,5 +46,5 @@ export default function Settings() {
         </Col>
       </Row>
     </Main>
-  );
+  )
 }
