@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Row, Col, Form, Dropdown } from 'react-bootstrap'
 import type { ElementType } from 'website-lib'
 
-export default function InputElement({ element }: { element: ElementType }) {
+export function InputElement({ element }: { element: ElementType }) {
   const [type, setType] = useState(element.properties.type)
   const [validationType, setValidationType] = useState(element.properties.validateType)
 

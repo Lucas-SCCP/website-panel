@@ -1,7 +1,7 @@
 import { Row, Col, Form } from 'react-bootstrap'
 import type { ElementType } from 'website-lib'
 
-export default function TextElement({ element, showSettings }: { element: ElementType; showSettings: boolean }) {
+export function TextElement({ element, showSettings }: { element: ElementType; showSettings: boolean }) {
   function setValue(value: string): void {
     console.log('Setting value:', value)
   }

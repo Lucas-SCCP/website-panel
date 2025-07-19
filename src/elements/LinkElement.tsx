@@ -1,7 +1,7 @@
 import { Row, Col, Form } from 'react-bootstrap'
 import type { ElementType } from 'website-lib'
 
-export default function LinkElement({ element }: { element: ElementType }) {
+export function LinkElement({ element }: { element: ElementType }) {
   return (
     <Row>
       <Col lg={12}>

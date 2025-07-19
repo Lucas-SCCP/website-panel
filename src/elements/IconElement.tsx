@@ -62,7 +62,7 @@ const iconToOption = ([name, Icon]: [string, React.ComponentType<React.Component
 const MAX_OPTIONS = 28
 const initialOptions = iconList.slice(0, MAX_OPTIONS).map(iconToOption)
 
-export default function IconElement({ element }: { element: ElementType }) {
+export function IconElement({ element }: { element: ElementType }) {
   const [selectedOption, setSelectedOption] = useState<OptionType | null>(null)
   const [options, setOptions] = useState<OptionType[]>(initialOptions)
 

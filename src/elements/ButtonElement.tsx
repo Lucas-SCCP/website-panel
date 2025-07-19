@@ -3,7 +3,7 @@ import { Row, Col, Form, Dropdown } from 'react-bootstrap'
 import type { ComponentType, ElementType } from 'website-lib'
 import { useWebsiteStore } from '../stores/UseWebsiteStore'
 
-export default function ButtonElement({ element }: { element: ElementType }) {
+export function ButtonElement({ element }: { element: ElementType }) {
   const selectedPage = useWebsiteStore((state) => state.selectedPage)
   const components = selectedPage?.components.find((c: ComponentType) => c.id === element.component_id)
   const alerts = components?.elements.content.filter((e: ElementType) => e.element_type_id === 7)

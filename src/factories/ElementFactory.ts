@@ -1,11 +1,11 @@
 import React from 'react'
 import { ElementTypeEnum } from '../enums/ElementTypeEnum'
 import type { ElementType } from 'website-lib'
-import TextElement from '../elements/TextElement'
-import InputElement from '../elements/InputElement'
-import AlertElement from '../elements/AlertElement'
-import ButtonElement from '../elements/ButtonElement'
-import LinkElement from '../elements/LinkElement'
+import { TextElement } from '../elements/TextElement'
+import { InputElement } from '../elements/InputElement'
+import { AlertElement } from '../elements/AlertElement'
+import { ButtonElement } from '../elements/ButtonElement'
+import { LinkElement } from '../elements/LinkElement'
 
 export function elementFactory(type: number, element: ElementType): React.ReactElement | null {
   switch (type) {
