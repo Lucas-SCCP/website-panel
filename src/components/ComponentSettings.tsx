@@ -3,7 +3,7 @@ import { Row, Col, Accordion, Form, OverlayTrigger, Tooltip } from 'react-bootst
 
 import type { ComponentType } from 'website-lib'
 
-import { componentFactory } from '../factories/ComponentFactory'
+import { ComponentFactory } from '../factories/ComponentFactory'
 
 import { FaListUl, FaInfoCircle, FaTextHeight } from 'react-icons/fa'
 import { RiInputField } from 'react-icons/ri'
@@ -15,6 +15,7 @@ export function ComponentSettings(component: ComponentType & { index: number }) 
   const [componentSort, setComponentSort] = useState(component.sort)
   const [componentSize, setComponentSize] = useState(component.size)
   const [componentEnabled, setComponentEnabled] = useState(component.enabled)
+  const componentFactory = new ComponentFactory()
 
   function getIconByComponentType(type: number): JSX.Element {
     switch (type) {
@@ -130,7 +131,7 @@ export function ComponentSettings(component: ComponentType & { index: number }) 
           </Col>
         </Row>
         <Row id="component-edit">
-          <Accordion>{componentFactory(component)}</Accordion>
+          <Accordion>{componentFactory.build(component)}</Accordion>
         </Row>
       </Accordion.Body>
     </Accordion.Item>

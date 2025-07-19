@@ -3,7 +3,7 @@ import { Accordion, OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import type { ComponentType } from 'website-lib'
 
-import { elementFactory } from '../factories/ElementFactory'
+import { ElementFactory } from '../factories/ElementFactory'
 
 import { FaListUl, FaTextHeight } from 'react-icons/fa'
 import { RiInputField } from 'react-icons/ri'
@@ -15,6 +15,8 @@ import { MdAdsClick } from 'react-icons/md'
 import { BiSolidMessageDetail } from 'react-icons/bi'
 
 export function FormComponent(props: { component: ComponentType }) {
+  const elementFactory = new ElementFactory()
+
   function getIconByElementType(type: number): JSX.Element | null {
     switch (type) {
       case 14:
@@ -109,7 +111,7 @@ export function FormComponent(props: { component: ComponentType }) {
           </OverlayTrigger>
         </span>
       </Accordion.Header>
-      <Accordion.Body>{elementFactory(element.element_type_id, element)}</Accordion.Body>
+      <Accordion.Body>{elementFactory.build(element.element_type_id, element)}</Accordion.Body>
     </Accordion.Item>
   ))
 }
