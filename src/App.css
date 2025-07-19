@@ -1,35 +1,165 @@
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+body {
+  background-color: #DDD;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/** FONTS **/
+.modak {
+  font-family: 'Modak', system-ui;
+  font-weight: 400;
+  font-style: normal;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.krona {
+  font-family: 'Krona One', sans-serif;
+  font-weight: 100;
+  font-style: normal;
 }
 
-.card {
-  padding: 2em;
+/** LOGIN **/
+.website-login-container {
+  min-height: 100vh;
 }
 
-.read-the-docs {
-  color: #888;
+.website-login-card {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.website-login-logo {
+   font-size: 8em;
+   color: #DDD;
+}
+
+/** NAVBAR **/
+.website-navbar {
+  background-color: #FFF;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.website-navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.website-navbar-brand-logo {
+  border-radius: 5px;
+  width: 40px;
+  height: 40px;
+}
+
+.website-navbar-button {
+  border: 1px solid #000;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.website-navbar-button-icon {
+  padding: 5px;
+}
+
+.website-navbar-action-buttons {
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.website-navbar-action-buttons-danger {
+  border: 1px solid red;
+  background-color: red;
+}
+
+.website-navbar-action-buttons-success {
+  border: 1px solid green;
+  background-color: green;
+}
+
+.website-navbar-action-exit {
+  border: 1px solid #000;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+/** ACCORDION **/
+.website-accordion-selected {
+  border: 3px solid #EEE !important;
+}
+
+.website-accordion-header-border-radius {
+  border-radius: 5px !important;
+}
+
+.website-accordion-header-border-radius button {
+  border-radius: 5px !important;
+}
+
+.website-accordion-header-button-bg-gray button {
+  background-color: #EEE;
+  border: none !important;
+}
+
+.website-accordion-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.website-accordion-header-title-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.website-accordion-header-title {
+  display: flex;
+  gap: 10px;
+}
+
+.website-accordion-header-action-buttons {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+/** TABS **/
+.website-tabs {
+  border-left: 1px solid #DDD;
+  border-right: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
+  padding: 10px;
+}
+
+/** INFO **/
+.website-info {
+   cursor: pointer;
+   color: #A1A1A1;
+}
+
+/** CARD **/
+.website-card {
+  background: #FFF;
+  border-radius: 5px;
+  padding: 10px;
+  min-height: 30vh;
+}
+
+.website-card-header {
+  background-color: #EEE;
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }

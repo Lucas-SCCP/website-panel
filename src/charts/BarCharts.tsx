@@ -9,11 +9,11 @@ import {
 } from 'recharts';
 
 const data = [
-  { name: 'Jan', visitas: 400 },
-  { name: 'Fev', visitas: 300 },
-  { name: 'Mar', visitas: 500 },
-  { name: 'Abr', visitas: 200 },
-  { name: 'Mai', visitas: 350 },
+  { name: 'Página inicial', visitas: 400 },
+  { name: 'Sobre', visitas: 300 },
+  { name: 'Lojas', visitas: 500 },
+  { name: 'Serviços', visitas: 200 },
+  { name: 'Contato', visitas: 350 },
 ];
 
 const BarCharts = () => {
@@ -25,7 +25,7 @@ const BarCharts = () => {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="visitas" fill="#AAA" />
+          <Bar dataKey="visitas" fill="#46a8cb" />
         </BarChart>
       </ResponsiveContainer>
     </div>

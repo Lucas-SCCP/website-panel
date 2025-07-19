@@ -1,126 +1,265 @@
-import { Row, Col, Image, Dropdown, OverlayTrigger, Tooltip, Button } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Row, Navbar, Container, Offcanvas, Nav, NavDropdown, OverlayTrigger, Tooltip, Button, Modal, Dropdown } from 'react-bootstrap';
+
+import apiService from '../services/ApiService';
+
+import { useWebsiteStore } from '../stores/UseWebsiteStore';
+import { useUserStore } from '../stores/UseUserStore';
+
+import type { Website } from '../types/Website'
+
 import { FaHome } from "react-icons/fa";
 import { MdOutlineSettings } from "react-icons/md";
 import { MdAddCircleOutline } from "react-icons/md";
+import { HiOutlineLogout } from "react-icons/hi";
+import { MdSaveAlt } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
 
 export default function Menu() {
+  const navigate = useNavigate();
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const { user } = useUserStore();
+
+  const websites = useWebsiteStore(state => state.data);
+  const selectedWebsite = useWebsiteStore(state => state.selectedWebsite);
+  const selectedPage = useWebsiteStore(state => state.selectedPage);
+  const setWebsiteData = useWebsiteStore(state => state.setWebsiteData);
+  const setSelectedWebsite = useWebsiteStore(state => state.setSelectedWebsite);
+  const setSelectedPage = useWebsiteStore(state => state.setSelectedPage);
+
+  const goToDashboardClick = () => {
+    setSelectedPage(null)
+    navigate('/')
+  }
+
+  const goToSettingsClick = () => {
+    setSelectedPage(null)
+    navigate('/settings')
+  }
+
+  const selectedWebsiteClick = (event: React.MouseEvent<HTMLElement>) => {
+    const selected = websites.find(w => w.id.toString() === event.currentTarget.id);
+    if (selected) {
+      setSelectedPage(null)
+      setSelectedWebsite(selected)
+      navigate('/')
+    }
+  }
+
+  const selectedPageClick = (event: React.MouseEvent<HTMLElement>) => {
+    const selected = selectedWebsite?.pages.find(w => w.id.toString() === event.currentTarget.id);
+    if (selected) {
+      setSelectedPage(selected)
+      navigate('/pages')
+    }
+  }
+
+  const handleExit = () => {
+    setSelectedPage(null)
+    setSelectedWebsite(null)
+    useWebsiteStore.getState().clearWebsiteData()
+    useUserStore.getState().clearUser()
+    navigate('/login')
+  }
+  
+  useEffect(() => {
+    const fetchWebsites = async () => {
+      if (selectedWebsite) {
+        return
+      }
+
+      let websites: Website[] = []
+      if (user && user.id && user.token) {
+        websites = await apiService.getAllWebsiteByUserId(user.id, user.token)
+      }
+      
+      setWebsiteData(websites)
+      const selectedWebsiteFound = websites.find(site => site.id === user?.default_website_id)
+      console.log(selectedWebsiteFound)
+      setSelectedWebsite(selectedWebsiteFound ?? null)
+    }
+
+    fetchWebsites()
+  }, [user, selectedWebsite, setWebsiteData, setSelectedWebsite]);
+
+  if (!websites) {
+    console.log('Site não carregou');
+  }
+
   return (
-    <Col lg={2} style={{ background: '#EEE', height: '100vh' }}>
+    <>
       <Row>
-        <Col lg={12} className='text-center' style={{ marginTop: '20px' }}>
-          <Image
-            width='150px'
-            src="https://media.istockphoto.com/id/1337144146/pt/vetorial/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=_XeYoSJQIN7GrE08cUQDJCo3U7yvoEp5OKpbhQzpmC0="
-            roundedCircle
-          />
-        </Col>
-        <Col lg={12} className='text-center' style={{ padding: '20px' }}>
-          <div>Lucas da Silva</div>
-          <div style={{ fontSize: '14px', color: '#A1A1A1' }}>minha conta | sair</div>
-        </Col>
-        <hr />
-        <Col lg={12} style={{ marginBottom: '20px' }}>
+        <Navbar expand='lg' className='website-navbar'>
+          <Container fluid>
+            <Navbar.Brand className='website-navbar-brand'>
+              <img
+                alt="NOIS"
+                src="/favicon.ico"
+                className="d-inline-block align-top website-navbar-brand-logo"
+              />
+              <span className='krona'>
+                PAINEL ADMINISTRATIVO
+              </span>
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls='offcanvasNavbar-expand' />
+            <Navbar.Offcanvas
+              id='offcanvasNavbar-expand'
+              aria-labelledby='offcanvasNavbarLabel-expand'
+              placement="end"
+            >
+              <Offcanvas.Header closeButton>
+                <Offcanvas.Title id='offcanvasNavbarLabel-expand'>
+                  Painel Administrativo
+                </Offcanvas.Title>
+              </Offcanvas.Header>
+              <Offcanvas.Body>
+                <Nav className="w-100">
+                  <Nav.Link>
+                    <OverlayTrigger
+                      placement='bottom'
+                      overlay={
+                        <Tooltip id={'tooltip-bottom'}>
+                          Página inicial
+                        </Tooltip>
+                      }
+                    >
+                        <div onClick={goToDashboardClick} className='website-navbar-button website-navbar-button-icon'>
+                        <FaHome size={30} />
+                      </div>
+                    </OverlayTrigger>
+                  </Nav.Link>
+                  <Nav.Link>
+                    <OverlayTrigger
+                      placement='bottom'
+                      overlay={
+                        <Tooltip id={'tooltip-bottom'}>
+                          Configurações
+                        </Tooltip>
+                      }
+                    >
+                      <div onClick={goToSettingsClick} className='website-navbar-button website-navbar-button-icon'>
+                        <MdOutlineSettings size={30} />
+                      </div>
+                    </OverlayTrigger>
+                  </Nav.Link>
+                  <Nav.Link>
+                    <NavDropdown
+                      title={selectedWebsite ? selectedWebsite.name : 'Selecione um site'}
+                      className='website-navbar-button'
+                    >
+                      {websites.map((website) => (
+                        <NavDropdown.Item id={website.id.toString()} key={website.id} onClick={selectedWebsiteClick}>
+                          {website.name}
+                        </NavDropdown.Item>
+                      ))}
+                    </NavDropdown>
+                  </Nav.Link>
+                  <Nav.Link>
+                    <NavDropdown
+                      title={selectedPage ? selectedPage.name : 'Selecione uma página'}
+                      className='website-navbar-button'
+                    >
+                      {selectedWebsite?.pages.map((page) => (
+                        <NavDropdown.Item id={page.id.toString()} key={page.id} onClick={selectedPageClick}>
+                          {page.name}
+                        </NavDropdown.Item>
+                      ))}
+                    </NavDropdown>
+                  </Nav.Link>
+                  {
+                    selectedPage !== null && (
+                      <>
+                        <Nav.Link>
+                          <OverlayTrigger
+                            placement="bottom"
+                            overlay={
+                              <Tooltip id="tooltip-delete-page">
+                                Excluir página
+                              </Tooltip>
+                            }
+                          >
+                            <div className='website-navbar-action-buttons website-navbar-action-buttons-danger'>
+                              <MdDeleteForever size={30} />
+                            </div>
+                          </OverlayTrigger>
+                        </Nav.Link>
+                        <Nav.Link>
+                          <OverlayTrigger
+                            placement="bottom"
+                            overlay={
+                              <Tooltip id="tooltip-menu-position" onClick={handleShow}>
+                                Inserir novo componente
+                              </Tooltip>
+                            }
+                          >
+                            <div className='website-navbar-action-buttons website-navbar-action-buttons-success'>
+                              <MdAddCircleOutline size={30} />
+                            </div>
+                          </OverlayTrigger>
+                        </Nav.Link>
+                        <Nav.Link>
+                          <div className='website-navbar-action-buttons website-navbar-action-buttons-success'>
+                            <MdSaveAlt size={30} />
+                          </div>
+                        </Nav.Link>
+                      </>
+                    )
+                  }
+                  <Nav.Link className="ms-auto d-flex">
+                    <OverlayTrigger
+                      placement='left'
+                      overlay={
+                        <Tooltip id={'tooltip-bottom'}>
+                          Sair
+                        </Tooltip>
+                      }
+                    >
+                      <div onClick={handleExit} className='website-navbar-action-exit'>
+                        <HiOutlineLogout size={30} />
+                      </div>
+                    </OverlayTrigger>
+                  </Nav.Link>
+                </Nav>
+              </Offcanvas.Body>
+            </Navbar.Offcanvas>
+          </Container>
+        </Navbar>
+      </Row>
+      <Modal
+          show={show}
+          onHide={handleClose}
+          backdrop="static"
+          keyboard={false}
+        >
+        <Modal.Header closeButton>
+          <Modal.Title>Inserir novo componente</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
           <Dropdown style={{ width: '100%' }}>
-            <Dropdown.Toggle variant="secondary" id="dropdown-basic" style={{ width: '100%' }}>
-              Selecione um site
+            <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" style={{ width: '100%' }}>
+              Selecione um componente
             </Dropdown.Toggle>
             <Dropdown.Menu style={{ width: '100%' }}>
-              <Dropdown.Item href="#">Nois.dev.br</Dropdown.Item>
-              <Dropdown.Item href="#">Postos Elefantinho</Dropdown.Item>
-              <Dropdown.Item href="#">CT Clean Foods</Dropdown.Item>
+              <Dropdown.Item href="#">Texto</Dropdown.Item>
+              <Dropdown.Item href="#">Lista</Dropdown.Item>
+              <Dropdown.Item href="#">Formulário</Dropdown.Item>
+              <Dropdown.Item href="#">Imagem</Dropdown.Item>
+              <Dropdown.Item href="#">Vídeo</Dropdown.Item>
+              <Dropdown.Item href="#">Carrossel</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-        </Col>
-        <hr />
-        <Col lg={12}>
-          <Row>
-            <Col lg={6}>
-              <OverlayTrigger
-                placement='bottom'
-                overlay={
-                  <Tooltip id={'tooltip-bottom'}>
-                    Página inicial
-                  </Tooltip>
-                }
-              >
-                <a
-                  href='/'
-                  style={{
-                    border: '3px solid #BBB',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    height: '50px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#AAA'
-                  }}
-                >
-                  <FaHome size={30} />
-                </a>
-              </OverlayTrigger>
-            </Col>
-            <Col lg={6}>
-              <OverlayTrigger
-                placement='bottom'
-                overlay={
-                  <Tooltip id={'tooltip-bottom'}>
-                    Configurações
-                  </Tooltip>
-                }
-              >
-                <a
-                  href='/settings'
-                  style={{
-                    border: '3px solid #BBB',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    height: '50px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#AAA'
-                  }}
-                >
-                  <MdOutlineSettings size={30} />
-                </a>
-              </OverlayTrigger>
-            </Col>
-          </Row>
-        </Col>
-        <hr style={{ marginTop: '20px', marginBottom: '20px' }}/>
-        <Col>
-          <Row>
-            <Col lg={12} style={{ marginBottom: '10px' }}>
-              <Button
-                variant='outline-secondary'
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '5px',
-                }}
-              >
-                <MdAddCircleOutline />
-                Criar nova página
-              </Button>
-            </Col>
-            <Col lg={12}>
-              <Dropdown style={{ width: '100%' }}>
-                <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" style={{ width: '100%' }}>
-                  Selecione uma página
-                </Dropdown.Toggle>
-                <Dropdown.Menu style={{ width: '100%' }}>
-                  <Dropdown.Item href="/pages">Página inicial</Dropdown.Item>
-                  <Dropdown.Item href="#">Sobre</Dropdown.Item>
-                  <Dropdown.Item href="#">Contato</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    </Col>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success">
+            <MdSaveAlt />
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
