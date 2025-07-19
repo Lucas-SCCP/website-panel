@@ -22,7 +22,6 @@ const iconList = Object.entries(allIcons)
 const initialOptions = iconList.slice(0, maxOptions).map(iconToOption)
 
 export function IconElement({ element }: { element: ElementType }) {
-  
   type OptionType = {
     value: string
     label: string

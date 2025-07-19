@@ -6,14 +6,8 @@ export function ProtectedRouter({ children }: { children: JSX.Element }) {
   const { user, token } = UseUserStore()
 
   if (!user || !token) {
-    return (
-      <Navigate to="/login" replace />
-    )
+    return <Navigate to="/login" replace />
   }
 
-  return (
-    <>
-      {children}
-    </>
-  )
+  return <>{children}</>
 }
