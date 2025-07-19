@@ -6,7 +6,7 @@ import type { AuthenticateResponseType } from 'website-lib'
 
 import { ApiService } from '../services/ApiService'
 
-import { useUserStore } from '../stores/UseUserStore'
+import { UseUserStore } from '../stores/UseUserStore'
 
 import { AuthenticateException } from '../exceptions/AuthenticateException'
 
@@ -25,7 +25,7 @@ export function Login() {
       const response: AuthenticateResponseType = await apiService.authenticate(email, password)
 
       if (response.status) {
-        useUserStore.getState().setUser(response.data, response.data.token)
+        UseUserStore.getState().setUser(response.data, response.data.token)
         navigate('/')
       }
     } catch (err) {

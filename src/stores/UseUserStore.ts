@@ -10,7 +10,7 @@ interface UserStore {
   updateUserField: <K extends keyof UserType>(key: K, value: UserType[K]) => void
 }
 
-export const useUserStore = create<UserStore>()(
+export const UseUserStore = create<UserStore>()(
   persist(
     (set, get) => ({
       user: null,

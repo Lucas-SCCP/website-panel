@@ -32,7 +32,7 @@ interface WebsiteStore {
   getWebsiteById: (website_id: number) => WebsiteType | undefined
 }
 
-export const useWebsiteStore = create<WebsiteStore>()(
+export const UseWebsiteStore = create<WebsiteStore>()(
   persist(
     (set, get) => ({
       data: [],

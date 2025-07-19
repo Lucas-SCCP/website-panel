@@ -16,8 +16,8 @@ import {
 
 import { ApiService } from '../services/ApiService'
 
-import { useWebsiteStore } from '../stores/UseWebsiteStore'
-import { useUserStore } from '../stores/UseUserStore'
+import { UseWebsiteStore } from '../stores/UseWebsiteStore'
+import { UseUserStore } from '../stores/UseUserStore'
 
 import type { WebsiteType } from 'website-lib'
 
@@ -35,14 +35,14 @@ export function Menu() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const { user } = useUserStore()
+  const { user } = UseUserStore()
 
-  const websites = useWebsiteStore((state) => state.data)
-  const selectedWebsite = useWebsiteStore((state) => state.selectedWebsite)
-  const selectedPage = useWebsiteStore((state) => state.selectedPage)
-  const setWebsiteData = useWebsiteStore((state) => state.setWebsiteData)
-  const setSelectedWebsite = useWebsiteStore((state) => state.setSelectedWebsite)
-  const setSelectedPage = useWebsiteStore((state) => state.setSelectedPage)
+  const websites = UseWebsiteStore((state) => state.data)
+  const selectedWebsite = UseWebsiteStore((state) => state.selectedWebsite)
+  const selectedPage = UseWebsiteStore((state) => state.selectedPage)
+  const setWebsiteData = UseWebsiteStore((state) => state.setWebsiteData)
+  const setSelectedWebsite = UseWebsiteStore((state) => state.setSelectedWebsite)
+  const setSelectedPage = UseWebsiteStore((state) => state.setSelectedPage)
 
   const goToDashboardClick = () => {
     setSelectedPage(null)
@@ -76,8 +76,8 @@ export function Menu() {
   const handleExit = () => {
     setSelectedPage(null)
     setSelectedWebsite(null)
-    useWebsiteStore.getState().clearWebsiteData()
-    useUserStore.getState().clearUser()
+    UseWebsiteStore.getState().clearWebsiteData()
+    UseUserStore.getState().clearUser()
     navigate('/login')
   }
 

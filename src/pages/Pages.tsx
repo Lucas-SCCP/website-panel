@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Row, Col, Form, OverlayTrigger, Tooltip, Accordion } from 'react-bootstrap'
 
-import { useWebsiteStore } from '../stores/UseWebsiteStore'
+import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 
 import type { PageType } from 'website-lib'
 
@@ -25,8 +25,8 @@ export function Pages() {
   const [menuOrder, setMenuOrder] = useState<number | undefined>()
   const [enabled, setEnabled] = useState<boolean | undefined>()
 
-  const selectedWebsite = useWebsiteStore((state) => state.selectedWebsite)
-  const selectedPage: PageType | null = useWebsiteStore((state) => state.selectedPage)
+  const selectedWebsite = UseWebsiteStore((state) => state.selectedWebsite)
+  const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
 
   useEffect(() => {
     if (selectedPage) {
