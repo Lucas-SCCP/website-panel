@@ -8,14 +8,14 @@ import type { PageType } from 'website-lib'
 
 import Main from './Main'
 
-import Component from '../components/Component'
+import ComponentSettings from '../components/ComponentSettings'
 import WebsitePreview from '../components/WebsitePreview'
 
 import { FaInfoCircle } from 'react-icons/fa'
 import { LuLayoutDashboard } from 'react-icons/lu'
 import { GrConfigure } from 'react-icons/gr'
 
-export default function Pages() {
+export function Pages() {
   const navigate = useNavigate()
 
   const [name, setName] = useState<string | undefined>()
@@ -215,7 +215,7 @@ export default function Pages() {
               <Accordion.Body>
                 <Accordion>
                   {selectedPage.components.map((component, index) => (
-                    <Component {...component} key={index} index={index} />
+                    <ComponentSettings {...component} key={index} index={index} />
                   ))}
                 </Accordion>
               </Accordion.Body>

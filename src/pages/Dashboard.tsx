@@ -6,7 +6,7 @@ import BarCharts from '../charts/BarCharts'
 import AreaCharts from '../charts/AreaCharts'
 import { FaChartBar } from 'react-icons/fa'
 
-export default function Home() {
+export function Dashboard() {
   return (
     <Main>
       <Row className="mt-3 mb-3">

@@ -4,13 +4,13 @@ import { Form, Button, Container, Row, Col, Alert, FloatingLabel } from 'react-b
 
 import type { AuthenticateResponseType } from 'website-lib'
 
-import apiService from '../services/ApiService'
+import { ApiService } from '../services/ApiService'
 
 import { useUserStore } from '../stores/UseUserStore'
 
 import { AuthenticateException } from '../exceptions/AuthenticateException'
 
-const Login: React.FC = () => {
+export function Login() {
   const navigate = useNavigate()
 
   const [email, setEmail] = useState('')
@@ -21,6 +21,7 @@ const Login: React.FC = () => {
     e.preventDefault()
 
     try {
+      const apiService = new ApiService()
       const response: AuthenticateResponseType = await apiService.authenticate(email, password)
 
       if (response.status) {
@@ -98,5 +99,3 @@ const Login: React.FC = () => {
     </Container>
   )
 }
-
-export default Login

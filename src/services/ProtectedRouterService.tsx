@@ -1,11 +1,7 @@
 import { Navigate } from 'react-router-dom'
 import { useUserStore } from '../stores/UseUserStore'
 
-interface ProtectedRouteProps {
-  children: React.ReactNode
-}
-
-export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, token } = useUserStore()
 
   if (!user || !token) {

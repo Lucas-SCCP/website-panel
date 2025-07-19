@@ -4,7 +4,7 @@ import Main from './Main'
 
 import { GrConfigure } from 'react-icons/gr'
 
-export default function Settings() {
+export function Settings() {
   return (
     <Main>
       <Row className="mt-3 mb-3">

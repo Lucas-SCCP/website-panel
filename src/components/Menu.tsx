@@ -14,7 +14,7 @@ import {
   Dropdown
 } from 'react-bootstrap'
 
-import apiService from '../services/ApiService'
+import { ApiService } from '../services/ApiService'
 
 import { useWebsiteStore } from '../stores/UseWebsiteStore'
 import { useUserStore } from '../stores/UseUserStore'
@@ -89,6 +89,7 @@ export default function Menu() {
 
       let websites: WebsiteType[] = []
       if (user && user.id && user.token) {
+        const apiService = new ApiService()
         websites = await apiService.getAllWebsiteByUserId(user.id, user.token)
       }
 
