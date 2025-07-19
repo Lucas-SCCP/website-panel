@@ -6,22 +6,28 @@ import type { StylesConfig } from 'react-select'
 import * as FaIcons from 'react-icons/fa'
 import * as MdIcons from 'react-icons/md'
 
+const allIcons = {
+  ...FaIcons,
+  ...MdIcons
+}
+
+const iconToOption = ([name, Icon]: [string, React.ComponentType<React.ComponentProps<'svg'>>]) => ({
+  value: name,
+  label: name,
+  icon: <Icon />
+})
+
+const maxOptions = 28
+const iconList = Object.entries(allIcons)
+const initialOptions = iconList.slice(0, maxOptions).map(iconToOption)
+
 export function IconElement({ element }: { element: ElementType }) {
   
-  // @todo: salvar os icones carregados no localStorage para não precisar carregar tudo de novo
-
   type OptionType = {
     value: string
     label: string
     icon?: React.ReactNode
   }
-
-  const allIcons = {
-    ...FaIcons,
-    ...MdIcons
-  }
-
-  const iconList = Object.entries(allIcons)
 
   const customStyles: StylesConfig<OptionType, false> = {
     menu: (base: object) => ({
@@ -56,14 +62,6 @@ export function IconElement({ element }: { element: ElementType }) {
     })
   }
 
-  const iconToOption = ([name, Icon]: [string, React.ComponentType<React.ComponentProps<'svg'>>]) => ({
-    value: name,
-    label: name,
-    icon: <Icon />
-  })
-
-  const maxOptions = 28
-  const initialOptions = iconList.slice(0, maxOptions).map(iconToOption)
   const [selectedOption, setSelectedOption] = useState<OptionType | null>(null)
   const [options, setOptions] = useState<OptionType[]>(initialOptions)
 
@@ -86,7 +84,7 @@ export function IconElement({ element }: { element: ElementType }) {
     } else {
       setOptions(initialOptions)
     }
-  }, [element.properties.name, initialOptions, iconList])
+  }, [element.properties.name])
 
   const handleInputChange = (inputValue: string) => {
     if (!inputValue) {
