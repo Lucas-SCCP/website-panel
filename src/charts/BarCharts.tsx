@@ -1,14 +1,14 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 
-const data = [
-  { name: 'Página inicial', visitas: 400 },
-  { name: 'Sobre', visitas: 300 },
-  { name: 'Lojas', visitas: 500 },
-  { name: 'Serviços', visitas: 200 },
-  { name: 'Contato', visitas: 350 }
-]
+export function BarCharts() {
+  const data = [
+    { name: 'Página inicial', visitas: 400 },
+    { name: 'Sobre', visitas: 300 },
+    { name: 'Lojas', visitas: 500 },
+    { name: 'Serviços', visitas: 200 },
+    { name: 'Contato', visitas: 350 }
+  ]
 
-const BarCharts = () => {
   return (
     <div style={{ width: '100%', height: 300 }}>
       <ResponsiveContainer>
@@ -23,5 +23,3 @@ const BarCharts = () => {
     </div>
   )
 }
-
-export default BarCharts

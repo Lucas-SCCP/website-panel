@@ -2,8 +2,8 @@ import { Row, Col } from 'react-bootstrap'
 
 import { Main } from './Main'
 
-import BarCharts from '../charts/BarCharts'
-import AreaCharts from '../charts/AreaCharts'
+import { BarCharts } from '../charts/BarCharts'
+import { AreaCharts } from '../charts/AreaCharts'
 import { FaChartBar } from 'react-icons/fa'
 
 export function Dashboard() {
