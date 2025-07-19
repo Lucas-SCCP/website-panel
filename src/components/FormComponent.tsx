@@ -14,7 +14,7 @@ import { FaLink } from 'react-icons/fa'
 import { MdAdsClick } from 'react-icons/md'
 import { BiSolidMessageDetail } from 'react-icons/bi'
 
-export default function FormComponent(props: { component: ComponentType }) {
+export function FormComponent(props: { component: ComponentType }) {
   function getIconByElementType(type: number): JSX.Element | null {
     switch (type) {
       case 14:

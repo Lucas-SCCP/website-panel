@@ -10,7 +10,7 @@ import { RiInputField } from 'react-icons/ri'
 import { TiDelete } from 'react-icons/ti'
 import { TbSwitchVertical } from 'react-icons/tb'
 
-export default function ComponentSettings(component: ComponentType & { index: number }) {
+export function ComponentSettings(component: ComponentType & { index: number }) {
   const [componentName, setComponentName] = useState(component.name)
   const [componentSort, setComponentSort] = useState(component.sort)
   const [componentSize, setComponentSize] = useState(component.size)

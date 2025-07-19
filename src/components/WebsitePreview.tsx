@@ -7,7 +7,7 @@ import { PageRenderer } from 'website-lib'
 import { FaSearchPlus } from 'react-icons/fa'
 import { MdOutlineFindInPage } from 'react-icons/md'
 
-export default function WebsitePreview(page: PageType) {
+export function WebsitePreview(page: PageType) {
   const [show, setShow] = useState(false)
 
   const handleClose = () => setShow(false)

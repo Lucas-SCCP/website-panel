@@ -9,7 +9,7 @@ import { TiDelete } from 'react-icons/ti'
 import { TbSwitchVertical } from 'react-icons/tb'
 import { PiArrowBendDownRightBold } from 'react-icons/pi'
 
-export default function ListComponent(props: { component: ComponentType }) {
+export function ListComponent(props: { component: ComponentType }) {
   const elements = props.component.elements.content
 
   const icon = elements.filter((e) => e.element_type_id === 9).sort((a, b) => a.sort - b.sort)

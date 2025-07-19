@@ -1,10 +1,10 @@
 import React from 'react'
 import { ComponentTypeEnum } from '../enums/ComponentTypeEnum'
 import type { ComponentType } from 'website-lib'
-import ListComponent from '../components/ListComponent'
-import TextComponent from '../components/TextComponent'
-import FormComponent from '../components/FormComponent'
-import CarouselComponent from '../components/CarouselComponent'
+import { ListComponent } from '../components/ListComponent'
+import { TextComponent } from '../components/TextComponent'
+import { FormComponent } from '../components/FormComponent'
+import { CarouselComponent } from '../components/CarouselComponent'
 
 export function componentFactory(component: ComponentType): React.ReactElement | null {
   switch (component.component_type_id) {

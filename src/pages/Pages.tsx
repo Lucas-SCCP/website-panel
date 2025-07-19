@@ -8,8 +8,8 @@ import type { PageType } from 'website-lib'
 
 import Main from './Main'
 
-import ComponentSettings from '../components/ComponentSettings'
-import WebsitePreview from '../components/WebsitePreview'
+import { ComponentSettings } from '../components/ComponentSettings'
+import { WebsitePreview } from '../components/WebsitePreview'
 
 import { FaInfoCircle } from 'react-icons/fa'
 import { LuLayoutDashboard } from 'react-icons/lu'

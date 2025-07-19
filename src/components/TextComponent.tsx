@@ -8,7 +8,7 @@ import { MdControlPointDuplicate } from 'react-icons/md'
 import { TiDelete } from 'react-icons/ti'
 import { TbSwitchVertical } from 'react-icons/tb'
 
-export default function TextComponent(props: { component: ComponentType }) {
+export function TextComponent(props: { component: ComponentType }) {
   function getIconByElementType(type: number): JSX.Element {
     switch (type) {
       case 14:

@@ -28,7 +28,7 @@ import { HiOutlineLogout } from 'react-icons/hi'
 import { MdSaveAlt } from 'react-icons/md'
 import { MdDeleteForever } from 'react-icons/md'
 
-export default function Menu() {
+export function Menu() {
   const navigate = useNavigate()
 
   const [show, setShow] = useState(false)
