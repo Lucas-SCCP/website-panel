@@ -1,11 +1,9 @@
 import { useState } from 'react'
 import { Container, Row, Col, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap'
-
-import type { PageType, ComponentType } from 'website-lib'
 import { PageRenderer } from 'website-lib'
-
 import { FaSearchPlus } from 'react-icons/fa'
 import { MdOutlineFindInPage } from 'react-icons/md'
+import type { PageType, ComponentType } from 'website-lib'
 
 export function WebsitePreview(page: PageType) {
   const [show, setShow] = useState(false)

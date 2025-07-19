@@ -1,7 +1,7 @@
 import type { JSX } from 'react'
 import { Accordion, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import type { ComponentType } from 'website-lib'
-import { elementFactory } from '../factories/ElementFactory'
+import { ElementFactory } from '../factories/ElementFactory'
 import { FaListUl, FaTextHeight } from 'react-icons/fa'
 import { RiInputField } from 'react-icons/ri'
 import { MdControlPointDuplicate } from 'react-icons/md'
@@ -9,6 +9,8 @@ import { TiDelete } from 'react-icons/ti'
 import { TbSwitchVertical } from 'react-icons/tb'
 
 export function TextComponent(props: { component: ComponentType }) {
+  const elementFactory = new ElementFactory()
+
   function getIconByElementType(type: number): JSX.Element {
     switch (type) {
       case 14:
@@ -95,7 +97,7 @@ export function TextComponent(props: { component: ComponentType }) {
           </OverlayTrigger>
         </span>
       </Accordion.Header>
-      <Accordion.Body>{elementFactory(element.element_type_id, element)}</Accordion.Body>
+      <Accordion.Body>{elementFactory.build(element.element_type_id, element)}</Accordion.Body>
     </Accordion.Item>
   ))
 }

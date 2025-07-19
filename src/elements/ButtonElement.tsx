@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Row, Col, Form, Dropdown } from 'react-bootstrap'
-import type { ComponentType, ElementType } from 'website-lib'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
+import type { ComponentType, ElementType } from 'website-lib'
 
 export function ButtonElement({ element }: { element: ElementType }) {
   const selectedPage = UseWebsiteStore((state) => state.selectedPage)

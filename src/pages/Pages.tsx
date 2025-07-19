@@ -1,19 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Row, Col, Form, OverlayTrigger, Tooltip, Accordion } from 'react-bootstrap'
-
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
-
-import type { PageType } from 'website-lib'
-
 import { Main } from './Main'
-
 import { ComponentSettings } from '../components/ComponentSettings'
 import { WebsitePreview } from '../components/WebsitePreview'
-
 import { FaInfoCircle } from 'react-icons/fa'
 import { LuLayoutDashboard } from 'react-icons/lu'
 import { GrConfigure } from 'react-icons/gr'
+import type { PageType } from 'website-lib'
 
 export function Pages() {
   const navigate = useNavigate()

@@ -1,13 +1,11 @@
 import { Row, Col, Form, Accordion, Tabs, Tab, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import type { ComponentType } from 'website-lib'
-
 import { TextElement } from '../elements/TextElement'
 import { IconElement } from '../elements/IconElement'
-
 import { MdControlPointDuplicate } from 'react-icons/md'
 import { TiDelete } from 'react-icons/ti'
 import { TbSwitchVertical } from 'react-icons/tb'
 import { PiArrowBendDownRightBold } from 'react-icons/pi'
+import type { ComponentType } from 'website-lib'
 
 export function ListComponent(props: { component: ComponentType }) {
   const elements = props.component.elements.content

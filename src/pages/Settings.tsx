@@ -1,7 +1,5 @@
 import { Row, Col } from 'react-bootstrap'
-
 import { Main } from './Main'
-
 import { GrConfigure } from 'react-icons/gr'
 
 export function Settings() {

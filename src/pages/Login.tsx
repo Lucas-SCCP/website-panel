@@ -1,14 +1,10 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Form, Button, Container, Row, Col, Alert, FloatingLabel } from 'react-bootstrap'
-
-import type { AuthenticateResponseType } from 'website-lib'
-
 import { ApiService } from '../services/ApiService'
-
 import { UseUserStore } from '../stores/UseUserStore'
-
 import { AuthenticateException } from '../exceptions/AuthenticateException'
+import type { AuthenticateResponseType } from 'website-lib'
 
 export function Login() {
   const navigate = useNavigate()

@@ -1,10 +1,6 @@
 import type { JSX } from 'react'
 import { Accordion, OverlayTrigger, Tooltip } from 'react-bootstrap'
-
-import type { ComponentType } from 'website-lib'
-
 import { ElementFactory } from '../factories/ElementFactory'
-
 import { FaListUl, FaTextHeight } from 'react-icons/fa'
 import { RiInputField } from 'react-icons/ri'
 import { MdControlPointDuplicate } from 'react-icons/md'
@@ -13,6 +9,7 @@ import { TbSwitchVertical } from 'react-icons/tb'
 import { FaLink } from 'react-icons/fa'
 import { MdAdsClick } from 'react-icons/md'
 import { BiSolidMessageDetail } from 'react-icons/bi'
+import type { ComponentType } from 'website-lib'
 
 export function FormComponent(props: { component: ComponentType }) {
   const elementFactory = new ElementFactory()

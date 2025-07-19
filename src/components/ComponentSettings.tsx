@@ -1,14 +1,11 @@
 import { useState, type JSX } from 'react'
 import { Row, Col, Accordion, Form, OverlayTrigger, Tooltip } from 'react-bootstrap'
-
-import type { ComponentType } from 'website-lib'
-
 import { ComponentFactory } from '../factories/ComponentFactory'
-
 import { FaListUl, FaInfoCircle, FaTextHeight } from 'react-icons/fa'
 import { RiInputField } from 'react-icons/ri'
 import { TiDelete } from 'react-icons/ti'
 import { TbSwitchVertical } from 'react-icons/tb'
+import type { ComponentType } from 'website-lib'
 
 export function ComponentSettings(component: ComponentType & { index: number }) {
   const [componentName, setComponentName] = useState(component.name)
