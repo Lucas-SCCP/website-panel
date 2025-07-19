@@ -1,14 +1,7 @@
 import { Row, Col, Form } from 'react-bootstrap'
-import type { Element } from '../types/Website'
+import type { ElementType } from 'website-lib'
 
-type LinkElementProps = {
-  element: Element
-}
-
-export default function LinkElement({ element }: LinkElementProps) {
-
-  console.log('LinkElement rendered with element:', element);
-  console.log(element.properties.type)
+export default function LinkElement({ element }: { element: ElementType}) {
 
   return (
     <Row>
@@ -17,7 +10,7 @@ export default function LinkElement({ element }: LinkElementProps) {
           <Form.Label>
             Texto
           </Form.Label>
-          <Form.Control type="text" placeholder="Digite o texto para o link" value={element.properties.title} />
+          <Form.Control type="text" placeholder="Digite o texto para o link" value={element.properties?.title} />
         </Form.Group>
       </Col>
       <Col lg={12}>

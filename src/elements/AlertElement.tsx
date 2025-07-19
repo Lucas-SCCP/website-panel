@@ -1,11 +1,7 @@
 import { Row, Col, Form, Dropdown } from 'react-bootstrap'
-import type { Element } from '../types/Website'
+import type { ElementType } from 'website-lib'
 
-type AlertElementProps = {
-  element: Element
-}
-
-export default function AlertElement({ element }: AlertElementProps) {
+export default function AlertElement({ element }: { element: ElementType }) {
   return (
     <Row>
       <Col lg={12}>

@@ -1,21 +1,22 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { Website, Page, Component, Element } from '../types/Website'
+
+import type { WebsiteType, PageType, ComponentType, ElementType } from 'website-lib'
 
 interface WebsiteStore {
-  data: Website[]
-  selectedWebsite: Website | null
-  selectedPage: Page | null
-  setWebsiteData: (data: Website[]) => void
+  data: WebsiteType[]
+  selectedWebsite: WebsiteType | null
+  selectedPage: PageType | null
+  setWebsiteData: (data: WebsiteType[]) => void
   clearWebsiteData: () => void
-  addWebsite: (website: Website) => void
-  setSelectedWebsite: (website: Website | null) => void
-  setSelectedPage: (page: Page | null) => void
-  updateWebsiteField: <K extends keyof Website>(website_id: number, key: K, value: Website[K]) => void
-  updatePageField: <K extends keyof Page>(website_id: number, page_id: number, key: K, value: Page[K]) => void
-  updateComponentField: <K extends keyof Component>(website_id: number, page_id: number, component_id: number, key: K, value: Component[K]) => void
-  updateElementField: <K extends keyof Element>(website_id: number, page_id: number, component_id: number, element_id: number, key: K, value: Element[K]) => void
-  getWebsiteById: (website_id: number) => Website | undefined
+  addWebsite: (website: WebsiteType) => void
+  setSelectedWebsite: (website: WebsiteType | null) => void
+  setSelectedPage: (page: PageType | null) => void
+  updateWebsiteField: <K extends keyof WebsiteType>(website_id: number, key: K, value: WebsiteType[K]) => void
+  updatePageField: <K extends keyof PageType>(website_id: number, page_id: number, key: K, value: PageType[K]) => void
+  updateComponentField: <K extends keyof ComponentType>(website_id: number, page_id: number, component_id: number, key: K, value: ComponentType[K]) => void
+  updateElementField: <K extends keyof ElementType>(website_id: number, page_id: number, component_id: number, element_id: number, key: K, value: ElementType[K]) => void
+  getWebsiteById: (website_id: number) => WebsiteType | undefined
 }
 
 export const useWebsiteStore = create<WebsiteStore>()(
@@ -84,12 +85,11 @@ export const useWebsiteStore = create<WebsiteStore>()(
             const updatedComponents = page.components.map(component => {
               if (component.id !== componentId) return component;
 
-              const updatedContent = Object.fromEntries(
-                Object.entries(component.elements.content).map(([id, element]) => [
-                  id,
-                  element.id === elementId ? { ...element, [key]: value } : element,
-                ])
-              )
+              const updatedContent = Array.isArray(component.elements.content)
+                ? component.elements.content.map(element =>
+                    element.id === elementId ? { ...element, [key]: value } : element
+                  )
+                : component.elements.content
 
               return {
                 ...component,

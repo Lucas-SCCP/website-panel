@@ -1,5 +1,5 @@
 import { Row, Col, Form, Accordion, Tabs, Tab, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import type { Component } from '../types/Website';
+import type { ComponentType } from 'website-lib';
 
 import TextElement from '../elements/TextElement';
 import IconElement from '../elements/IconElement';
@@ -9,7 +9,7 @@ import { TiDelete } from "react-icons/ti";
 import { TbSwitchVertical } from "react-icons/tb";
 import { PiArrowBendDownRightBold } from "react-icons/pi";
 
-export default function ListComponent(props: { component: Component }) {
+export default function ListComponent(props: { component: ComponentType }) {
   const elements = props.component.elements.content;
 
   const icon = elements.filter(e => e.element_type_id === 9).sort((a, b) => a.sort - b.sort);

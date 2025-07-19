@@ -4,7 +4,7 @@ import { Row, Col, Form, OverlayTrigger, Tooltip, Accordion } from 'react-bootst
 
 import { useWebsiteStore } from '../stores/UseWebsiteStore';
 
-import type { Page } from '../types/Website'
+import type { PageType } from 'website-lib'
 
 import Main from './Main';
 
@@ -27,7 +27,7 @@ export default function Pages() {
   const [enabled, setEnabled] = useState<boolean | undefined>();
 
   const selectedWebsite = useWebsiteStore(state => state.selectedWebsite);
-  const selectedPage: Page | null = useWebsiteStore(state => state.selectedPage);
+  const selectedPage: PageType | null = useWebsiteStore(state => state.selectedPage);
 
   useEffect(() => {
     if (selectedPage) {

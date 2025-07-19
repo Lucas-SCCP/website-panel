@@ -1,12 +1,12 @@
 import React from "react";
 import { ComponentTypeEnum } from "../enums/ComponentTypeEnum";
+import type { ComponentType } from "website-lib";
 import ListComponent from "../components/ListComponent";
-import type { Component } from "../types/Website";
 import TextComponent from "../components/TextComponent";
 import FormComponent from "../components/FormComponent";
 import CarouselComponent from "../components/CarouselComponent";
 
-export function componentFactory(component: Component): React.ReactElement | null {
+export function componentFactory(component: ComponentType): React.ReactElement | null {
   switch (component.component_type_id) {
     case ComponentTypeEnum.Text:
       return React.createElement(TextComponent, { component });

@@ -1,13 +1,13 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { User } from '../types/User'
+import type { UserType } from 'website-lib'
 
 interface UserStore {
-  user: User | null
+  user: UserType | null
   token: string | null
-  setUser: (user: User, token: string) => void
+  setUser: (user: UserType, token: string) => void
   clearUser: () => void
-  updateUserField: <K extends keyof User>(key: K, value: User[K]) => void
+  updateUserField: <K extends keyof UserType>(key: K, value: UserType[K]) => void
 }
 
 export const useUserStore = create<UserStore>()(

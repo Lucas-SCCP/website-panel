@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Row, Col, Alert, FloatingLabel } from 'react-bootstrap';
 
-import type { AuthenticateResponse } from '../types/AuthenticateResponse';
+import type { AuthenticateResponseType } from 'website-lib';
 
 import apiService from '../services/ApiService';
 
@@ -21,7 +21,7 @@ const Login: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response: AuthenticateResponse = await apiService.authenticate(email, password);
+      const response: AuthenticateResponseType = await apiService.authenticate(email, password);
 
       if (response.status) {
         useUserStore.getState().setUser(response.data, response.data.token)

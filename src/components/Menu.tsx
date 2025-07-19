@@ -7,7 +7,7 @@ import apiService from '../services/ApiService';
 import { useWebsiteStore } from '../stores/UseWebsiteStore';
 import { useUserStore } from '../stores/UseUserStore';
 
-import type { Website } from '../types/Website'
+import type { WebsiteType } from 'website-lib'
 
 import { FaHome } from "react-icons/fa";
 import { MdOutlineSettings } from "react-icons/md";
@@ -52,7 +52,7 @@ export default function Menu() {
   }
 
   const selectedPageClick = (event: React.MouseEvent<HTMLElement>) => {
-    const selected = selectedWebsite?.pages.find(w => w.id.toString() === event.currentTarget.id);
+    const selected = selectedWebsite?.pages.find((w: { id: number; name: string }) => w.id.toString() === event.currentTarget.id);
     if (selected) {
       setSelectedPage(selected)
       navigate('/pages')
@@ -73,7 +73,7 @@ export default function Menu() {
         return
       }
 
-      let websites: Website[] = []
+      let websites: WebsiteType[] = []
       if (user && user.id && user.token) {
         websites = await apiService.getAllWebsiteByUserId(user.id, user.token)
       }
@@ -164,7 +164,7 @@ export default function Menu() {
                       title={selectedPage ? selectedPage.name : 'Selecione uma página'}
                       className='website-navbar-button'
                     >
-                      {selectedWebsite?.pages.map((page) => (
+                      {selectedWebsite?.pages.map((page: { id: number; name: string }) => (
                         <NavDropdown.Item id={page.id.toString()} key={page.id} onClick={selectedPageClick}>
                           {page.name}
                         </NavDropdown.Item>

@@ -1,17 +1,21 @@
-import type { Page } from '../types/Website'
-import { Container, Row, Col, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { PageRenderer } from 'website-lib';
 import { useState } from 'react';
+import { Container, Row, Col, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
+
+import type { PageType, ComponentType } from 'website-lib';
+import { PageRenderer } from 'website-lib';
+
 import { FaSearchPlus } from "react-icons/fa";
 import { MdOutlineFindInPage } from "react-icons/md";
 
-export default function WebsitePreview(page: Page) {
+export default function WebsitePreview(page: PageType) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const component = page.components;
+  const components = page.components as ComponentType[];
+
+  console.log('WebsitePreview rendered with page:', page.components);
 
   return (
     <>
@@ -134,7 +138,7 @@ export default function WebsitePreview(page: Page) {
               <PageRenderer
                 ga4='T'
                 title=''
-                components={component}
+                components={components}
               />
             </Container>
           </main>
@@ -150,7 +154,7 @@ export default function WebsitePreview(page: Page) {
               <PageRenderer
                 ga4='T'
                 title=''
-                components={component}
+                components={components}
               />
             </Container>
           </main>

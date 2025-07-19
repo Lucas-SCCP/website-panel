@@ -1,7 +1,7 @@
 import { Row } from 'react-bootstrap';
-import type { Component } from '../types/Website';
+import type { ComponentType } from 'website-lib';
 
-export default function ButtonComponent(props: { component: Component  }) {
+export default function ButtonComponent(props: { component: ComponentType  }) {
   return (
     <Row>
       {props.component.id}

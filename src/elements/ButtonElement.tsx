@@ -1,24 +1,20 @@
 import { useState } from 'react';
 import { Row, Col, Form, Dropdown } from 'react-bootstrap'
-import type { Element } from '../types/Website'
+import type { ComponentType, ElementType } from 'website-lib'
 import { useWebsiteStore } from '../stores/UseWebsiteStore';
 
-type ButtonElementProps = {
-  element: Element
-}
-
-export default function ButtonElement({ element }: ButtonElementProps) {
+export default function ButtonElement({ element }: { element: ElementType }) {
 
   const selectedPage = useWebsiteStore(state => state.selectedPage);
   console.log('Selected page:', selectedPage);
 
-  const components = selectedPage?.components.find(c => c.id === element.component_id);
+  const components = selectedPage?.components.find((c: ComponentType) => c.id === element.component_id);
   console.log('Components:', components);
 
-  const alerts = components?.elements.content.filter(e => e.element_type_id === 7);
+  const alerts = components?.elements.content.filter((e: ElementType) => e.element_type_id === 7);
   console.log('Alerts:', alerts);
 
-  const buttons = components?.elements.content.filter(e => e.element_type_id === 8);
+  const buttons = components?.elements.content.filter((e: ElementType) => e.element_type_id === 8);
   console.log('Buttons:', buttons);
 
   console.log('ButtonElement rendered with element:', element);
@@ -104,10 +100,10 @@ export default function ButtonElement({ element }: ButtonElementProps) {
           </Form.Label>
           <Dropdown style={{ width: '100%' }}>
             <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" style={{ width: '100%' }}>
-              {successMessageId ? alerts?.find(alert => alert.id === successMessageId)?.properties.name : 'Selecione'}
+              {successMessageId ? alerts?.find((alert: ElementType) => alert.id === successMessageId)?.properties.name : 'Selecione'}
             </Dropdown.Toggle>
             <Dropdown.Menu style={{ width: '100%' }}>
-              {alerts && alerts.map((alert, index) => (
+              {alerts && alerts.map((alert: ElementType, index: number) => (
                 <Dropdown.Item key={index} onClick={() => handleSelectSuccessMessageId(alert.id)}>{alert.properties.name}</Dropdown.Item>
               ))}
             </Dropdown.Menu>
@@ -136,10 +132,10 @@ export default function ButtonElement({ element }: ButtonElementProps) {
           </Form.Label>
           <Dropdown style={{ width: '100%' }}>
             <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" style={{ width: '100%' }}>
-              {successActionId ? buttons?.find(button => button.id === successActionId)?.properties.title : 'Selecione'}
+              {successActionId ? buttons?.find((button: ElementType) => button.id === successActionId)?.properties.title : 'Selecione'}
             </Dropdown.Toggle>
             <Dropdown.Menu style={{ width: '100%' }}>
-              {buttons && buttons.map((button, index) => (
+              {buttons && buttons.map((button: ElementType, index: number) => (
                 <Dropdown.Item key={index} onClick={() => handleSelectSuccessActionId(button.id)}>{button.properties.title}</Dropdown.Item>
               ))}
             </Dropdown.Menu>

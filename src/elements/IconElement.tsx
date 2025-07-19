@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { Element } from '../types/Website'
+import type { ElementType } from 'website-lib'
 import { Form } from 'react-bootstrap'
 import Select from "react-select";
 import type { StylesConfig } from "react-select";
@@ -62,11 +62,7 @@ const iconToOption = ([name, Icon]: [string, React.ComponentType<React.Component
 const MAX_OPTIONS = 28;
 const initialOptions = iconList.slice(0, MAX_OPTIONS).map(iconToOption);
 
-type IconElementProps = {
-  element: Element
-}
-
-export default function IconElement({ element }: IconElementProps) {
+export default function IconElement({ element }: { element: ElementType }) {
   const [selectedOption, setSelectedOption] = useState<OptionType | null>(null);
   const [options, setOptions] = useState<OptionType[]>(initialOptions);
 

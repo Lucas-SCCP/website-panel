@@ -1,7 +1,7 @@
 import { useState, type JSX } from 'react';
 import { Row, Col, Accordion, Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-import type { Component as ComponentType } from '../types/Website';
+import type { ComponentType } from 'website-lib';
 
 import { componentFactory } from '../factories/ComponentFactory';
 

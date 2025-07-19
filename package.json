@@ -24,7 +24,7 @@
     "react-router-dom": "^6.28.0",
     "react-select": "^5.10.2",
     "recharts": "^3.0.2",
-    "website-lib": "1.0.9",
+    "website-lib": "1.0.12",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
