@@ -1,14 +1,14 @@
-import { Row, Col, Form, Accordion, Tabs, Tab, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import { TextElement } from '../elements/TextElement'
-import { IconElement } from '../elements/IconElement'
+import { Row, Col, Accordion, Tabs, Tab, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { MdControlPointDuplicate } from 'react-icons/md'
 import { TiDelete } from 'react-icons/ti'
 import { TbSwitchVertical } from 'react-icons/tb'
 import { PiArrowBendDownRightBold } from 'react-icons/pi'
+import { ElementFactory } from '../factories/ElementFactory'
 import type { ComponentType } from 'website-lib'
 
-export function ListComponent(props: { component: ComponentType }) {
-  const elements = props.component.elements.content
+export function ListComponent({ component }: { component: ComponentType }) {
+  const elementFactory = new ElementFactory()
+  const elements = component.elements.content
 
   const icon = elements.filter((e) => e.element_type_id === 9).sort((a, b) => a.sort - b.sort)
   const text = elements.filter((e) => e.element_type_id === 12).sort((a, b) => a.sort - b.sort)
@@ -27,7 +27,7 @@ export function ListComponent(props: { component: ComponentType }) {
   function handleDuplicateElement(event: React.MouseEvent<HTMLSpanElement, MouseEvent>): void {
     event.stopPropagation()
     if (window.confirm('Duplicar o componente?')) {
-      console.log(`Component with index ${props.component.id} would be duplicated.`)
+      console.log(`Component with index ${component.id} would be duplicated.`)
     }
   }
 
@@ -39,8 +39,8 @@ export function ListComponent(props: { component: ComponentType }) {
   }
 
   return result.map((item, index) => (
-    <Accordion.Item key={index} eventKey={index.toString()}>
-      <Accordion.Header>
+    <Accordion.Item key={index} eventKey={index.toString()} className="mb-3 website-accordion-selected website-accordion-header-border-radius">
+      <Accordion.Header className="website-accordion-header-button-bg-gray">
         <div className="website-accordion-header-title-container">
           <div className="website-accordion-header-title">
             <PiArrowBendDownRightBold />- <b>Item</b>
@@ -76,49 +76,13 @@ export function ListComponent(props: { component: ComponentType }) {
       </Accordion.Header>
       <Accordion.Body>
         <Row>
-          <Col lg={3}>
-            <IconElement element={item.icon} />
-          </Col>
-          <Col lg={9}>
-            <TextElement element={item.text} showSettings={false} />
-          </Col>
           <Col lg={12}>
             <Tabs defaultActiveKey="icon" id="configs" fill>
               <Tab eventKey="icon" title="Ícone" className="website-tabs">
-                Estilo
-                <hr />
-                <Row>
-                  <Col lg={6}>
-                    <Form.Group className="mb-3" controlId="pageName">
-                      <Form.Label>Cor</Form.Label>
-                      <Form.Control type="text" placeholder="Digite o texto" />
-                    </Form.Group>
-                  </Col>
-                  <Col lg={6}>
-                    <Form.Group className="mb-3" controlId="pageName">
-                      <Form.Label>Tamanho da fonte</Form.Label>
-                      <Form.Control type="text" placeholder="Digite o texto" />
-                    </Form.Group>
-                  </Col>
-                </Row>
+                {elementFactory.build(item.icon.element_type_id, item.icon)}
               </Tab>
               <Tab eventKey="text" title="Texto" className="website-tabs">
-                Estilo
-                <hr />
-                <Row>
-                  <Col lg={6}>
-                    <Form.Group className="mb-3" controlId="pageName">
-                      <Form.Label>Cor</Form.Label>
-                      <Form.Control type="text" placeholder="Digite o texto" />
-                    </Form.Group>
-                  </Col>
-                  <Col lg={6}>
-                    <Form.Group className="mb-3" controlId="pageName">
-                      <Form.Label>Tamanho da fonte</Form.Label>
-                      <Form.Control type="text" placeholder="Digite o texto" />
-                    </Form.Group>
-                  </Col>
-                </Row>
+                {elementFactory.build(item.text.element_type_id, item.text)}
               </Tab>
             </Tabs>
           </Col>

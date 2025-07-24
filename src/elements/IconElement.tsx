@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Form } from 'react-bootstrap'
+import { Row, Col, Form } from 'react-bootstrap'
 import Select from 'react-select'
+import { PropertiesSettings } from '../components/PropertiesSettings'
 import type { ElementType } from 'website-lib'
 import type { StylesConfig } from 'react-select'
 import * as FaIcons from 'react-icons/fa'
@@ -109,18 +110,26 @@ export function IconElement({ element }: { element: ElementType }) {
   }
 
   return (
-    <Form.Group className="mb-3">
-      <Form.Label>Ícone</Form.Label>
-      <Select
-        id={`icon-select-${element.id}`}
-        value={selectedOption}
-        options={options}
-        onChange={setSelectedOption}
-        onInputChange={handleInputChange}
-        formatOptionLabel={(option) => option.icon}
-        styles={customStyles}
-        isSearchable
-      />
-    </Form.Group>
+    <Row>
+      <Col lg={4}>
+        <Form.Group className="mb-3">
+          <Form.Label>Escolha um ícone</Form.Label>
+          <Select
+            id={`icon-select-${element.id}`}
+            value={selectedOption}
+            options={options}
+            onChange={setSelectedOption}
+            onInputChange={handleInputChange}
+            formatOptionLabel={(option) => option.icon}
+            styles={customStyles}
+            isSearchable
+          />
+        </Form.Group>
+      </Col>
+      <Col lg={12}>
+        <PropertiesSettings properties={element.properties} styles={element.styles} />
+      </Col>
+    </Row>
+    
   )
 }

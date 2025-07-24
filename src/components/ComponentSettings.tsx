@@ -12,6 +12,7 @@ export function ComponentSettings(component: ComponentType & { index: number }) 
   const [componentSort, setComponentSort] = useState(component.sort)
   const [componentSize, setComponentSize] = useState(component.size)
   const [componentEnabled, setComponentEnabled] = useState(component.enabled)
+  const [allSettings, setAllSettings] = useState(false)
   const componentFactory = new ComponentFactory()
 
   function getIconByComponentType(type: number): JSX.Element {
@@ -39,7 +40,7 @@ export function ComponentSettings(component: ComponentType & { index: number }) 
       eventKey={component.index.toString()}
       className="mb-3 website-accordion-selected website-accordion-header-border-radius"
     >
-      <Accordion.Header className="website-accordion-header-button website-accordion-header-button-bg-gray">
+      <Accordion.Header className="website-accordion-header-button-bg-gray">
         <div className="website-accordion-header-title-container">
           <div className="website-accordion-header-title">
             {getIconByComponentType(component.component_type_id)} - <b>{component.name}</b>
@@ -126,9 +127,41 @@ export function ComponentSettings(component: ComponentType & { index: number }) 
               />
             </Form.Group>
           </Col>
+          <Col lg={12}>
+            <Form.Group className="mb-3" controlId="componentAllSettingsSwitch">
+              <Form.Check
+                type="switch"
+                checked={allSettings}
+                onChange={() => setAllSettings(true)}
+                id="componentAllSettingsSwitch"
+                label={
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    Configurações para todos os elementos
+                    <OverlayTrigger
+                      placement="bottom"
+                      overlay={
+                        <Tooltip id="tooltip-component-all-settings">Ative para aplicar a mesma configuração a todos os elementos.</Tooltip>
+                      }
+                    >
+                      <span className="website-info">
+                        <FaInfoCircle size={14} />
+                      </span>
+                    </OverlayTrigger>
+                  </span>
+                }
+              />
+            </Form.Group>
+          </Col>
         </Row>
         <Row id="component-edit">
-          <Accordion>{componentFactory.build(component)}</Accordion>
+          <Row>
+            <Col style={{ fontWeight: 'bold', marginBottom: '10px', padding: '0 15px' }}>
+              <b>Elementos:</b>
+            </Col>
+          </Row>
+          <Accordion>
+            {componentFactory.build(component)}
+          </Accordion>
         </Row>
       </Accordion.Body>
     </Accordion.Item>

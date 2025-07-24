@@ -1,17 +1,20 @@
 import { useState } from 'react'
 import { Row, Col, Form, Dropdown } from 'react-bootstrap'
-import type { ElementType } from 'website-lib'
+import { PropertiesSettings } from '../components/PropertiesSettings'
+import type { ElementType, InputPropertiesType } from 'website-lib'
 
 export function InputElement({ element }: { element: ElementType }) {
-  const [type, setType] = useState(element.properties.type)
-  const [validationType, setValidationType] = useState(element.properties.validateType)
+  const properties = element.properties as InputPropertiesType
+
+  const [type, setType] = useState(properties.type)
+  const [inputValidateId, setValidationType] = useState(properties.inputValidateId)
 
   const handleSelectType = (selectedType: string) => {
     setType(selectedType)
   }
 
-  const handleSelectValidationType = (selectedValidationType: string) => {
-    setValidationType(selectedValidationType)
+  const handleSelectValidationType = (selectedInputValidateId: number) => {
+    setValidationType(selectedInputValidateId)
   }
 
   return (
@@ -22,7 +25,7 @@ export function InputElement({ element }: { element: ElementType }) {
           <Form.Control
             type="text"
             placeholder="Digite o texto de título do formulário"
-            value={element.properties.name}
+            value={properties.name}
           />
         </Form.Group>
       </Col>
@@ -32,7 +35,7 @@ export function InputElement({ element }: { element: ElementType }) {
           <Form.Control
             type="text"
             placeholder="Digite o texto de placeholder"
-            value={element.properties.placeholder}
+            value={properties.placeholder}
           />
         </Form.Group>
       </Col>
@@ -56,37 +59,22 @@ export function InputElement({ element }: { element: ElementType }) {
           <Form.Label>Tipo de validação</Form.Label>
           <Dropdown style={{ width: '100%' }}>
             <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" style={{ width: '100%' }}>
-              {validationType ? validationType.charAt(0).toUpperCase() + validationType.slice(1) : 'Selecione'}
+              {inputValidateId ? inputValidateId : 'Selecione'}
             </Dropdown.Toggle>
             <Dropdown.Menu style={{ width: '100%' }}>
-              <Dropdown.Item onClick={() => handleSelectValidationType('nome')}>Nome</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleSelectValidationType('celular')}>Celular</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleSelectValidationType('email')}>Email</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleSelectValidationType('dataDeNascimento')}>
+              <Dropdown.Item onClick={() => handleSelectValidationType(1)}>Nome</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleSelectValidationType(2)}>Celular</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleSelectValidationType(3)}>Email</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleSelectValidationType(4)}>
                 Data de nascimento
               </Dropdown.Item>
-              <Dropdown.Item onClick={() => handleSelectValidationType('cpf')}>CPF</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleSelectValidationType(5)}>CPF</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Form.Group>
       </Col>
       <Col lg={12}>
-        Estilo
-        <hr />
-        <Row>
-          <Col lg={6}>
-            <Form.Group className="mb-3" controlId="pageName">
-              <Form.Label>Cor</Form.Label>
-              <Form.Control type="text" placeholder="Digite o texto" value={element.properties.style?.color} />
-            </Form.Group>
-          </Col>
-          <Col lg={6}>
-            <Form.Group className="mb-3" controlId="pageName">
-              <Form.Label>Tamanho da fonte</Form.Label>
-              <Form.Control type="text" placeholder="Digite o texto" />
-            </Form.Group>
-          </Col>
-        </Row>
+        <PropertiesSettings properties={element.properties} styles={element.styles} />
       </Col>
     </Row>
   )

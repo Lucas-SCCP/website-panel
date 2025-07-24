@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Row, Col, Form, Dropdown } from 'react-bootstrap'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
-import type { ComponentType, ElementType } from 'website-lib'
+import { PropertiesSettings } from '../components/PropertiesSettings'
+import type { ComponentType, ElementType, ButtonPropertiesType } from 'website-lib'
 
 export function ButtonElement({ element }: { element: ElementType }) {
   const selectedPage = UseWebsiteStore((state) => state.selectedPage)
@@ -9,16 +10,18 @@ export function ButtonElement({ element }: { element: ElementType }) {
   const alerts = components?.elements.content.filter((e: ElementType) => e.element_type_id === 7)
   const buttons = components?.elements.content.filter((e: ElementType) => e.element_type_id === 8)
 
-  const [type, setType] = useState(element.properties.type)
-  const [action, setAction] = useState(element.properties.action)
-  const [successMessageId, setSuccessMessageId] = useState(element.properties.successMessageId)
-  const [successActionId, setSuccessActionId] = useState(element.properties.successActionId)
+  const properties: ButtonPropertiesType = element.properties as ButtonPropertiesType
+
+  const [type, setType] = useState(properties.type)
+  const [actionId, setAction] = useState(properties.actionId)
+  const [successMessageId, setSuccessMessageId] = useState(properties.successMessageId)
+  const [successActionId, setSuccessActionId] = useState(properties.successActionId)
 
   const handleSelectType = (selectedType: string) => {
     setType(selectedType)
   }
 
-  const handleSelectAction = (selectedAction: string) => {
+  const handleSelectAction = (selectedAction: number) => {
     setAction(selectedAction)
   }
 
@@ -35,7 +38,7 @@ export function ButtonElement({ element }: { element: ElementType }) {
       <Col lg={12}>
         <Form.Group className="mb-3" controlId="pageName">
           <Form.Label>Texto do botão</Form.Label>
-          <Form.Control type="text" placeholder="Digite o texto do botão" value={element.properties.title} />
+          <Form.Control type="text" placeholder="Digite o texto do botão" value={properties.title} />
         </Form.Group>
       </Col>
       <Col lg={12}>
@@ -44,7 +47,7 @@ export function ButtonElement({ element }: { element: ElementType }) {
           <Form.Control
             type="text"
             placeholder="Digite o texto de carregamento do botão"
-            value={element.properties.loadingMessage}
+            value={properties.message}
           />
         </Form.Group>
       </Col>
@@ -66,10 +69,10 @@ export function ButtonElement({ element }: { element: ElementType }) {
           <Form.Label>Ação</Form.Label>
           <Dropdown style={{ width: '100%' }}>
             <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" style={{ width: '100%' }}>
-              {action ? action.charAt(0).toUpperCase() + action.slice(1) : 'Selecione'}
+              {actionId ? actionId : 'Selecione'}
             </Dropdown.Toggle>
             <Dropdown.Menu style={{ width: '100%' }}>
-              <Dropdown.Item onClick={() => handleSelectAction('sendMail')}>Enviar E-mail</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleSelectAction(1)}>Enviar E-mail</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Form.Group>
@@ -130,26 +133,11 @@ export function ButtonElement({ element }: { element: ElementType }) {
       <Col lg={12}>
         <Form.Group className="mb-3" controlId="pageName">
           <Form.Label>Link</Form.Label>
-          <Form.Control type="text" placeholder="Digite o link do botão" value={element.properties.href} />
+          <Form.Control type="text" placeholder="Digite o link do botão" value={properties.path} />
         </Form.Group>
       </Col>
       <Col lg={12}>
-        Estilo
-        <hr />
-        <Row>
-          <Col lg={6}>
-            <Form.Group className="mb-3" controlId="pageName">
-              <Form.Label>Cor</Form.Label>
-              <Form.Control type="text" placeholder="Digite o texto" />
-            </Form.Group>
-          </Col>
-          <Col lg={6}>
-            <Form.Group className="mb-3" controlId="pageName">
-              <Form.Label>Tamanho da fonte</Form.Label>
-              <Form.Control type="text" placeholder="Digite o texto" />
-            </Form.Group>
-          </Col>
-        </Row>
+        <PropertiesSettings properties={properties} styles={element.styles} />
       </Col>
     </Row>
   )

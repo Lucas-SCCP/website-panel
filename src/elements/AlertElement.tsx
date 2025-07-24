@@ -1,4 +1,5 @@
 import { Row, Col, Form, Dropdown } from 'react-bootstrap'
+import { PropertiesSettings } from '../components/PropertiesSettings'
 import type { ElementType } from 'website-lib'
 
 export function AlertElement({ element }: { element: ElementType }) {
@@ -39,6 +40,9 @@ export function AlertElement({ element }: { element: ElementType }) {
             <Dropdown.Item>Aviso</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+      </Col>
+      <Col lg={12}>
+        <PropertiesSettings properties={element.properties} styles={element.styles} />
       </Col>
     </Row>
   )

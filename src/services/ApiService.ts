@@ -72,7 +72,7 @@ class ApiService {
 
       const json = await response.json()
 
-      const websites: WebsiteType[] = json.data.map((item: RawWebsiteType) => this.parseWebsiteResponse(item))
+      const websites: WebsiteType[] = json.data.map((rawWebsite: RawWebsiteType) => this.parseWebsiteResponse(rawWebsite))
 
       return websites
     } catch (error: unknown) {
@@ -125,42 +125,42 @@ class ApiService {
                   ? Object.values(rawComponent.elements.content).map(
                       (rawElement): ElementType => ({
                         id: rawElement.id,
+                        component_parent: rawElement.component_parent,
                         component_id: rawElement.component_id,
                         element_type_id: rawElement.element_type_id,
-                        properties: {
-                          title: rawElement.properties.title,
-                          name: rawElement.properties.name,
-                          text: rawElement.properties.text,
-                          placeholder: rawElement.properties.placeholder,
-                          type: rawElement.properties.type,
-                          validateType: rawElement.properties.validateType,
-                          loadingMessage: rawElement.properties.loadingMessage,
-                          action: rawElement.properties.action,
-                          successMessageId: rawElement.properties.successMessageId,
-                          successActionId: rawElement.properties.successActionId,
-                          href: rawElement.properties.href,
-                          message: rawElement.properties.message,
-                          variant: rawElement.properties.variant,
-                          visibilityAfter: rawElement.properties.visibilityAfter,
-                          hideButtonAfter: rawElement.properties.hideButtonAfter,
-                          loadingTime: rawElement.properties.loadingTime,
-                          mask: rawElement.properties.mask,
-                          required: rawElement.properties.required,
-                          style: {
-                            color: rawElement.properties.style?.color,
-                            fontSize: rawElement.properties.style?.fontSize,
-                            textAlign: rawElement.properties.style?.textAlign,
-                            fontWeight: rawElement.properties.style?.fontWeight,
-                            display: rawElement.properties.style?.display,
-                            height: rawElement.properties.style?.height,
-                            alignItems: rawElement.properties.style?.alignItems,
-                            marginTop: rawElement.properties.style?.marginTop,
-                            marginLeft: rawElement.properties.style?.marginLeft
-                          }
-                        },
                         size: rawElement.size,
-                        component_parent: rawElement.component_parent,
                         sort: rawElement.sort,
+                        properties: {
+                          name: rawElement.properties.name,
+                          title: rawElement.properties.title,
+                          message: rawElement.properties.message,
+                          type: rawElement.properties.type,
+                          startHidden: rawElement.properties.startHidden,
+                          
+                          ...(rawElement.properties.path && { path: rawElement.properties.path }),
+                          ...(rawElement.properties.mask && { mask: rawElement.properties.mask }),
+                          ...(rawElement.properties.placeholder && { placeholder: rawElement.properties.placeholder }),
+                          ...(rawElement.properties.required && { required: rawElement.properties.required }),
+                          ...(rawElement.properties.validateTypeId && { validateTypeId: rawElement.properties.validateTypeId }),
+
+                          ...(rawElement.properties.hideOnClick && { hideOnClick: rawElement.properties.hideOnClick }),
+                          ...(rawElement.properties.actionId && { action: rawElement.properties.actionId }),
+                          ...(rawElement.properties.successActionId && { successActionId: rawElement.properties.successActionId }),
+                          ...(rawElement.properties.errorActionId && { errorActionId: rawElement.properties.errorActionId }),
+                          ...(rawElement.properties.successMessageId && { successMessageId: rawElement.properties.successMessageId }),
+                          ...(rawElement.properties.errorMessageId && { errorMessageId: rawElement.properties.errorMessageId }),
+                        },
+                        styles: {
+                          color: rawElement.styles?.color,
+                          fontSize: rawElement.styles?.fontSize,
+                          textAlign: rawElement.styles?.textAlign,
+                          fontWeight: rawElement.styles?.fontWeight,
+                          display: rawElement.styles?.display,
+                          height: rawElement.styles?.height,
+                          alignItems: rawElement.styles?.alignItems,
+                          marginTop: rawElement.styles?.marginTop,
+                          marginLeft: rawElement.styles?.marginLeft
+                        },
                         created_at: rawElement.created_at,
                         updated_at: rawElement.updated_at,
                         deleted_at: rawElement.deleted_at

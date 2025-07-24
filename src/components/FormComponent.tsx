@@ -73,8 +73,8 @@ export function FormComponent(props: { component: ComponentType }) {
   }
 
   return props.component.elements.content.map((element, index) => (
-    <Accordion.Item key={index} eventKey={index.toString()}>
-      <Accordion.Header>
+    <Accordion.Item key={index} eventKey={index.toString()} className="mb-3 website-accordion-selected website-accordion-header-border-radius">
+      <Accordion.Header className="website-accordion-header-button-bg-gray">
         <div className="website-accordion-header-title-container">
           <div className="website-accordion-header-title">
             {getIconByElementType(element.element_type_id)} - <b>{getNameElementByType(element.element_type_id)}</b>
