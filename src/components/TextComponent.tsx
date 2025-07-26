@@ -1,14 +1,14 @@
 import type { JSX } from 'react'
 import { Accordion, OverlayTrigger, Tooltip } from 'react-bootstrap'
-import type { ComponentType } from 'website-lib'
 import { ElementFactory } from '../factories/ElementFactory'
 import { FaListUl, FaTextHeight } from 'react-icons/fa'
 import { RiInputField } from 'react-icons/ri'
 import { MdControlPointDuplicate } from 'react-icons/md'
 import { TiDelete } from 'react-icons/ti'
 import { TbSwitchVertical } from 'react-icons/tb'
+import type { ComponentType } from 'website-lib'
 
-export function TextComponent(props: { component: ComponentType }) {
+export function TextComponent({ component }: { component: ComponentType }) {
   const elementFactory = new ElementFactory()
 
   function getIconByElementType(type: number): JSX.Element {
@@ -61,7 +61,7 @@ export function TextComponent(props: { component: ComponentType }) {
     }
   }
 
-  return props.component.elements.content.map((element, index) => (
+  return component.elements.content.map((element, index) => (
     <Accordion.Item key={index} eventKey={index.toString()} className="mb-3 website-accordion-selected website-accordion-header-border-radius">
       <Accordion.Header className="website-accordion-header-button-bg-gray">
         <div className="website-accordion-header-title-container">

@@ -3,6 +3,8 @@ import { MdControlPointDuplicate } from 'react-icons/md'
 import { TiDelete } from 'react-icons/ti'
 import { TbSwitchVertical } from 'react-icons/tb'
 import { PiArrowBendDownRightBold } from 'react-icons/pi'
+import { MdInsertEmoticon } from 'react-icons/md'
+import { MdOutlineTextFields } from 'react-icons/md'
 import { ElementFactory } from '../factories/ElementFactory'
 import type { ComponentType } from 'website-lib'
 
@@ -78,10 +80,10 @@ export function ListComponent({ component }: { component: ComponentType }) {
         <Row>
           <Col lg={12}>
             <Tabs defaultActiveKey="icon" id="configs" fill>
-              <Tab eventKey="icon" title="Ícone" className="website-tabs">
+              <Tab eventKey="icon" title={<span><MdInsertEmoticon /> Ícone</span>} className="website-tabs">
                 {elementFactory.build(item.icon.element_type_id, item.icon)}
               </Tab>
-              <Tab eventKey="text" title="Texto" className="website-tabs">
+              <Tab eventKey="text" title={<span><MdOutlineTextFields /> Texto</span>} className="website-tabs">
                 {elementFactory.build(item.text.element_type_id, item.text)}
               </Tab>
             </Tabs>

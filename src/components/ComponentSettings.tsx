@@ -7,7 +7,7 @@ import { TiDelete } from 'react-icons/ti'
 import { TbSwitchVertical } from 'react-icons/tb'
 import type { ComponentType } from 'website-lib'
 
-export function ComponentSettings(component: ComponentType & { index: number }) {
+export function ComponentSettings({ component, index }: { component: ComponentType, index: number }) {
   const [componentName, setComponentName] = useState(component.name)
   const [componentSort, setComponentSort] = useState(component.sort)
   const [componentSize, setComponentSize] = useState(component.size)
@@ -31,13 +31,13 @@ export function ComponentSettings(component: ComponentType & { index: number }) 
   function handleDeleteComponent(event: React.MouseEvent<HTMLSpanElement, MouseEvent>): void {
     event.stopPropagation()
     if (window.confirm('Tem certeza que deseja excluir este componente?')) {
-      console.log(`Component with index ${component.index} would be deleted.`)
+      console.log(`Component with index ${index} would be deleted.`)
     }
   }
 
   return (
     <Accordion.Item
-      eventKey={component.index.toString()}
+      eventKey={index.toString()}
       className="mb-3 website-accordion-selected website-accordion-header-border-radius"
     >
       <Accordion.Header className="website-accordion-header-button-bg-gray">
@@ -80,9 +80,9 @@ export function ComponentSettings(component: ComponentType & { index: number }) 
               />
             </Form.Group>
           </Col>
-          <Col lg={6}>
+          <Col lg={2}>
             <Form.Group className="mb-3" controlId="componentSort">
-              <Form.Label>Posição do componente</Form.Label>
+              <Form.Label>Posição</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Digite uma posição para o componente"
@@ -91,9 +91,9 @@ export function ComponentSettings(component: ComponentType & { index: number }) 
               />
             </Form.Group>
           </Col>
-          <Col lg={6}>
+          <Col lg={3}>
             <Form.Group className="mb-3" controlId="componentSize">
-              <Form.Label>Tamanho do componente</Form.Label>
+              <Form.Label>Tamanho</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Digite o tamanho do componente"

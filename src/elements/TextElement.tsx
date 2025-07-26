@@ -1,10 +1,35 @@
 import { Row, Col, Form } from 'react-bootstrap'
 import { PropertiesSettings } from '../components/PropertiesSettings';
-import type { ElementType } from 'website-lib'
+import { UseWebsiteStore } from '../stores/UseWebsiteStore';
+import type { ComponentType, ElementType, PageType, WebsiteType } from 'website-lib'
 
 export function TextElement({ element }: { element: ElementType }) {
-  function setValue(value: string): void {
-    console.log('Setting value:', value)
+
+  const selectedWebsite: WebsiteType | null = UseWebsiteStore((state) => state.selectedWebsite)
+  const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
+  const component: ComponentType | undefined = selectedPage?.components.find((c) => c.id === element.component_id)
+
+  const updatedElement = component?.elements.content.find((e) => e.id === element.id) || element
+
+  const { updateSelectedElementField } = UseWebsiteStore()
+
+  const setValue = (key: string, value: string) => {
+    if (
+      selectedWebsite?.id == null ||
+      selectedPage?.id == null ||
+      component?.id == null
+    ) {
+      return
+    }
+    updateSelectedElementField(
+      component.id,
+      element.id,
+      'properties',
+      {
+        ...updatedElement.properties,
+        [key]: value
+      }
+    )
   }
 
   return (
@@ -15,13 +40,13 @@ export function TextElement({ element }: { element: ElementType }) {
           <Form.Control
             type="text"
             placeholder="Digite o texto"
-            value={element.properties.title}
-            onChange={(e) => setValue(e.target.value)}
+            value={updatedElement.properties.title}
+            onChange={(e) => setValue('title', e.target.value)}
           />
         </Form.Group>
       </Col>
       <Col lg={12}>
-        <PropertiesSettings properties={element.properties} styles={element.styles} />
+        <PropertiesSettings element={updatedElement} properties={updatedElement.properties} styles={updatedElement.styles} />
       </Col>
     </Row>
   )

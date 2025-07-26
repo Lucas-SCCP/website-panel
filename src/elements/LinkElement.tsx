@@ -20,7 +20,7 @@ export function LinkElement({ element }: { element: ElementType }) {
         </Form.Group>
       </Col>
       <Col lg={12}>
-        <PropertiesSettings properties={properties} styles={element.styles} />
+        <PropertiesSettings element={element} properties={properties} styles={element.styles} />
       </Col>
     </Row>
   )

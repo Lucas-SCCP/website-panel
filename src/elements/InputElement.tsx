@@ -74,7 +74,7 @@ export function InputElement({ element }: { element: ElementType }) {
         </Form.Group>
       </Col>
       <Col lg={12}>
-        <PropertiesSettings properties={element.properties} styles={element.styles} />
+        <PropertiesSettings element={element} properties={element.properties} styles={element.styles} />
       </Col>
     </Row>
   )

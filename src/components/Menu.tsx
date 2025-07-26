@@ -71,14 +71,16 @@ export function Menu() {
 
   const handleExit = () => {
     setSelectedPage(null)
-    setSelectedWebsite(null)
+    setSelectedWebsite({} as WebsiteType)
     UseWebsiteStore.getState().clearWebsiteData()
     UseUserStore.getState().clearUser()
     navigate('/login')
   }
 
   useEffect(() => {
+    console.log('teste')
     const fetchWebsites = async () => {
+      console.log('Fetching websites...')
       if (selectedWebsite) {
         return
       }
@@ -87,18 +89,23 @@ export function Menu() {
       if (user && user.id && user.token) {
         const apiService = new ApiService()
         websites = await apiService.getAllWebsiteByUserId(user.id, user.token)
+        console.log('Websites fetched:', websites)
       }
 
       setWebsiteData(websites)
       const selectedWebsiteFound = websites.find((site) => site.id === user?.default_website_id)
-      console.log(selectedWebsiteFound)
-      setSelectedWebsite(selectedWebsiteFound ?? null)
+      console.log('selectedWebsiteFound:', selectedWebsiteFound)
+      if (selectedWebsiteFound) {
+        setSelectedWebsite(selectedWebsiteFound)
+      }
     }
 
+    console.log('fetchWebsites called with user:', user, 'selectedWebsite:', selectedWebsite)
     fetchWebsites()
   }, [user, selectedWebsite, setWebsiteData, setSelectedWebsite])
 
-  if (!websites) {
+  console.log('selectedWebsite1', websites)
+  if (!websites || selectedWebsite == null) {
     console.log('Site não carregou')
   }
 

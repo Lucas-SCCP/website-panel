@@ -42,7 +42,7 @@ export function AlertElement({ element }: { element: ElementType }) {
         </Dropdown>
       </Col>
       <Col lg={12}>
-        <PropertiesSettings properties={element.properties} styles={element.styles} />
+        <PropertiesSettings element={element} properties={element.properties} styles={element.styles} />
       </Col>
     </Row>
   )

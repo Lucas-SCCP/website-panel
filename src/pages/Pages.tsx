@@ -210,7 +210,7 @@ export function Pages() {
               <Accordion.Body>
                 <Accordion>
                   {selectedPage.components.map((component, index) => (
-                    <ComponentSettings {...component} key={index} index={index} />
+                    <ComponentSettings component={component} key={index} index={index} />
                   ))}
                 </Accordion>
               </Accordion.Body>
@@ -218,7 +218,7 @@ export function Pages() {
           </Accordion>
         </Col>
         <Col sm={12} md={12} lg={8} className="ps-0">
-          <WebsitePreview {...selectedPage} />
+          <WebsitePreview />
         </Col>
       </Row>
     </Main>
