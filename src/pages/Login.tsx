@@ -14,9 +14,7 @@ export function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  const setAllWebsites = UseWebsiteStore((state) => state.setAllWebsites)
-  const setSelectedWebsiteId = UseWebsiteStore((state) => state.setSelectedWebsiteId)
-  const setSelectedWebsite = UseWebsiteStore((state) => state.setSelectedWebsite)
+  const { setAllWebsites, setSelectedWebsiteId, setSelectedWebsite } = UseWebsiteStore((state) => state)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -65,55 +63,51 @@ export function Login() {
   }
 
   return (
-    <Container className="d-flex align-items-center justify-content-center website-login-container">
-      <Row className="justify-content-center">
-        <Col lg={12}>
-          <div className="website-card website-login-card">
-            <Form onSubmit={handleSubmit} className="mb-5">
-              <Row className="text-center">
-                <Col lg={12} className="website-login-logo">
-                  <span className="modak">NOIS</span>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={{ span: 8, offset: 2 }}>
-                  <FloatingLabel controlId="emailInput" label="Digite seu email" className="mb-3">
-                    <Form.Control
-                      type="email"
-                      placeholder="Digite seu email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </FloatingLabel>
-                  <FloatingLabel controlId="passwordInput" label="Digite sua senha" className="mb-3">
-                    <Form.Control
-                      type="password"
-                      placeholder="Digite sua senha"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                  </FloatingLabel>
-                </Col>
-                <Col lg={{ span: 8, offset: 2 }} className="text-center">
-                  <Button variant="secondary" type="submit" className="w-100 mb-3">
-                    ENTRAR
-                  </Button>
-                </Col>
-                <Col lg={12} className="text-center" style={{ cursor: 'pointer' }}>
-                  <span onClick={handleForgetPassword}>Recuperar minha senha</span>
-                </Col>
-                <Col lg={{ span: 8, offset: 2 }} className="mt-3">
-                  {error && (
-                    <Alert variant="danger" className="text-center">
-                      {error}
-                    </Alert>
-                  )}
-                </Col>
-              </Row>
-            </Form>
-          </div>
+    <Container className="website-login-container" style={{ height: '100vh' }}>
+      <Row className="h-100 d-flex justify-content-center align-items-center">
+        <Col lg={6} className="website-card website-login-card">
+          <Form onSubmit={handleSubmit} className="mb-5">
+            <Row className="text-center">
+              <Col lg={12} className="website-login-logo">
+                <span className="modak">NOIS</span>
+              </Col>
+              <Col lg={{ span: 8, offset: 2 }}>
+                <FloatingLabel controlId="emailInput" label="Digite seu email" className="mb-3">
+                  <Form.Control
+                    type="email"
+                    placeholder="Digite seu email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </FloatingLabel>
+                <FloatingLabel controlId="passwordInput" label="Digite sua senha" className="mb-3">
+                  <Form.Control
+                    type="password"
+                    placeholder="Digite sua senha"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </FloatingLabel>
+              </Col>
+              <Col lg={{ span: 8, offset: 2 }} className="text-center">
+                <Button variant="secondary" type="submit" className="w-100 mb-3">
+                  ENTRAR
+                </Button>
+              </Col>
+              <Col lg={{ span: 8, offset: 2 }} className="text-center" style={{ cursor: 'pointer' }}>
+                <span onClick={handleForgetPassword}>Recuperar minha senha</span>
+              </Col>
+              <Col lg={{ span: 8, offset: 2 }} className="mt-3">
+                {error && (
+                  <Alert variant="danger" className="text-center">
+                    {error}
+                  </Alert>
+                )}
+              </Col>
+            </Row>
+          </Form>
         </Col>
       </Row>
     </Container>

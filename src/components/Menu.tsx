@@ -27,9 +27,13 @@ import type { WebsiteType, PageType } from 'website-lib'
 export function Menu() {
   const navigate = useNavigate()
 
-  const [show, setShow] = useState(false)
-  const handleClose = () => setShow(false)
-  const handleShow = () => setShow(true)
+  const [showModalComponent, setShowModalComponent] = useState(false)
+  const handleCloseModalComponent = () => setShowModalComponent(false)
+  const handleShowModalComponent = () => setShowModalComponent(true)
+
+  const [showModalSave, setShowModalSave] = useState(false)
+  const handleCloseModalSave = () => setShowModalSave(false)
+  const handleShowModalSave = () => setShowModalSave(true)
 
   const [website, setWebsite] = useState<WebsiteType | null>(null)
   const [page, setPage] = useState<PageType | null>(null)
@@ -103,7 +107,7 @@ export function Menu() {
     }, 100)
 
     return () => clearTimeout(timeoutId)
-  }, [allWebsites, selectedWebsiteId, selectedPageId, setSelectedWebsiteId, setSelectedPage]);
+  }, [allWebsites, selectedWebsiteId, selectedPageId, setSelectedWebsiteId, setSelectedWebsite, setSelectedPage]);
 
   return (
     <>
@@ -178,20 +182,29 @@ export function Menu() {
                         <OverlayTrigger
                           placement="bottom"
                           overlay={
-                            <Tooltip id="tooltip-menu-position" onClick={handleShow}>
+                            <Tooltip id="tooltip-menu-position">
                               Inserir novo componente
                             </Tooltip>
                           }
                         >
-                          <div className="website-navbar-action-buttons website-navbar-action-buttons-success">
+                          <div className="website-navbar-action-buttons website-navbar-action-buttons-success" onClick={handleShowModalComponent}>
                             <MdAddCircleOutline size={30} />
                           </div>
                         </OverlayTrigger>
                       </Nav.Link>
                       <Nav.Link>
-                        <div className="website-navbar-action-buttons website-navbar-action-buttons-success">
-                          <MdSaveAlt size={30} />
-                        </div>
+                        <OverlayTrigger
+                          placement="bottom"
+                          overlay={
+                            <Tooltip id="tooltip-menu-position" onClick={handleShowModalSave}>
+                              Salvar todas as alterações
+                            </Tooltip>
+                          }
+                        >
+                          <div className="website-navbar-action-buttons website-navbar-action-buttons-success" onClick={handleShowModalSave}>
+                            <MdSaveAlt size={30} />
+                          </div>
+                        </OverlayTrigger>
                       </Nav.Link>
                       <Nav.Link>
                         {hasUnsavedChanges && (
@@ -218,7 +231,7 @@ export function Menu() {
           </Container>
         </Navbar>
       </Row>
-      <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+      <Modal show={showModalComponent} onHide={handleCloseModalComponent} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>Inserir novo componente</Modal.Title>
         </Modal.Header>
@@ -240,6 +253,22 @@ export function Menu() {
         <Modal.Footer>
           <Button variant="success">
             <MdSaveAlt />
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showModalSave} onHide={handleCloseModalSave}>
+        <Modal.Header closeButton>
+          <Modal.Title>Salvar alterações</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-secondary" onClick={handleCloseModalSave}>
+            Cancelar
+          </Button>
+          <Button variant="success" onClick={handleCloseModalSave}>
+            Salvar
           </Button>
         </Modal.Footer>
       </Modal>

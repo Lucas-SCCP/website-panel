@@ -178,6 +178,8 @@ export const UseWebsiteStore = create<WebsiteStore>()(
         )
         const updatedWebsite = { ...currentSelectedWebsite, pages: updatedPages }
 
+        // const website = allWebsites.find((w) => w.id === currentSelectedWebsite.id)
+
         const isWebsiteDifferent = !allWebsites.some(website => website.id === updatedWebsite.id && JSON.stringify(website) === JSON.stringify(updatedWebsite))
 
         set({
