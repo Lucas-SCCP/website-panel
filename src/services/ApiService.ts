@@ -84,6 +84,50 @@ class ApiService {
     }
   }
 
+  async updateWebsite(website: WebsiteType): Promise<WebsiteType> {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API}/website/${website.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          // Adicione aqui o token de autenticação se necessário
+          // 'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(website)
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const json = await response.json()
+      return this.parseWebsiteResponse(json.data)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to update website: ${error.message}`)
+      }
+      throw new Error('Failed to update website: Unknown error')
+    }
+  }
+
+  async refreshWebsiteData(websiteId: number): Promise<WebsiteType> {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API}/website/${websiteId}/structure`)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const json = await response.json()
+      return this.parseWebsiteResponse(json.data)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to refresh website data: ${error.message}`)
+      }
+      throw new Error('Failed to refresh website data: Unknown error')
+    }
+  }
+
   parseWebsiteResponse(rawWebsite: RawWebsiteType): WebsiteType {
     const website: WebsiteType = {
       id: rawWebsite.id,

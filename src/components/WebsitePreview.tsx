@@ -4,7 +4,7 @@ import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { PageRenderer } from 'website-lib'
 import { FaSearchPlus } from 'react-icons/fa'
 import { MdOutlineFindInPage } from 'react-icons/md'
-import type { PageType, ComponentType, WebsiteType } from 'website-lib'
+import type { PageType, ComponentType } from 'website-lib'
 
 export function WebsitePreview() {
   const [show, setShow] = useState(false)
@@ -12,15 +12,11 @@ export function WebsitePreview() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const getWebsiteData: WebsiteType[] = UseWebsiteStore((state) => state.data)
   const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
 
-  console.log('WebsitePreview selectedPage', selectedPage)
+  console.log('Selected page in WebsitePreview:', selectedPage)
 
   const components = selectedPage?.components as ComponentType[]
-
-  console.log('WebsitePreview components', components)
-  console.log('WebsitePreview all sites', getWebsiteData)
 
   return (
     <>

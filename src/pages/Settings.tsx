@@ -1,8 +1,16 @@
+import { useEffect } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { Main } from './Main'
 import { GrConfigure } from 'react-icons/gr'
+import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 
 export function Settings() {
+  const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
+  
+  useEffect(() => {
+    setSelectedPageId(null)
+  }, [setSelectedPageId])
+
   return (
     <Main>
       <Row className="mt-3 mb-3">

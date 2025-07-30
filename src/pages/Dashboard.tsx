@@ -1,10 +1,18 @@
+import { useEffect } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { Main } from './Main'
 import { AreaCharts } from '../charts/AreaCharts'
 import { BarCharts } from '../charts/BarCharts'
 import { FaChartBar } from 'react-icons/fa'
+import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 
 export function Dashboard() {
+  const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
+  
+  useEffect(() => {
+    setSelectedPageId(null)
+  }, [setSelectedPageId])
+
   return (
     <Main>
       <Row className="mt-3 mb-3">

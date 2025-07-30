@@ -11,9 +11,8 @@ import {
   Tooltip,
   Button,
   Modal,
-  Dropdown
+  Dropdown,
 } from 'react-bootstrap'
-import { ApiService } from '../services/ApiService'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { UseUserStore } from '../stores/UseUserStore'
 import { FaHome } from 'react-icons/fa'
@@ -22,7 +21,8 @@ import { MdAddCircleOutline } from 'react-icons/md'
 import { HiOutlineLogout } from 'react-icons/hi'
 import { MdSaveAlt } from 'react-icons/md'
 import { MdDeleteForever } from 'react-icons/md'
-import type { WebsiteType } from 'website-lib'
+import { TiWarningOutline } from 'react-icons/ti'
+import type { WebsiteType, PageType } from 'website-lib'
 
 export function Menu() {
   const navigate = useNavigate()
@@ -31,83 +31,79 @@ export function Menu() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const { user } = UseUserStore()
+  const [website, setWebsite] = useState<WebsiteType | null>(null)
+  const [page, setPage] = useState<PageType | null>(null)
 
-  const websites = UseWebsiteStore((state) => state.data)
-  const selectedWebsite = UseWebsiteStore((state) => state.selectedWebsite)
-  const selectedPage = UseWebsiteStore((state) => state.selectedPage)
-  const setWebsiteData = UseWebsiteStore((state) => state.setWebsiteData)
+  const allWebsites = UseWebsiteStore((state) => state.allWebsites)
+  const selectedWebsiteId = UseWebsiteStore((state) => state.selectedWebsiteId)
+  const selectedPageId = UseWebsiteStore((state) => state.selectedPageId)
+  const setSelectedWebsiteId = UseWebsiteStore((state) => state.setSelectedWebsiteId)
   const setSelectedWebsite = UseWebsiteStore((state) => state.setSelectedWebsite)
+  const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
   const setSelectedPage = UseWebsiteStore((state) => state.setSelectedPage)
 
+  const hasUnsavedChanges = UseWebsiteStore((state) => state.hasUnsavedChanges)
+
   const goToDashboardClick = () => {
-    setSelectedPage(null)
+    setSelectedPageId(null)
     navigate('/')
   }
 
   const goToSettingsClick = () => {
-    setSelectedPage(null)
+    setSelectedPageId(null)
     navigate('/settings')
   }
 
   const selectedWebsiteClick = (event: React.MouseEvent<HTMLElement>) => {
-    const selected = websites.find((w) => w.id.toString() === event.currentTarget.id)
-    if (selected) {
-      setSelectedPage(null)
-      setSelectedWebsite(selected)
+    const website = allWebsites.find((w) => w.id.toString() === event.currentTarget.id)
+    if (website) {
+      setSelectedPageId(null)
+      setSelectedWebsite(website)
+      setSelectedWebsiteId(website.id)
       navigate('/')
     }
   }
 
   const selectedPageClick = (event: React.MouseEvent<HTMLElement>) => {
-    const selected = selectedWebsite?.pages.find(
+    const website = allWebsites.find((w) => w.id === selectedWebsiteId)
+    const page = website?.pages.find(
       (w: { id: number; name: string }) => w.id.toString() === event.currentTarget.id
     )
-    if (selected) {
-      setSelectedPage(selected)
+    if (page) {
+      setPage(page)
+      setSelectedPage(page)
+      setSelectedPageId(page.id)
       navigate('/pages')
     }
   }
 
   const handleExit = () => {
-    setSelectedPage(null)
-    setSelectedWebsite({} as WebsiteType)
-    UseWebsiteStore.getState().clearWebsiteData()
+    setSelectedPageId(null)
+    setSelectedWebsiteId(null)
+    UseWebsiteStore.getState().clearAllWebsites()
     UseUserStore.getState().clearUser()
     navigate('/login')
   }
 
   useEffect(() => {
-    console.log('teste')
-    const fetchWebsites = async () => {
-      console.log('Fetching websites...')
-      if (selectedWebsite) {
-        return
+    const timeoutId = setTimeout(() => {
+      const website = allWebsites.find((w) => w.id === selectedWebsiteId)
+      if (website) {
+        setWebsite(website)
+        setSelectedWebsite(website)
+        setSelectedWebsiteId(selectedWebsiteId)
+        if (selectedPageId) {
+          const page = website.pages.find((p) => p.id === selectedPageId)
+          if (page) {
+            setPage(page)
+            setSelectedPage(page)
+          }
+        }
       }
+    }, 100)
 
-      let websites: WebsiteType[] = []
-      if (user && user.id && user.token) {
-        const apiService = new ApiService()
-        websites = await apiService.getAllWebsiteByUserId(user.id, user.token)
-        console.log('Websites fetched:', websites)
-      }
-
-      setWebsiteData(websites)
-      const selectedWebsiteFound = websites.find((site) => site.id === user?.default_website_id)
-      console.log('selectedWebsiteFound:', selectedWebsiteFound)
-      if (selectedWebsiteFound) {
-        setSelectedWebsite(selectedWebsiteFound)
-      }
-    }
-
-    console.log('fetchWebsites called with user:', user, 'selectedWebsite:', selectedWebsite)
-    fetchWebsites()
-  }, [user, selectedWebsite, setWebsiteData, setSelectedWebsite])
-
-  console.log('selectedWebsite1', websites)
-  if (!websites || selectedWebsite == null) {
-    console.log('Site não carregou')
-  }
+    return () => clearTimeout(timeoutId)
+  }, [allWebsites, selectedWebsiteId, selectedPageId, setSelectedWebsiteId, setSelectedPage]);
 
   return (
     <>
@@ -144,10 +140,10 @@ export function Menu() {
                   </Nav.Link>
                   <Nav.Link>
                     <NavDropdown
-                      title={selectedWebsite ? selectedWebsite.name : 'Selecione um site'}
+                      title={selectedWebsiteId ? allWebsites.find((w) => w.id === selectedWebsiteId)?.name : 'Selecione um site'}
                       className="website-navbar-button"
                     >
-                      {websites.map((website) => (
+                      {allWebsites.map((website) => (
                         <NavDropdown.Item id={website.id.toString()} key={website.id} onClick={selectedWebsiteClick}>
                           {website.name}
                         </NavDropdown.Item>
@@ -156,17 +152,17 @@ export function Menu() {
                   </Nav.Link>
                   <Nav.Link>
                     <NavDropdown
-                      title={selectedPage ? selectedPage.name : 'Selecione uma página'}
+                      title={selectedPageId ? allWebsites.find((w) => w.id === selectedWebsiteId)?.pages.find((p) => p.id === selectedPageId)?.name : 'Selecione uma página'}
                       className="website-navbar-button"
                     >
-                      {selectedWebsite?.pages.map((page: { id: number; name: string }) => (
+                      {website?.pages.map((page: { id: number; name: string }) => (
                         <NavDropdown.Item id={page.id.toString()} key={page.id} onClick={selectedPageClick}>
                           {page.name}
                         </NavDropdown.Item>
                       ))}
                     </NavDropdown>
                   </Nav.Link>
-                  {selectedPage !== null && (
+                  {page !== null && (
                     <>
                       <Nav.Link>
                         <OverlayTrigger
@@ -196,6 +192,16 @@ export function Menu() {
                         <div className="website-navbar-action-buttons website-navbar-action-buttons-success">
                           <MdSaveAlt size={30} />
                         </div>
+                      </Nav.Link>
+                      <Nav.Link>
+                        {hasUnsavedChanges && (
+                          <div style={{background: '#edc707', padding: '10px', borderRadius: '5px', display: 'flex', alignItems: 'center'}}>
+                            <TiWarningOutline size={20} />
+                            <span style={{ marginLeft: '5px', fontWeight: 'bold', color: 'black' }}>
+                              Você tem alterações não salvas
+                            </span>
+                          </div>
+                        )}
                       </Nav.Link>
                     </>
                   )}

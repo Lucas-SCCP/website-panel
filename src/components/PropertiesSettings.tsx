@@ -6,7 +6,7 @@ import type { WebsiteType, PageType, ComponentType, ElementType, PropertiesType,
 
 export function PropertiesSettings({ element, properties, styles }: { element: ElementType, properties: PropertiesType, styles: StylesType }) {
 
-  console.log('PropertiesSettings element:', element)
+  // console.log('PropertiesSettings element:', element)
   const selectedWebsite: WebsiteType | null = UseWebsiteStore((state) => state.selectedWebsite)
   const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
   const component: ComponentType | undefined = selectedPage?.components.find((c) => c.id === element.component_id)

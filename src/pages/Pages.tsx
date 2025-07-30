@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Row, Col, Form, OverlayTrigger, Tooltip, Accordion } from 'react-bootstrap'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { Main } from './Main'
@@ -11,50 +10,98 @@ import { GrConfigure } from 'react-icons/gr'
 import type { PageType } from 'website-lib'
 
 export function Pages() {
-  const navigate = useNavigate()
-
   const [name, setName] = useState<string | undefined>()
   const [title, setTitle] = useState<string | undefined>()
   const [path, setPath] = useState<string | undefined>()
   const [menu, setMenu] = useState<number | undefined>()
   const [menuOrder, setMenuOrder] = useState<number | undefined>()
   const [enabled, setEnabled] = useState<boolean | undefined>()
+  const [page, setPage] = useState<PageType | null>(null)
+ 
+  const allWebsites = UseWebsiteStore((state) => state.allWebsites)
+  const selectedWebsiteId = UseWebsiteStore((state) => state.selectedWebsiteId)
+  const selectedPageId = UseWebsiteStore((state) => state.selectedPageId)
+  
+  const { updateSelectedPageField } = UseWebsiteStore()
 
-  const selectedWebsite = UseWebsiteStore((state) => state.selectedWebsite)
-  const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
-
-  useEffect(() => {
-    if (selectedPage) {
-      setName(selectedPage.name)
-      setTitle(selectedPage.title)
-      setPath(selectedPage.path)
-      setMenu(selectedPage.menu)
-      setMenuOrder(selectedPage.menu_order)
-      setEnabled(selectedPage.enabled)
-    }
-  }, [selectedPage])
-
-  if (!selectedWebsite) {
-    navigate('/')
+  // Funções para atualizar os campos da página
+  const handleNameChange = (newName: string) => {
+    setName(newName)
+    updateSelectedPageField('name', newName)
   }
 
-  if (!selectedPage) {
-    console.log('Paginas nao carregaram')
-    return null
+  const handleTitleChange = (newTitle: string) => {
+    setTitle(newTitle)
+    updateSelectedPageField('title', newTitle)
+  }
+
+  const handlePathChange = (newPath: string) => {
+    setPath(newPath)
+    updateSelectedPageField('path', newPath)
+  }
+
+  const handleMenuChange = (newMenu: number) => {
+    setMenu(newMenu)
+    updateSelectedPageField('menu', newMenu)
+  }
+
+  const handleMenuOrderChange = (newMenuOrder: number) => {
+    setMenuOrder(newMenuOrder)
+    updateSelectedPageField('menu_order', newMenuOrder)
+  }
+
+  const handleEnabledChange = (newEnabled: boolean) => {
+    setEnabled(newEnabled)
+    updateSelectedPageField('enabled', newEnabled)
   }
 
   function setCheckedPage(checked: boolean): void {
-    if (checked) {
-      setPath('/')
-    }
+    const newPath = checked ? '/' : ''
+    handlePathChange(newPath)
   }
 
   function setCheckedMenu(checked: boolean): void {
-    setMenu(checked ? 1 : 0)
+    const newMenu = checked ? 1 : 0
+    handleMenuChange(newMenu)
   }
 
   function setCheckedInitialPage(checked: boolean): void {
-    setEnabled(checked)
+    handleEnabledChange(checked)
+  }
+
+  useEffect(() => {
+    console.log('PAGE')
+    const timeoutId = setTimeout(() => {
+      const website = allWebsites.find((w) => w.id === selectedWebsiteId)
+      console.log('Selected website:', website)
+      if (website) {
+        const page = website.pages.find((p) => p.id === selectedPageId)
+        console.log('Selected page:', page)
+        if (page) {
+          setPage(page)
+          setName(page.name)
+          setTitle(page.title)
+          setPath(page.path)
+          setMenu(page.menu)
+          setMenuOrder(page.menu_order)
+          setEnabled(page.enabled)
+        }
+      }
+    }, 100)
+
+    return () => clearTimeout(timeoutId)
+  }, [allWebsites, selectedWebsiteId, selectedPageId])
+
+  if (!page) {
+    return (
+      <Main>
+        <div className="d-flex justify-content-center align-items-center" style={{ height: '300px' }}>
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+      </Main>
+    )
   }
 
   return (
@@ -80,7 +127,7 @@ export function Pages() {
                         type="text"
                         placeholder="Digite um nome para a página"
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => handleNameChange(e.target.value)}
                       />
                     </Form.Group>
                   </Col>
@@ -93,7 +140,7 @@ export function Pages() {
                         type="text"
                         placeholder="Digite um título para a página"
                         value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        onChange={(e) => handleTitleChange(e.target.value)}
                       />
                     </Form.Group>
                   </Col>
@@ -193,7 +240,7 @@ export function Pages() {
                           </span>
                         </OverlayTrigger>
                       </Form.Label>
-                      <Form.Control type="number" value={menuOrder} />
+                      <Form.Control type="number" value={menuOrder} onChange={(e) => handleMenuOrderChange(parseInt(e.target.value) || 0)}/>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -209,7 +256,7 @@ export function Pages() {
               </Accordion.Header>
               <Accordion.Body>
                 <Accordion>
-                  {selectedPage.components.map((component, index) => (
+                  {page.components.map((component, index) => (
                     <ComponentSettings component={component} key={index} index={index} />
                   ))}
                 </Accordion>

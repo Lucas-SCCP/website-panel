@@ -18,7 +18,10 @@ export const UseUserStore = create<UserStore>()(
 
       setUser: (user, token) => set({ user, token }),
 
-      clearUser: () => set({ user: null, token: null }),
+      clearUser: () => {
+        set({ user: null, token: null })
+        localStorage.removeItem('user-storage')
+      },
 
       updateUserField: (key, value) => {
         const currentUser = get().user

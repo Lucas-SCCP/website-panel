@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Form, Button, Container, Row, Col, Alert, FloatingLabel } from 'react-bootstrap'
 import { ApiService } from '../services/ApiService'
 import { UseUserStore } from '../stores/UseUserStore'
+import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { AuthenticateException } from '../exceptions/AuthenticateException'
 import type { AuthenticateResponseType } from 'website-lib'
 
@@ -13,15 +14,38 @@ export function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
+  const setAllWebsites = UseWebsiteStore((state) => state.setAllWebsites)
+  const setSelectedWebsiteId = UseWebsiteStore((state) => state.setSelectedWebsiteId)
+  const setSelectedWebsite = UseWebsiteStore((state) => state.setSelectedWebsite)
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     try {
+      console.log('LOGIN')
       const apiService = new ApiService()
       const response: AuthenticateResponseType = await apiService.authenticate(email, password)
+      console.log('LOGIN RESPONSE')
 
       if (response.status) {
-        UseUserStore.getState().setUser(response.data, response.data.token)
+        const user = response.data
+        UseUserStore.getState().setUser(user, user.token)
+
+        console.log('GET ALL WEBSITES')
+        const websites = await apiService.getAllWebsiteByUserId(user.id, user.token)
+        console.log('Websites fetched:', websites)
+
+        // Ao buscar todos os sites que o usuario tem acesso salva no estado global
+        setAllWebsites(websites)
+      
+        // Seta o site selecionado de acordo com o padrao configurado pelo usuario
+        const selectedWebsiteFound = websites.find((website) => website.id === user?.default_website_id)
+        console.log('selectedWebsiteFound:', selectedWebsiteFound)
+        if (selectedWebsiteFound) {
+          setSelectedWebsite(selectedWebsiteFound)
+          setSelectedWebsiteId(selectedWebsiteFound.id)
+        }
+
         navigate('/')
       }
     } catch (err) {
