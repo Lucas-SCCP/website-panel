@@ -84,6 +84,16 @@ export function Menu() {
     }
   }
 
+  const handleSaveClick = () => {
+    console.log('Detalhes das mudanças:', changes)
+  }
+
+  const handleOpenModalSaveClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+    event.preventDefault()
+    setShowModalSave(true)
+    console.log('handleOpenModalSaveClick', changes)
+  }
+
   const handleExit = () => {
     setSelectedPageId(null)
     setSelectedWebsiteId(null)
@@ -112,15 +122,6 @@ export function Menu() {
     return () => clearTimeout(timeoutId)
   }, [allWebsites, selectedWebsiteId, selectedPageId, setSelectedWebsiteId, setSelectedWebsite, setSelectedPage]);
 
-  function handleSaveClick() {
-    console.log('Detalhes das mudanças:', changes)
-  }
-
-  function handleOpenModalSaveClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
-    event.preventDefault()
-    setShowModalSave(true)
-    console.log(changes)
-  }
   return (
     <>
       <Row>
@@ -276,44 +277,124 @@ export function Menu() {
           <Container>
             <Row style={{ padding: '10px' }}>
               {hasUnsavedChanges ? (
-                (changes?.page?.component && changes.page.component.length > 0) ? (
-                  changes.page.component.map((component, index) => (
+                <>
+                  {/* Mudanças no Website */}
+                  {changes?.changes && changes.changes.length > 0 && (
                     <>
-                      <Col lg={12} key={index} style={{ background: '#BBB', padding: '10px', borderRadius: '5px' }}>
-                        <b>Componente: {component.name}</b>
+                      <Col lg={12} style={{ background: '#007bff', color: 'white', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>
+                        <b>Website</b>
                       </Col>
-                      {component.element?.map((el, elIndex) => (
-                        <>
-                          <Col key={elIndex} lg={12} className='mt-2 mb-2' style={{ border: '2px solid #BBB', padding: '10px', borderRadius: '5px' }}>
-                            Elemento: {el.elementTypeId}
-                          </Col>
-                          {el.changes.map((change) => (
-                            <Col lg={12} className='mb-2'>
-                              <Row className="d-flex gap-2">
-                                <div style={{ flex: 3, padding: '10px', borderRadius: '5px', background: '#eee' }}>
-                                  {change.field}
-                                </div>
-                                <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#ffe6e6' }}>
-                                  {change.oldValue}
-                                </div>
-                                <div className='text-center' style={{ flex: 1, padding: '10px' }}>
-                                  <FaArrowAltCircleRight />
-                                </div>
-                                <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#e6ffe6' }}>
-                                  {change.newValue}
-                                </div>
-                              </Row>
-                            </Col>
-                          ))}
-                        </>
+                      {changes.changes.map((change, changeIndex) => (
+                        <Col lg={12} className='mb-2' key={changeIndex}>
+                          <Row className="d-flex gap-2">
+                            <div style={{ flex: 3, padding: '10px', borderRadius: '5px', background: '#eee' }}>
+                              {change.field}
+                            </div>
+                            <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#ffe6e6' }}>
+                              {change.oldValue}
+                            </div>
+                            <div className='text-center' style={{ flex: 1, padding: '10px' }}>
+                              <FaArrowAltCircleRight />
+                            </div>
+                            <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#e6ffe6' }}>
+                              {change.newValue}
+                            </div>
+                          </Row>
+                        </Col>
                       ))}
                     </>
-                  ))
-                ) : (
-                  <Col lg={12}>
-                    Nenhum componente modificado.
-                  </Col>
-                )
+                  )}
+
+                  {/* Mudanças na Página */}
+                  {changes?.page?.changes && changes.page.changes.length > 0 && (
+                    <>
+                      <Col lg={12} style={{ background: '#28a745', color: 'white', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>
+                        <b>Página</b>
+                      </Col>
+                      {changes.page.changes.map((change, changeIndex) => (
+                        <Col lg={12} className='mb-2' key={changeIndex}>
+                          <Row className="d-flex gap-2">
+                            <div style={{ flex: 3, padding: '10px', borderRadius: '5px', background: '#eee' }}>
+                              {change.field}
+                            </div>
+                            <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#ffe6e6' }}>
+                              {change.oldValue}
+                            </div>
+                            <div className='text-center' style={{ flex: 1, padding: '10px' }}>
+                              <FaArrowAltCircleRight />
+                            </div>
+                            <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#e6ffe6' }}>
+                              {change.newValue}
+                            </div>
+                          </Row>
+                        </Col>
+                      ))}
+                    </>
+                  )}
+
+                  {/* Mudanças nos Componentes */}
+                  {(changes?.page?.component && changes.page.component.length > 0) ? (
+                    changes.page.component.map((component, index) => (
+                      <>
+                        <Col lg={12} key={index} style={{ background: '#BBB', padding: '10px', borderRadius: '5px' }}>
+                          <b>Componente: {component.name}</b>
+                        </Col>
+                        
+                        {component.changes?.map((change, changeIndex) => (
+                          <Col lg={12} className='mb-2' key={changeIndex}>
+                            <Row className="d-flex gap-2">
+                              <div style={{ flex: 3, padding: '10px', borderRadius: '5px', background: '#eee' }}>
+                                {change.field}
+                              </div>
+                              <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#ffe6e6' }}>
+                                {change.oldValue}
+                              </div>
+                              <div className='text-center' style={{ flex: 1, padding: '10px' }}>
+                                <FaArrowAltCircleRight />
+                              </div>
+                              <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#e6ffe6' }}>
+                                {change.newValue}
+                              </div>
+                            </Row>
+                          </Col>
+                        ))}
+                        
+                        {component.element?.map((el, elIndex) => (
+                          <>
+                            <Col key={elIndex} lg={12} className='mt-2 mb-2' style={{ border: '2px solid #BBB', padding: '10px', borderRadius: '5px' }}>
+                              Elemento: {el.elementTypeId}
+                            </Col>
+                            {el.changes.map((change, changeIndex) => (
+                              <Col lg={12} className='mb-2' key={changeIndex}>
+                                <Row className="d-flex gap-2">
+                                  <div style={{ flex: 3, padding: '10px', borderRadius: '5px', background: '#eee' }}>
+                                    {change.field}
+                                  </div>
+                                  <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#ffe6e6' }}>
+                                    {change.oldValue}
+                                  </div>
+                                  <div className='text-center' style={{ flex: 1, padding: '10px' }}>
+                                    <FaArrowAltCircleRight />
+                                  </div>
+                                  <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#e6ffe6' }}>
+                                    {change.newValue}
+                                  </div>
+                                </Row>
+                              </Col>
+                            ))}
+                          </>
+                        ))}
+                      </>
+                    ))
+                  ) : (
+                    // Só mostrar esta mensagem se não há mudanças em website, página ou componente
+                    !changes?.changes?.length && !changes?.page?.changes?.length && (
+                      <Col lg={12}>
+                        Nenhuma alteração encontrada.
+                      </Col>
+                    )
+                  )}
+                </>
               ) : (
                 <Col lg={12} className='text-center'>
                   Não há alterações para salvar.

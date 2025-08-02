@@ -5,22 +5,31 @@ import type { WebsiteType, PageType, ComponentType, ElementType } from 'website-
 interface ChangeDetail {
   websiteId: number
   action?: 'updated' | 'added' | 'removed'
-  field?: string
-  oldValue?: string
-  newValue?: string
+  changes?: {
+    action: 'updated' | 'added' | 'removed'
+    field: string
+    oldValue: string
+    newValue: string
+  }[]
   page?: {
     id: number
     action?: 'updated' | 'added' | 'removed'
-    field?: string
-    oldValue?: string
-    newValue?: string
+    changes?: {
+      action: 'updated' | 'added' | 'removed'
+      field: string
+      oldValue: string
+      newValue: string
+    }[]
     component?: {
       id: number
       name: string
       action?: 'updated' | 'added' | 'removed'
-      field?: string
-      oldValue?: string
-      newValue?: string
+      changes?: {
+        action: 'updated' | 'added' | 'removed'
+        field: string
+        oldValue: string
+        newValue: string
+      }[]
       element?: {
         id: number
         elementTypeId: number
@@ -122,19 +131,85 @@ export const UseWebsiteStore = create<WebsiteStore>()(
         const originalWebsite = allWebsites.find(w => w.id === currentSelectedWebsite.id)
         const updatedWebsite = { ...currentSelectedWebsite, [key]: value }
 
-        const newChange: ChangeDetail = {
-          websiteId: currentSelectedWebsite.id,
-          action: 'updated',
-          field: String(key),
-          oldValue: originalWebsite ? String(originalWebsite[key]) : String(currentSelectedWebsite[key]),
-          newValue: String(value),
+        const oldValue = originalWebsite ? String(originalWebsite[key]) : String(currentSelectedWebsite[key])
+        const newValue = String(value)
+
+        const currentChanges = get().changes
+        let updatedChanges: ChangeDetail
+
+        if (oldValue === newValue) {
+          // Se os valores são iguais, remover do objeto de changes
+          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+            updatedChanges = { ...currentChanges }
+            
+            if (updatedChanges.changes) {
+              // Remover o field específico
+              updatedChanges.changes = updatedChanges.changes.filter(ch => ch.field !== String(key))
+              
+              // Se não há mais changes, limpar changes
+              if (updatedChanges.changes.length === 0) {
+                updatedChanges = {
+                  websiteId: currentSelectedWebsite.id,
+                  changes: undefined
+                }
+              }
+            }
+            
+            set({ 
+              selectedWebsite: updatedWebsite,
+              hasUnsavedChanges: false,
+              changes: (updatedChanges.changes && updatedChanges.changes.length > 0) ? updatedChanges : null
+            })
+          } else {
+            set({
+              selectedWebsite: updatedWebsite,
+              hasUnsavedChanges: false,
+              changes: null
+            })
+          }
+        } else {
+          // Valores diferentes, criar/atualizar change
+          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+            // Se já existe um change para este website, vamos adicionar/atualizar o field
+            updatedChanges = { ...currentChanges }
+            
+            if (!updatedChanges.changes) {
+              updatedChanges.changes = []
+            }
+            
+            const existingChangeIndex = updatedChanges.changes.findIndex(ch => ch.field === String(key))
+            const newChange = {
+              action: 'updated' as const,
+              field: String(key),
+              oldValue: oldValue,
+              newValue: newValue
+            }
+            
+            if (existingChangeIndex >= 0) {
+              updatedChanges.changes[existingChangeIndex] = newChange
+            } else {
+              updatedChanges.changes.push(newChange)
+            }
+          } else {
+            // Criar novo change
+            updatedChanges = {
+              websiteId: currentSelectedWebsite.id,
+              action: 'updated',
+              changes: [{
+                action: 'updated',
+                field: String(key),
+                oldValue: oldValue,
+                newValue: newValue
+              }]
+            }
+          }
+          
+          set({
+            selectedWebsite: updatedWebsite,
+            hasUnsavedChanges: true,
+            changes: updatedChanges
+          })
         }
-        
-        set({
-          selectedWebsite: updatedWebsite,
-          hasUnsavedChanges: true,
-          changes: newChange
-        })
       },
 
       selectedPage: null,
@@ -156,15 +231,81 @@ export const UseWebsiteStore = create<WebsiteStore>()(
         
         const updatedPage = { ...currentSelectedPage, [key]: value }
 
-        const newChange: ChangeDetail = {
-          websiteId: currentSelectedWebsite.id,
-          page: {
-            id: currentSelectedPage.id,
-            action: 'updated',
-            field: String(key),
-            oldValue: originalPage ? String(originalPage[key]) : String(currentSelectedPage[key]),
-            newValue: String(value)
+        const oldValue = originalPage ? String(originalPage[key]) : String(currentSelectedPage[key])
+        const newValue = String(value)
+
+        const currentChanges = get().changes
+        let updatedChanges: ChangeDetail
+
+        if (oldValue === newValue) {
+          // Se os valores são iguais, remover do objeto de changes
+          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+            updatedChanges = { ...currentChanges }
+            
+            if (updatedChanges.page?.changes) {
+              // Remover o field específico
+              updatedChanges.page.changes = updatedChanges.page.changes.filter(ch => ch.field !== String(key))
+              
+              // Se não há mais changes para esta página, removê-la se não há componentes
+              if (updatedChanges.page.changes.length === 0 && (!updatedChanges.page.component || updatedChanges.page.component.length === 0)) {
+                updatedChanges = {
+                  websiteId: currentSelectedWebsite.id,
+                  page: undefined
+                }
+              }
+            }
+            
+            set({ changes: updatedChanges.page ? updatedChanges : null })
           }
+        } else {
+          // Valores diferentes, criar/atualizar change
+          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+            // Se já existe um change para este website, vamos adicionar/atualizar a página
+            updatedChanges = { ...currentChanges }
+            
+            if (!updatedChanges.page) {
+              updatedChanges.page = {
+                id: currentSelectedPage.id,
+                action: 'updated',
+                changes: []
+              }
+            }
+            
+            if (!updatedChanges.page.changes) {
+              updatedChanges.page.changes = []
+            }
+            
+            const existingChangeIndex = updatedChanges.page.changes.findIndex(ch => ch.field === String(key))
+            const newChange = {
+              action: 'updated' as const,
+              field: String(key),
+              oldValue: oldValue,
+              newValue: newValue
+            }
+            
+            if (existingChangeIndex >= 0) {
+              updatedChanges.page.changes[existingChangeIndex] = newChange
+            } else {
+              updatedChanges.page.changes.push(newChange)
+            }
+          } else {
+            // Criar novo change
+            updatedChanges = {
+              websiteId: currentSelectedWebsite.id,
+              page: {
+                id: currentSelectedPage.id,
+                action: 'updated',
+                changes: [{
+                  action: 'updated',
+                  field: String(key),
+                  oldValue: oldValue,
+                  newValue: newValue
+                }]
+              }
+            }
+          }
+          
+          set({ changes: updatedChanges })
         }
         
         set({ selectedPage: updatedPage })
@@ -174,10 +315,21 @@ export const UseWebsiteStore = create<WebsiteStore>()(
             page.id === currentSelectedPage.id ? updatedPage : page
           )
           const updatedWebsite = { ...currentSelectedWebsite, pages: updatedPages }
+          
+          // Verificar se há mudanças reais no objeto changes
+          const finalChanges = get().changes
+          const hasRealChanges = Boolean(finalChanges && (
+            finalChanges.action || 
+            (finalChanges.changes && finalChanges.changes.length > 0) ||
+            (finalChanges.page && (
+              (finalChanges.page.changes && finalChanges.page.changes.length > 0) ||
+              (finalChanges.page.component && finalChanges.page.component.length > 0)
+            ))
+          ))
+          
           set({ 
             selectedWebsite: updatedWebsite,
-            hasUnsavedChanges: true,
-            changes: newChange
+            hasUnsavedChanges: hasRealChanges
           })
         }
       },
@@ -205,26 +357,130 @@ export const UseWebsiteStore = create<WebsiteStore>()(
         )
         const updatedWebsite = { ...currentSelectedWebsite, pages: updatedPages }
 
-        const newChange: ChangeDetail = {
-          websiteId: currentSelectedWebsite.id,
-          page: {
-            id: currentSelectedPage.id,
-            component: [{
-              id: componentId,
-              name: originalComponent ? String(originalComponent.name) : String(currentSelectedPage.components.find(c => c.id === componentId)?.name),
-              action: 'updated',
-              field: String(key),
-              oldValue: originalComponent ? String(originalComponent[key]) : String(currentSelectedPage.components.find(c => c.id === componentId)?.[key]),
-              newValue: String(value)
-            }]
+        const oldValue = originalComponent ? String(originalComponent[key]) : String(currentSelectedPage.components.find(c => c.id === componentId)?.[key])
+        const newValue = String(value)
+
+        const currentChanges = get().changes
+        let updatedChanges: ChangeDetail
+
+        if (oldValue === newValue) {
+          // Se os valores são iguais, remover do objeto de changes
+          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+            updatedChanges = { ...currentChanges }
+            
+            if (updatedChanges.page?.component) {
+              const targetComponent = updatedChanges.page.component.find(c => c.id === componentId)
+              if (targetComponent?.changes) {
+                // Remover o field específico
+                targetComponent.changes = targetComponent.changes.filter(ch => ch.field !== String(key))
+                
+                // Se não há mais changes para este componente, removê-lo
+                if (targetComponent.changes.length === 0) {
+                  updatedChanges.page.component = updatedChanges.page.component.filter(c => c.id !== componentId)
+                }
+                
+                // Se não há mais componentes para esta página, limpar changes
+                if (updatedChanges.page.component.length === 0) {
+                  updatedChanges = {
+                    websiteId: currentSelectedWebsite.id,
+                    page: undefined
+                  }
+                }
+              }
+              
+              set({ changes: updatedChanges.page ? updatedChanges : null })
+            }
           }
+        } else {
+          // Valores diferentes, criar/atualizar change
+          const currentChanges = get().changes
+          let updatedChanges: ChangeDetail
+
+          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+            // Se já existe um change para este website, vamos adicionar/atualizar o componente
+            updatedChanges = { ...currentChanges }
+            
+            if (!updatedChanges.page) {
+              updatedChanges.page = {
+                id: currentSelectedPage.id,
+                component: []
+              }
+            }
+            
+            let targetComponent = updatedChanges.page.component?.find(c => c.id === componentId)
+            if (!targetComponent) {
+              targetComponent = { 
+                id: componentId, 
+                name: originalComponent ? String(originalComponent.name) : String(currentSelectedPage.components.find(c => c.id === componentId)?.name),
+                action: 'updated',
+                changes: [{
+                  action: 'updated',
+                  field: String(key),
+                  oldValue: oldValue,
+                  newValue: newValue
+                }]
+              }
+              updatedChanges.page.component = updatedChanges.page.component || []
+              updatedChanges.page.component.push(targetComponent)
+            } else {
+              // Atualizar componente existente - adicionar ou atualizar field
+              if (!targetComponent.changes) {
+                targetComponent.changes = []
+              }
+              
+              const existingChangeIndex = targetComponent.changes.findIndex(ch => ch.field === String(key))
+              const newChange = {
+                action: 'updated' as const,
+                field: String(key),
+                oldValue: oldValue,
+                newValue: newValue
+              }
+              
+              if (existingChangeIndex >= 0) {
+                targetComponent.changes[existingChangeIndex] = newChange
+              } else {
+                targetComponent.changes.push(newChange)
+              }
+            }
+          } else {
+            // Criar novo change
+            updatedChanges = {
+              websiteId: currentSelectedWebsite.id,
+              page: {
+                id: currentSelectedPage.id,
+                component: [{
+                  id: componentId,
+                  name: originalComponent ? String(originalComponent.name) : String(currentSelectedPage.components.find(c => c.id === componentId)?.name),
+                  action: 'updated',
+                  changes: [{
+                    action: 'updated',
+                    field: String(key),
+                    oldValue: oldValue,
+                    newValue: newValue
+                  }]
+                }]
+              }
+            }
+          }
+          
+          set({ changes: updatedChanges })
         }
+
+        // Verificar se há mudanças reais no objeto changes
+        const finalChanges = get().changes
+        const hasRealChanges = Boolean(finalChanges && (
+          finalChanges.action || 
+          (finalChanges.changes && finalChanges.changes.length > 0) ||
+          (finalChanges.page && (
+            (finalChanges.page.changes && finalChanges.page.changes.length > 0) ||
+            (finalChanges.page.component && finalChanges.page.component.length > 0)
+          ))
+        ))
 
         set({ 
           selectedPage: updatedPage,
           selectedWebsite: updatedWebsite,
-          hasUnsavedChanges: true,
-          changes: newChange
+          hasUnsavedChanges: hasRealChanges
         })
       },
       updateSelectedElementField: (componentId, elementId, key, value) => {
@@ -537,8 +793,11 @@ export const UseWebsiteStore = create<WebsiteStore>()(
         const finalChanges = get().changes
         const hasRealChanges = Boolean(finalChanges && (
           finalChanges.action || 
-          finalChanges.field || 
-          (finalChanges.page && finalChanges.page.component && finalChanges.page.component.length > 0)
+          (finalChanges.changes && finalChanges.changes.length > 0) ||
+          (finalChanges.page && (
+            (finalChanges.page.changes && finalChanges.page.changes.length > 0) ||
+            (finalChanges.page.component && finalChanges.page.component.length > 0)
+          ))
         ))
 
         set({
