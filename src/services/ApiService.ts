@@ -74,6 +74,8 @@ class ApiService {
 
       const websites: WebsiteType[] = json.data.map((rawWebsite: RawWebsiteType) => this.parseWebsiteResponse(rawWebsite))
 
+      console.log('Websites fetched:', websites)
+
       return websites
     } catch (error: unknown) {
       if (error instanceof Error) {

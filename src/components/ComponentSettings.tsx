@@ -46,7 +46,7 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
             {getIconByComponentType(component.component_type_id)} - <b>{component.name}</b>
           </div>
         </div>
-        <span className="ms-auto website-accordion-header-action-buttons">
+        <span className="ms-auto website-accordion-header-action-buttons" style={{ display: 'none' }} id='aSerDesenvolvido'>
           <OverlayTrigger
             placement="bottom"
             overlay={<Tooltip id="tooltip-delete-component">Excluir componente</Tooltip>}
@@ -56,7 +56,7 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
             </span>
           </OverlayTrigger>
         </span>
-        <span className="ms-auto website-accordion-header-action-buttons">
+        <span className="ms-auto website-accordion-header-action-buttons" style={{ display: 'none' }} id='aSerDesenvolvido'>
           <OverlayTrigger
             placement="bottom"
             overlay={<Tooltip id="tooltip-drag-component">Arraste para alterar a ordenação</Tooltip>}
@@ -80,7 +80,7 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
               />
             </Form.Group>
           </Col>
-          <Col lg={2}>
+          <Col xs={4} lg={2}>
             <Form.Group className="mb-3" controlId="componentSort">
               <Form.Label>Posição</Form.Label>
               <Form.Control
@@ -91,7 +91,7 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
               />
             </Form.Group>
           </Col>
-          <Col lg={3}>
+          <Col xs={4} lg={3}>
             <Form.Group className="mb-3" controlId="componentSize">
               <Form.Label>Tamanho</Form.Label>
               <Form.Control
@@ -102,32 +102,33 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
               />
             </Form.Group>
           </Col>
-          <Col lg={6}>
+          <Col xs={4} lg={6}>
             <Form.Group className="mb-3" controlId="componentEnabledSwitch">
+              <Form.Label>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  Habilitado
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id="tooltip-component-enabled">Ative para exibir esse componente no site.</Tooltip>
+                    }
+                  >
+                    <span className="website-info">
+                      <FaInfoCircle size={14} />
+                    </span>
+                  </OverlayTrigger>
+                </span>
+              </Form.Label>
               <Form.Check
                 type="switch"
                 checked={componentEnabled}
                 onChange={(e) => setComponentEnabled(e.target.checked)}
                 id="componentEnabledSwitch"
-                label={
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                    Habilitado
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip id="tooltip-component-enabled">Ative para exibir esse componente no site.</Tooltip>
-                      }
-                    >
-                      <span className="website-info">
-                        <FaInfoCircle size={14} />
-                      </span>
-                    </OverlayTrigger>
-                  </span>
-                }
+                className="form-switch-lg"
               />
             </Form.Group>
           </Col>
-          <Col lg={12}>
+          <Col lg={12} style={{ display: 'none' }} id='aSerDesenvolvido'>
             <Form.Group className="mb-3" controlId="componentAllSettingsSwitch">
               <Form.Check
                 type="switch"

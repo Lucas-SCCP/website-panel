@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Row, Col, Form, Dropdown } from 'react-bootstrap'
+import { Row, Col, Form, Dropdown, Accordion } from 'react-bootstrap'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { PropertiesSettings } from '../components/PropertiesSettings'
+import { StylesSettings } from '../components/StylesSettings';
 import type { ComponentType, ElementType, ButtonPropertiesType } from 'website-lib'
 
 export function ButtonElement({ element }: { element: ElementType }) {
@@ -137,7 +138,10 @@ export function ButtonElement({ element }: { element: ElementType }) {
         </Form.Group>
       </Col>
       <Col lg={12}>
-        <PropertiesSettings element={element} properties={properties} styles={element.styles} />
+        <Accordion>
+          <PropertiesSettings element={element} properties={element.properties} />
+          <StylesSettings element={element} styles={element.styles} />
+        </Accordion>
       </Col>
     </Row>
   )

@@ -48,14 +48,14 @@ export function ListComponent({ component }: { component: ComponentType }) {
             <PiArrowBendDownRightBold />- <b>Item</b>
           </div>
         </div>
-        <span className="ms-auto website-accordion-header-action-buttons">
+        <span className="ms-auto website-accordion-header-action-buttons" style={{ display: 'none' }} id='aSerDesenvolvido'>
           <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip-delete-element">Excluir elemento</Tooltip>}>
             <span onClick={handleDeleteElement}>
               <TiDelete size={20} style={{ color: 'red' }} />
             </span>
           </OverlayTrigger>
         </span>
-        <span className="ms-auto website-accordion-header-action-buttons">
+        <span className="ms-auto website-accordion-header-action-buttons" style={{ display: 'none' }} id='aSerDesenvolvido'>
           <OverlayTrigger
             placement="bottom"
             overlay={<Tooltip id="tooltip-duplicate-element">Duplicar elemento</Tooltip>}
@@ -65,7 +65,7 @@ export function ListComponent({ component }: { component: ComponentType }) {
             </span>
           </OverlayTrigger>
         </span>
-        <span className="ms-auto website-accordion-header-action-buttons">
+        <span className="ms-auto website-accordion-header-action-buttons" style={{ display: 'none' }} id='aSerDesenvolvido'>
           <OverlayTrigger
             placement="bottom"
             overlay={<Tooltip id="tooltip-drag-element">Arraste para alterar a ordenação</Tooltip>}

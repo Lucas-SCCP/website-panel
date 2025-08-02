@@ -33,10 +33,8 @@ export function Login() {
         const websites = await apiService.getAllWebsiteByUserId(user.id, user.token)
         console.log('Websites fetched:', websites)
 
-        // Ao buscar todos os sites que o usuario tem acesso salva no estado global
         setAllWebsites(websites)
-      
-        // Seta o site selecionado de acordo com o padrao configurado pelo usuario
+
         const selectedWebsiteFound = websites.find((website) => website.id === user?.default_website_id)
         console.log('selectedWebsiteFound:', selectedWebsiteFound)
         if (selectedWebsiteFound) {

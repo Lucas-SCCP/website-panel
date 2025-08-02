@@ -1,5 +1,6 @@
-import { Row, Col, Form } from 'react-bootstrap'
+import { Row, Col, Form, Accordion } from 'react-bootstrap'
 import { PropertiesSettings } from '../components/PropertiesSettings'
+import { StylesSettings } from '../components/StylesSettings';
 import type { ElementType, LinkPropertiesType } from 'website-lib'
 
 export function LinkElement({ element }: { element: ElementType }) {
@@ -20,7 +21,10 @@ export function LinkElement({ element }: { element: ElementType }) {
         </Form.Group>
       </Col>
       <Col lg={12}>
-        <PropertiesSettings element={element} properties={properties} styles={element.styles} />
+        <Accordion>
+          <PropertiesSettings element={element} properties={element.properties} />
+          <StylesSettings element={element} styles={element.styles} />
+        </Accordion>
       </Col>
     </Row>
   )

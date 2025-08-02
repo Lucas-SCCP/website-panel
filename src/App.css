@@ -171,3 +171,13 @@ body {
   align-items: center;
   gap: 8px;
 }
+
+/** SWITCH **/
+.form-switch-lg .form-check-input {
+  width: 4em;
+  height: 2em;
+}
+
+.form-switch-lg .form-check-input:checked {
+  background-position: right center;
+}

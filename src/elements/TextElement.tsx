@@ -1,5 +1,6 @@
-import { Row, Col, Form } from 'react-bootstrap'
+import { Row, Col, Form, Accordion } from 'react-bootstrap'
 import { PropertiesSettings } from '../components/PropertiesSettings';
+import { StylesSettings } from '../components/StylesSettings';
 import { UseWebsiteStore } from '../stores/UseWebsiteStore';
 import type { ComponentType, ElementType, PageType, WebsiteType } from 'website-lib'
 
@@ -50,7 +51,10 @@ export function TextElement({ element }: { element: ElementType }) {
         </Form.Group>
       </Col>
       <Col lg={12}>
-        <PropertiesSettings element={updatedElement} properties={updatedElement.properties} styles={updatedElement.styles} />
+        <Accordion>
+          <PropertiesSettings element={updatedElement} properties={updatedElement.properties} />
+          <StylesSettings element={updatedElement} styles={updatedElement.styles} />
+        </Accordion>
       </Col>
     </Row>
   )

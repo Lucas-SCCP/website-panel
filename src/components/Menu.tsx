@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Row,
+  Col,
   Navbar,
   Container,
   Offcanvas,
@@ -20,8 +21,10 @@ import { MdOutlineSettings } from 'react-icons/md'
 import { MdAddCircleOutline } from 'react-icons/md'
 import { HiOutlineLogout } from 'react-icons/hi'
 import { MdSaveAlt } from 'react-icons/md'
+import { FaRegSave } from "react-icons/fa";
 import { MdDeleteForever } from 'react-icons/md'
 import { TiWarningOutline } from 'react-icons/ti'
+import { FaArrowAltCircleRight } from 'react-icons/fa';
 import type { WebsiteType, PageType } from 'website-lib'
 
 export function Menu() {
@@ -33,7 +36,6 @@ export function Menu() {
 
   const [showModalSave, setShowModalSave] = useState(false)
   const handleCloseModalSave = () => setShowModalSave(false)
-  const handleShowModalSave = () => setShowModalSave(true)
 
   const [website, setWebsite] = useState<WebsiteType | null>(null)
   const [page, setPage] = useState<PageType | null>(null)
@@ -47,6 +49,7 @@ export function Menu() {
   const setSelectedPage = UseWebsiteStore((state) => state.setSelectedPage)
 
   const hasUnsavedChanges = UseWebsiteStore((state) => state.hasUnsavedChanges)
+  const changes = UseWebsiteStore.getState().getChanges()
 
   const goToDashboardClick = () => {
     setSelectedPageId(null)
@@ -109,6 +112,15 @@ export function Menu() {
     return () => clearTimeout(timeoutId)
   }, [allWebsites, selectedWebsiteId, selectedPageId, setSelectedWebsiteId, setSelectedWebsite, setSelectedPage]);
 
+  function handleSaveClick() {
+    console.log('Detalhes das mudanças:', changes)
+  }
+
+  function handleOpenModalSaveClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
+    event.preventDefault()
+    setShowModalSave(true)
+    console.log(changes)
+  }
   return (
     <>
       <Row>
@@ -125,7 +137,7 @@ export function Menu() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="w-100">
-                  <Nav.Link>
+                  <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger
                       placement="bottom"
                       overlay={<Tooltip id={'tooltip-bottom'}>Página inicial</Tooltip>}
@@ -135,14 +147,14 @@ export function Menu() {
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
-                  <Nav.Link>
+                  <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Configurações</Tooltip>}>
                       <div onClick={goToSettingsClick} className="website-navbar-button website-navbar-button-icon">
                         <MdOutlineSettings size={30} />
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
-                  <Nav.Link>
+                  <Nav.Link style={{ cursor: 'auto' }}>
                     <NavDropdown
                       title={selectedWebsiteId ? allWebsites.find((w) => w.id === selectedWebsiteId)?.name : 'Selecione um site'}
                       className="website-navbar-button"
@@ -154,7 +166,7 @@ export function Menu() {
                       ))}
                     </NavDropdown>
                   </Nav.Link>
-                  <Nav.Link>
+                  <Nav.Link style={{ cursor: 'auto' }}>
                     <NavDropdown
                       title={selectedPageId ? allWebsites.find((w) => w.id === selectedWebsiteId)?.pages.find((p) => p.id === selectedPageId)?.name : 'Selecione uma página'}
                       className="website-navbar-button"
@@ -168,7 +180,7 @@ export function Menu() {
                   </Nav.Link>
                   {page !== null && (
                     <>
-                      <Nav.Link>
+                      <Nav.Link style={{ cursor: 'auto', display: 'none' }} id='aSerDesenvolvido'>
                         <OverlayTrigger
                           placement="bottom"
                           overlay={<Tooltip id="tooltip-delete-page">Excluir página</Tooltip>}
@@ -178,7 +190,7 @@ export function Menu() {
                           </div>
                         </OverlayTrigger>
                       </Nav.Link>
-                      <Nav.Link>
+                      <Nav.Link style={{ cursor: 'auto', display: 'none' }} id='aSerDesenvolvido'>
                         <OverlayTrigger
                           placement="bottom"
                           overlay={
@@ -192,23 +204,23 @@ export function Menu() {
                           </div>
                         </OverlayTrigger>
                       </Nav.Link>
-                      <Nav.Link>
+                      <Nav.Link style={{ cursor: 'auto', display: hasUnsavedChanges ? 'block' : 'none' }}>
                         <OverlayTrigger
                           placement="bottom"
                           overlay={
-                            <Tooltip id="tooltip-menu-position" onClick={handleShowModalSave}>
+                            <Tooltip id="tooltip-menu-position">
                               Salvar todas as alterações
                             </Tooltip>
                           }
                         >
-                          <div className="website-navbar-action-buttons website-navbar-action-buttons-success" onClick={handleShowModalSave}>
-                            <MdSaveAlt size={30} />
+                          <div className="website-navbar-action-buttons website-navbar-action-buttons-success" onClick={handleOpenModalSaveClick}>
+                            <FaRegSave size={30} />
                           </div>
                         </OverlayTrigger>
                       </Nav.Link>
-                      <Nav.Link>
+                      <Nav.Link style={{ cursor: 'auto' }}>
                         {hasUnsavedChanges && (
-                          <div style={{background: '#edc707', padding: '10px', borderRadius: '5px', display: 'flex', alignItems: 'center'}}>
+                          <div style={{background: '#ffc107', padding: '10px', borderRadius: '5px', display: 'flex', alignItems: 'center'}}>
                             <TiWarningOutline size={20} />
                             <span style={{ marginLeft: '5px', fontWeight: 'bold', color: 'black' }}>
                               Você tem alterações não salvas
@@ -256,18 +268,69 @@ export function Menu() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Modal show={showModalSave} onHide={handleCloseModalSave}>
-        <Modal.Header closeButton>
-          <Modal.Title>Salvar alterações</Modal.Title>
+      <Modal show={showModalSave} onHide={handleCloseModalSave} backdrop="static" keyboard={false} size="lg" centered>
+        <Modal.Header>
+          <Modal.Title>Alterações realizadas</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          
+          <Container>
+            <Row style={{ padding: '10px' }}>
+              {hasUnsavedChanges ? (
+                (changes?.page?.component && changes.page.component.length > 0) ? (
+                  changes.page.component.map((component, index) => (
+                    <>
+                      <Col lg={12} key={index} style={{ background: '#BBB', padding: '10px', borderRadius: '5px' }}>
+                        <b>Componente: {component.name}</b>
+                      </Col>
+                      {component.element?.map((el, elIndex) => (
+                        <>
+                          <Col key={elIndex} lg={12} className='mt-2 mb-2' style={{ border: '2px solid #BBB', padding: '10px', borderRadius: '5px' }}>
+                            Elemento: {el.elementTypeId}
+                          </Col>
+                          {el.changes.map((change) => (
+                            <Col lg={12} className='mb-2'>
+                              <Row className="d-flex gap-2">
+                                <div style={{ flex: 3, padding: '10px', borderRadius: '5px', background: '#eee' }}>
+                                  {change.field}
+                                </div>
+                                <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#ffe6e6' }}>
+                                  {change.oldValue}
+                                </div>
+                                <div className='text-center' style={{ flex: 1, padding: '10px' }}>
+                                  <FaArrowAltCircleRight />
+                                </div>
+                                <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#e6ffe6' }}>
+                                  {change.newValue}
+                                </div>
+                              </Row>
+                            </Col>
+                          ))}
+                        </>
+                      ))}
+                    </>
+                  ))
+                ) : (
+                  <Col lg={12}>
+                    Nenhum componente modificado.
+                  </Col>
+                )
+              ) : (
+                <Col lg={12} className='text-center'>
+                  Não há alterações para salvar.
+                </Col>
+              )}
+            </Row>
+          </Container>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="outline-secondary" onClick={handleCloseModalSave}>
             Cancelar
           </Button>
-          <Button variant="success" onClick={handleCloseModalSave}>
+          <Button 
+            variant="success" 
+            onClick={handleSaveClick}
+            disabled={!hasUnsavedChanges}
+          >
             Salvar
           </Button>
         </Modal.Footer>

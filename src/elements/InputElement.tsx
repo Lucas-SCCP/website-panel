@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Row, Col, Form, Dropdown } from 'react-bootstrap'
+import { Row, Col, Form, Dropdown, Accordion } from 'react-bootstrap'
 import { PropertiesSettings } from '../components/PropertiesSettings'
+import { StylesSettings } from '../components/StylesSettings';
 import type { ElementType, InputPropertiesType } from 'website-lib'
 
 export function InputElement({ element }: { element: ElementType }) {
@@ -74,7 +75,10 @@ export function InputElement({ element }: { element: ElementType }) {
         </Form.Group>
       </Col>
       <Col lg={12}>
-        <PropertiesSettings element={element} properties={element.properties} styles={element.styles} />
+        <Accordion>
+          <PropertiesSettings element={element} properties={element.properties} />
+          <StylesSettings element={element} styles={element.styles} />
+        </Accordion>
       </Col>
     </Row>
   )
