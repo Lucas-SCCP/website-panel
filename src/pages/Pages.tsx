@@ -40,9 +40,9 @@ export function Pages() {
     updateSelectedPageField('path', newPath)
   }
 
-  const handleMenuChange = (newMenu: number) => {
-    setMenu(newMenu)
-    updateSelectedPageField('menu', newMenu)
+  const handleMenuChange = (newMenu: boolean) => {
+    setMenu(newMenu ? 1 : 0)
+    updateSelectedPageField('menu', newMenu ? 1 : 0)
   }
 
   const handleMenuOrderChange = (newMenuOrder: number) => {
@@ -61,8 +61,7 @@ export function Pages() {
   }
 
   function setCheckedMenu(checked: boolean): void {
-    const newMenu = checked ? 1 : 0
-    handleMenuChange(newMenu)
+    handleMenuChange(checked)
   }
 
   function setCheckedInitialPage(checked: boolean): void {
@@ -84,7 +83,8 @@ export function Pages() {
           setPath(page.path)
           setMenu(page.menu)
           setMenuOrder(page.menu_order)
-          setEnabled(page.enabled)
+          // Garantir que sempre trabalhamos com boolean na interface
+          setEnabled(!!page.enabled)
         }
       }
     }, 100)

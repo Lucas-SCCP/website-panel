@@ -231,8 +231,19 @@ export const UseWebsiteStore = create<WebsiteStore>()(
         
         const updatedPage = { ...currentSelectedPage, [key]: value }
 
-        const oldValue = originalPage ? String(originalPage[key]) : String(currentSelectedPage[key])
-        const newValue = String(value)
+        // Tratamento especial para campos booleanos/numéricos
+        const originalValue = originalPage ? originalPage[key] : currentSelectedPage[key]
+        let oldValue: string
+        let newValue: string
+        
+        if (key === 'enabled' || key === 'menu') {
+          // Para campos booleanos/numéricos, normalizar para string boolean
+          oldValue = String(!!originalValue)
+          newValue = String(!!value)
+        } else {
+          oldValue = String(originalValue)
+          newValue = String(value)
+        }
 
         const currentChanges = get().changes
         let updatedChanges: ChangeDetail
