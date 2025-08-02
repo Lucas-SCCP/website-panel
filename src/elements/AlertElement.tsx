@@ -44,8 +44,8 @@ export function AlertElement({ element }: { element: ElementType }) {
       </Col>
       <Col lg={12}>
         <Accordion>
-          <PropertiesSettings element={element} properties={element.properties} />
-          <StylesSettings element={element} styles={element.styles} />
+          <PropertiesSettings element={element} />
+          <StylesSettings element={element} />
         </Accordion>
       </Col>
     </Row>

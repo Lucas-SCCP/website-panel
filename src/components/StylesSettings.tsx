@@ -1,9 +1,9 @@
 import { Accordion, Row, Col, Form, InputGroup } from 'react-bootstrap'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore';
 import { LuPaintbrush } from 'react-icons/lu'
-import type { WebsiteType, PageType, ComponentType, ElementType, StylesType } from 'website-lib'
+import type { WebsiteType, PageType, ComponentType, ElementType } from 'website-lib'
 
-export function StylesSettings({ element, styles }: { element: ElementType, styles: StylesType }) {
+export function StylesSettings({ element }: { element: ElementType }) {
 
   // console.log('PropertiesSettings element:', element)
   const selectedWebsite: WebsiteType | null = UseWebsiteStore((state) => state.selectedWebsite)
@@ -15,6 +15,11 @@ export function StylesSettings({ element, styles }: { element: ElementType, styl
   const { updateSelectedElementField } = UseWebsiteStore()
 
   const setStylesValue = (key: string, value: string) => {
+    console.log('selectedWebsite', selectedWebsite)
+    console.log('selectedPage', selectedPage)
+    console.log('component', component)
+    console.log('key', key)
+    console.log('value', value)
     if (
       selectedWebsite?.id == null ||
       selectedPage?.id == null ||
@@ -50,7 +55,7 @@ export function StylesSettings({ element, styles }: { element: ElementType, styl
               <Form.Control
                 type="color"
                 placeholder="Digite o texto"
-                value={styles.color ? styles.color : ''}
+                value={updatedElement.styles.color ? updatedElement.styles.color : ''}
                 onChange={(e) => setStylesValue('color', e.target.value)}
               />
             </Form.Group>
@@ -61,7 +66,7 @@ export function StylesSettings({ element, styles }: { element: ElementType, styl
               <Form.Control 
                 type="text"
                 placeholder="Digite o texto"
-                value={styles?.fontSize?.replace('px', '')}
+                value={updatedElement.styles?.fontSize?.replace('px', '')}
                 onChange={(e) => setStylesValue('fontSize', e.target.value + 'px')}                
               />
               <InputGroup.Text id="basic-addon3">
@@ -72,7 +77,7 @@ export function StylesSettings({ element, styles }: { element: ElementType, styl
           <Col lg={4}>
             <Form.Group className="mb-3" controlId="pageName">
               <Form.Label>Alinhamento</Form.Label>
-              <Form.Select style={{ width: '100%' }} value={styles.textAlign} onChange={(e) => setStylesValue('textAlign', e.target.value)}>
+              <Form.Select style={{ width: '100%' }} value={updatedElement.styles.textAlign} onChange={(e) => setStylesValue('textAlign', e.target.value)}>
                 <option value="">Selecione</option>
                 <option value="left">Esquerda</option>
                 <option value="center">Centro</option>
@@ -86,7 +91,7 @@ export function StylesSettings({ element, styles }: { element: ElementType, styl
               <Form.Control
                 type="text"
                 placeholder="Digite o texto"
-                value={styles.fontWeight}
+                value={updatedElement.styles.fontWeight}
                 onChange={(e) => setStylesValue('fontWeight', e.target.value)}
               />
             </Form.Group>

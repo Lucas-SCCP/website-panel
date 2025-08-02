@@ -1,9 +1,9 @@
 import { Accordion, Row, Col, Form } from 'react-bootstrap'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore';
 import { MdOutlineSettings } from 'react-icons/md'
-import type { WebsiteType, PageType, ComponentType, ElementType, PropertiesType } from 'website-lib'
+import type { WebsiteType, PageType, ComponentType, ElementType } from 'website-lib'
 
-export function PropertiesSettings({ element, properties }: { element: ElementType, properties: PropertiesType }) {
+export function PropertiesSettings({ element }: { element: ElementType }) {
 
   // console.log('PropertiesSettings element:', element)
   const selectedWebsite: WebsiteType | null = UseWebsiteStore((state) => state.selectedWebsite)
@@ -31,6 +31,11 @@ export function PropertiesSettings({ element, properties }: { element: ElementTy
   }
 
   const setPropertiesValue = (key: string, value: string) => {
+    console.log('selectedWebsite', selectedWebsite)
+    console.log('selectedPage', selectedPage)
+    console.log('component', component)
+    console.log('key', key)
+    console.log('value', value)
     if (
       selectedWebsite?.id == null ||
       selectedPage?.id == null ||
@@ -38,13 +43,19 @@ export function PropertiesSettings({ element, properties }: { element: ElementTy
     ) {
       return
     }
+
+    let newValue: string | boolean = value
+    if (key === 'startHidden') {
+      newValue = value === 'true' ? true : false
+    }
+
     updateSelectedElementField(
       component.id,
       element.id,
       'properties',
       {
         ...updatedElement.properties,
-        [key]: value
+        [key]: newValue
       }
     )
   }
@@ -85,7 +96,7 @@ export function PropertiesSettings({ element, properties }: { element: ElementTy
           <Col lg={6}>
             <Form.Group className="mb-3" controlId="pageName">
               <Form.Label>Iniciar oculto</Form.Label>
-              <Form.Select value={properties.startHidden ? 'true' : 'false'} onChange={(e) => setPropertiesValue('startHidden', e.target.value)}>
+              <Form.Select value={updatedElement.properties.startHidden ? 'true' : 'false'} onChange={(e) => setPropertiesValue('startHidden', e.target.value)}>
                 <option value="">Selecione</option>
                 <option value="true">Sim</option>
                 <option value="false">Não</option>

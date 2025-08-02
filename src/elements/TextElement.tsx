@@ -52,8 +52,8 @@ export function TextElement({ element }: { element: ElementType }) {
       </Col>
       <Col lg={12}>
         <Accordion>
-          <PropertiesSettings element={updatedElement} properties={updatedElement.properties} />
-          <StylesSettings element={updatedElement} styles={updatedElement.styles} />
+          <PropertiesSettings element={updatedElement} />
+          <StylesSettings element={updatedElement} />
         </Accordion>
       </Col>
     </Row>

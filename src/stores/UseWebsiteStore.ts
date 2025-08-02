@@ -248,11 +248,19 @@ export const UseWebsiteStore = create<WebsiteStore>()(
             ? component.elements.content.map((element) => {
                 if (element.id !== elementId) return element
 
-                if (key === "properties" && typeof value === "object" && value !== null) {
+                if (key === 'properties' && typeof value === 'object' && value !== null) {
                   return {
                     ...element,
                     properties: {
                       ...element.properties,
+                      ...value
+                    }
+                  }
+                } else if (key === 'styles' && typeof value === 'object' && value !== null) {
+                  return {
+                    ...element,
+                    styles: {
+                      ...element.styles,
                       ...value
                     }
                   }
@@ -281,7 +289,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
         const newChangeValue = value
         const fieldName = String(key)
 
-        if (key === "properties" && typeof value === "object" && value !== null) {
+        if ((key === 'properties' || key === 'styles') && typeof value === 'object' && value !== null) {
           const currentElement = currentSelectedPage.components
             .find(c => c.id === componentId)?.elements.content
             ?.[elementIndex as number]
@@ -289,13 +297,52 @@ export const UseWebsiteStore = create<WebsiteStore>()(
           if (currentElement && originalElement) {
             const valueObj = value as unknown as Record<string, unknown>
             Object.keys(valueObj).forEach(propKey => {
-              const propOldValue = originalElement.properties?.[propKey as keyof typeof originalElement.properties]
+              const propOldValue = (key === 'properties') ? 
+              originalElement.properties?.[propKey as keyof typeof originalElement.properties] : 
+              originalElement.styles?.[propKey as keyof typeof originalElement.styles]
               const propNewValue = valueObj[propKey]
               
-              if (JSON.stringify(propOldValue) !== JSON.stringify(propNewValue)) {
-                const currentChanges = get().changes
-                let updatedChanges: ChangeDetail
-                
+              const currentChanges = get().changes
+              let updatedChanges: ChangeDetail
+              
+              if (JSON.stringify(propOldValue) === JSON.stringify(propNewValue)) {
+                // Se os valores são iguais, remover do objeto de changes
+                if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+                  updatedChanges = { ...currentChanges }
+                  
+                  if (updatedChanges.page?.component) {
+                    const targetComponent = updatedChanges.page.component.find(c => c.id === componentId)
+                    if (targetComponent?.element) {
+                      const existingElement = targetComponent.element.find(el => el.id === elementId)
+                      if (existingElement) {
+                        // Remover o change específico
+                        existingElement.changes = existingElement.changes.filter(ch => ch.field !== propKey)
+                        
+                        // Se não há mais changes para este elemento, removê-lo
+                        if (existingElement.changes.length === 0) {
+                          targetComponent.element = targetComponent.element.filter(el => el.id !== elementId)
+                        }
+                        
+                        // Se não há mais elementos para este componente, removê-lo
+                        if (targetComponent.element.length === 0) {
+                          updatedChanges.page.component = updatedChanges.page.component.filter(c => c.id !== componentId)
+                        }
+                        
+                        // Se não há mais componentes para esta página, limpar changes
+                        if (updatedChanges.page.component.length === 0) {
+                          updatedChanges = {
+                            websiteId: currentSelectedWebsite.id,
+                            page: undefined
+                          }
+                        }
+                        
+                        set({ changes: updatedChanges.page ? updatedChanges : null })
+                      }
+                    }
+                  }
+                }
+              } else {
+                // Valores diferentes, adicionar/atualizar change
                 if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
                   // Se já existe um change para este website, vamos adicionar/atualizar o elemento
                   updatedChanges = { ...currentChanges }
@@ -371,82 +418,129 @@ export const UseWebsiteStore = create<WebsiteStore>()(
           const currentChanges = get().changes
           let updatedChanges: ChangeDetail
           
-          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
-            // Se já existe um change para este website, vamos adicionar/atualizar o elemento
-            updatedChanges = { ...currentChanges }
-            
-            if (!updatedChanges.page) {
-              updatedChanges.page = {
-                id: currentSelectedPage.id,
-                component: []
+          if (String(oldValue) === String(newChangeValue)) {
+            // Se os valores são iguais, remover do objeto de changes
+            if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+              updatedChanges = { ...currentChanges }
+              
+              if (updatedChanges.page?.component) {
+                const targetComponent = updatedChanges.page.component.find(c => c.id === componentId)
+                if (targetComponent?.element) {
+                  const existingElement = targetComponent.element.find(el => el.id === elementId)
+                  if (existingElement) {
+                    // Remover o change específico
+                    existingElement.changes = existingElement.changes.filter(ch => ch.field !== fieldName)
+                    
+                    // Se não há mais changes para este elemento, removê-lo
+                    if (existingElement.changes.length === 0) {
+                      targetComponent.element = targetComponent.element.filter(el => el.id !== elementId)
+                    }
+                    
+                    // Se não há mais elementos para este componente, removê-lo
+                    if (targetComponent.element.length === 0) {
+                      updatedChanges.page.component = updatedChanges.page.component.filter(c => c.id !== componentId)
+                    }
+                    
+                    // Se não há mais componentes para esta página, limpar changes
+                    if (updatedChanges.page.component.length === 0) {
+                      updatedChanges = {
+                        websiteId: currentSelectedWebsite.id,
+                        page: undefined
+                      }
+                    }
+                    
+                    set({ changes: updatedChanges.page ? updatedChanges : null })
+                  }
+                }
               }
-            }
-            
-            let targetComponent = updatedChanges.page.component?.find(c => c.id === componentId)
-            if (!targetComponent) {
-              targetComponent = { 
-                id: componentId, 
-                name: originalComponentForElement ? String(originalComponentForElement.name) : '', 
-                element: [] 
-              }
-              updatedChanges.page.component = updatedChanges.page.component || []
-              updatedChanges.page.component.push(targetComponent)
-            }
-            
-            let existingElement = targetComponent.element?.find(el => el.id === elementId)
-            if (!existingElement) {
-              existingElement = { id: elementId, elementTypeId: originalElement?.element_type_id ?? 0, changes: [] }
-              targetComponent.element = targetComponent.element || []
-              targetComponent.element.push(existingElement)
-            }
-            
-            // Verificar se já existe um change para este campo
-            const existingChangeIndex = existingElement.changes.findIndex(ch => ch.field === fieldName)
-            const newChange = {
-              action: 'updated' as const,
-              field: fieldName,
-              oldValue: String(oldValue),
-              newValue: String(newChangeValue)
-            }
-            
-            if (existingChangeIndex >= 0) {
-              existingElement.changes[existingChangeIndex] = newChange
-            } else {
-              existingElement.changes.push(newChange)
             }
           } else {
-            // Criar novo change
-            updatedChanges = {
-              websiteId: currentSelectedWebsite.id,
-              page: {
-                id: currentSelectedPage.id,
-                component: [{
-                  id: componentId,
-                  name: originalComponentForElement ? String(originalComponentForElement.name) : '',
-                  element: [{
-                    id: elementId,
-                    elementTypeId: originalElement?.element_type_id ?? 0,
-                    changes: [{
-                      action: 'updated',
-                      field: fieldName,
-                      oldValue: String(oldValue),
-                      newValue: String(newChangeValue)
+            // Valores diferentes, adicionar/atualizar change
+            if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+              // Se já existe um change para este website, vamos adicionar/atualizar o elemento
+              updatedChanges = { ...currentChanges }
+              
+              if (!updatedChanges.page) {
+                updatedChanges.page = {
+                  id: currentSelectedPage.id,
+                  component: []
+                }
+              }
+              
+              let targetComponent = updatedChanges.page.component?.find(c => c.id === componentId)
+              if (!targetComponent) {
+                targetComponent = { 
+                  id: componentId, 
+                  name: originalComponentForElement ? String(originalComponentForElement.name) : '', 
+                  element: [] 
+                }
+                updatedChanges.page.component = updatedChanges.page.component || []
+                updatedChanges.page.component.push(targetComponent)
+              }
+              
+              let existingElement = targetComponent.element?.find(el => el.id === elementId)
+              if (!existingElement) {
+                existingElement = { id: elementId, elementTypeId: originalElement?.element_type_id ?? 0, changes: [] }
+                targetComponent.element = targetComponent.element || []
+                targetComponent.element.push(existingElement)
+              }
+              
+              // Verificar se já existe um change para este campo
+              const existingChangeIndex = existingElement.changes.findIndex(ch => ch.field === fieldName)
+              const newChange = {
+                action: 'updated' as const,
+                field: fieldName,
+                oldValue: String(oldValue),
+                newValue: String(newChangeValue)
+              }
+              
+              if (existingChangeIndex >= 0) {
+                existingElement.changes[existingChangeIndex] = newChange
+              } else {
+                existingElement.changes.push(newChange)
+              }
+            } else {
+              // Criar novo change
+              updatedChanges = {
+                websiteId: currentSelectedWebsite.id,
+                page: {
+                  id: currentSelectedPage.id,
+                  component: [{
+                    id: componentId,
+                    name: originalComponentForElement ? String(originalComponentForElement.name) : '',
+                    element: [{
+                      id: elementId,
+                      elementTypeId: originalElement?.element_type_id ?? 0,
+                      changes: [{
+                        action: 'updated',
+                        field: fieldName,
+                        oldValue: String(oldValue),
+                        newValue: String(newChangeValue)
+                      }]
                     }]
                   }]
-                }]
+                }
               }
             }
+            
+            set({ changes: updatedChanges })
           }
-          
-          set({ changes: updatedChanges })
         }
 
         const isWebsiteDifferent = !allWebsites.some(website => website.id === updatedWebsite.id && JSON.stringify(website) === JSON.stringify(updatedWebsite))
+        
+        // Verificar se há mudanças reais no objeto changes
+        const finalChanges = get().changes
+        const hasRealChanges = Boolean(finalChanges && (
+          finalChanges.action || 
+          finalChanges.field || 
+          (finalChanges.page && finalChanges.page.component && finalChanges.page.component.length > 0)
+        ))
 
         set({
           selectedPage: updatedPage,
           selectedWebsite: updatedWebsite,
-          hasUnsavedChanges: isWebsiteDifferent
+          hasUnsavedChanges: isWebsiteDifferent && hasRealChanges
         })
       },
 
