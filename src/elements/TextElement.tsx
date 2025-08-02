@@ -2,7 +2,7 @@ import { Row, Col, Form, Accordion } from 'react-bootstrap'
 import { PropertiesSettings } from '../components/PropertiesSettings';
 import { StylesSettings } from '../components/StylesSettings';
 import { UseWebsiteStore } from '../stores/UseWebsiteStore';
-import type { ComponentType, ElementType, PageType, WebsiteType } from 'website-lib'
+import type { WebsiteType, PageType, ComponentType, ElementType  } from 'website-lib'
 
 export function TextElement({ element }: { element: ElementType }) {
 

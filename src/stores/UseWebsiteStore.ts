@@ -182,6 +182,10 @@ export const UseWebsiteStore = create<WebsiteStore>()(
         }
       },
       updateSelectedComponentField: (componentId, key, value) => {
+        console.log('updateSelectedComponentField')
+        console.log('componentId', componentId)
+        console.log('key', key)
+        console.log('value', value)
         const allWebsites = get().allWebsites
         const currentSelectedPage = get().selectedPage
         const currentSelectedWebsite = get().selectedWebsite
@@ -298,8 +302,8 @@ export const UseWebsiteStore = create<WebsiteStore>()(
             const valueObj = value as unknown as Record<string, unknown>
             Object.keys(valueObj).forEach(propKey => {
               const propOldValue = (key === 'properties') ? 
-              originalElement.properties?.[propKey as keyof typeof originalElement.properties] : 
-              originalElement.styles?.[propKey as keyof typeof originalElement.styles]
+                originalElement.properties?.[propKey as keyof typeof originalElement.properties] : 
+                originalElement.styles?.[propKey as keyof typeof originalElement.styles]
               const propNewValue = valueObj[propKey]
               
               const currentChanges = get().changes

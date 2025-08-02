@@ -1,19 +1,23 @@
 import { useState, type JSX } from 'react'
 import { Row, Col, Accordion, Form, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { ComponentFactory } from '../factories/ComponentFactory'
+import { UseWebsiteStore } from '../stores/UseWebsiteStore';
 import { FaListUl, FaInfoCircle, FaTextHeight } from 'react-icons/fa'
 import { RiInputField } from 'react-icons/ri'
 import { TiDelete } from 'react-icons/ti'
 import { TbSwitchVertical } from 'react-icons/tb'
-import type { ComponentType } from 'website-lib'
+import type { WebsiteType, PageType, ComponentType  } from 'website-lib'
 
 export function ComponentSettings({ component, index }: { component: ComponentType, index: number }) {
-  const [componentName, setComponentName] = useState(component.name)
-  const [componentSort, setComponentSort] = useState(component.sort)
-  const [componentSize, setComponentSize] = useState(component.size)
-  const [componentEnabled, setComponentEnabled] = useState(component.enabled)
+
   const [allSettings, setAllSettings] = useState(false)
   const componentFactory = new ComponentFactory()
+
+  const selectedWebsite: WebsiteType | null = UseWebsiteStore((state) => state.selectedWebsite)
+  const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
+  const updatedComponent: ComponentType | undefined = selectedPage?.components.find((c) => c.id === component.id)
+
+  const { updateSelectedComponentField } = UseWebsiteStore()
 
   function getIconByComponentType(type: number): JSX.Element {
     switch (type) {
@@ -33,6 +37,25 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
     if (window.confirm('Tem certeza que deseja excluir este componente?')) {
       console.log(`Component with index ${index} would be deleted.`)
     }
+  }
+
+  const setValue = (key: keyof ComponentType, value: string) => {
+    console.log('setValue', key, value)
+    console.log('selectedWebsite', selectedWebsite)
+    console.log('selectedPage', selectedPage)
+    console.log('component', component)
+    if (
+      selectedWebsite?.id == null ||
+      selectedPage?.id == null ||
+      component?.id == null
+    ) {
+      return
+    }
+    updateSelectedComponentField(
+      component.id,
+      key,
+      value
+    )
   }
 
   return (
@@ -75,8 +98,8 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
               <Form.Control
                 type="text"
                 placeholder="Digite um nome para o componente"
-                value={componentName}
-                onChange={(e) => setComponentName(e.target.value)}
+                value={updatedComponent?.name}
+                onChange={(e) => setValue('name', e.target.value)}
               />
             </Form.Group>
           </Col>
@@ -84,10 +107,10 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
             <Form.Group className="mb-3" controlId="componentSort">
               <Form.Label>Posição</Form.Label>
               <Form.Control
-                type="text"
+                type="number"
                 placeholder="Digite uma posição para o componente"
-                value={componentSort}
-                onChange={(e) => setComponentSort(Number(e.target.value))}
+                value={updatedComponent?.sort}
+                onChange={(e) => setValue('sort', e.target.value)}
               />
             </Form.Group>
           </Col>
@@ -95,10 +118,10 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
             <Form.Group className="mb-3" controlId="componentSize">
               <Form.Label>Tamanho</Form.Label>
               <Form.Control
-                type="text"
+                type="number"
                 placeholder="Digite o tamanho do componente"
-                value={componentSize}
-                onChange={(e) => setComponentSize(Number(e.target.value))}
+                value={updatedComponent?.size}
+                onChange={(e) => setValue('size', e.target.value)}
               />
             </Form.Group>
           </Col>
@@ -121,8 +144,8 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
               </Form.Label>
               <Form.Check
                 type="switch"
-                checked={componentEnabled}
-                onChange={(e) => setComponentEnabled(e.target.checked)}
+                checked={updatedComponent?.enabled}
+                onChange={(e) => setValue('enabled', e.target.value)}
                 id="componentEnabledSwitch"
                 className="form-switch-lg"
               />
