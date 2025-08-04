@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Row, Col, Form, OverlayTrigger, Tooltip, Accordion } from 'react-bootstrap'
+import Switch from 'react-switch'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { Main } from './Main'
 import { ComponentSettings } from '../components/ComponentSettings'
@@ -144,89 +145,92 @@ export function Pages() {
                       />
                     </Form.Group>
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={3}>
                     <Form.Group className="mb-3" controlId="initialPageSwitch">
-                      <Form.Check
-                        type="switch"
-                        checked={path === '/'}
-                        onChange={(e) => setCheckedPage(e.target.checked)}
-                        id="initialPageSwitch"
-                        label={
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                            Página inicial
-                            <OverlayTrigger
-                              placement="bottom"
-                              overlay={
-                                <Tooltip id="tooltip-initial-page">
-                                  Ative para tornar essa a página inicial do site.
-                                </Tooltip>
-                              }
-                            >
-                              <span style={{ cursor: 'pointer', color: '#A1A1A1' }}>
-                                <FaInfoCircle size={14} />
-                              </span>
-                            </OverlayTrigger>
-                          </span>
-                        }
-                      />
+                      <Form.Label>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                          Página inicial
+                          <OverlayTrigger
+                            placement="bottom"
+                            overlay={
+                              <Tooltip id="tooltip-initial-page">
+                                Ative para tornar essa a página inicial do site.
+                              </Tooltip>
+                            }
+                          >
+                            <span style={{ cursor: 'pointer', color: '#A1A1A1' }}>
+                              <FaInfoCircle size={14} />
+                            </span>
+                          </OverlayTrigger>
+                        </span>
+                      </Form.Label>
+                      <div style={{ display: 'flex', marginTop: '8px' }}>
+                        <Switch
+                          onChange={(checked) => setCheckedPage(checked)}
+                          checked={path === '/'}
+                          className="react-switch"
+                        />
+                      </div>
                     </Form.Group>
                   </Col>
-                  <Col lg={6}>
-                    <Form.Group className="mb-3" controlId="menuSwitch">
-                      <Form.Check
-                        type="switch"
-                        checked={menu === 1}
-                        onChange={(e) => setCheckedMenu(e.target.checked)}
-                        id="menuSwitch"
-                        label={
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                            Exibir no menu
-                            <OverlayTrigger
-                              placement="bottom"
-                              overlay={
-                                <Tooltip id="tooltip-initial-page">
-                                  Ative para exibir essa página no menu de navegação do site.
-                                </Tooltip>
-                              }
-                            >
-                              <span style={{ cursor: 'pointer', color: '#A1A1A1' }}>
-                                <FaInfoCircle size={14} />
-                              </span>
-                            </OverlayTrigger>
-                          </span>
-                        }
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col lg={6}>
+                  <Col lg={3}>
                     <Form.Group className="mb-3" controlId="enabledSwitch">
-                      <Form.Check
-                        type="switch"
-                        checked={enabled}
-                        onChange={(e) => setCheckedInitialPage(e.target.checked)}
-                        id="enabledSwitch"
-                        label={
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                            Visível
-                            <OverlayTrigger
-                              placement="bottom"
-                              overlay={
-                                <Tooltip id="tooltip-initial-page">Ative para publicar essa página no site.</Tooltip>
-                              }
-                            >
-                              <span style={{ cursor: 'pointer', color: '#A1A1A1' }}>
-                                <FaInfoCircle size={14} />
-                              </span>
-                            </OverlayTrigger>
-                          </span>
-                        }
-                      />
+                      <Form.Label>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                          Publicada
+                          <OverlayTrigger
+                            placement="bottom"
+                            overlay={
+                              <Tooltip id="tooltip-initial-page">Ative para publicar essa página no site.</Tooltip>
+                            }
+                          >
+                            <span className="website-info">
+                              <FaInfoCircle size={14} />
+                            </span>
+                          </OverlayTrigger>
+                        </span>
+                      </Form.Label>
+                      <div style={{ display: 'flex', marginTop: '8px' }}>
+                        <Switch
+                          onChange={(checked) => setCheckedInitialPage(checked)}
+                          checked={!!enabled}
+                          className="react-switch"
+                        />
+                      </div>
                     </Form.Group>
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={3}>
+                    <Form.Group className="mb-3" controlId="menuSwitch">
+                      <Form.Label>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                          Menu
+                          <OverlayTrigger
+                            placement="bottom"
+                            overlay={
+                              <Tooltip id="tooltip-initial-page">
+                                Ative para exibir essa página no menu de navegação do site.
+                              </Tooltip>
+                            }
+                          >
+                            <span className="website-info">
+                              <FaInfoCircle size={14} />
+                            </span>
+                          </OverlayTrigger>
+                        </span>
+                      </Form.Label>
+                      <div style={{ display: 'flex', marginTop: '8px' }}>
+                        <Switch
+                          onChange={(checked) => setCheckedMenu(checked)}
+                          checked={menu === 1}
+                          className="react-switch"
+                        />
+                      </div>
+                    </Form.Group>
+                  </Col>
+                  <Col lg={3}>
                     <Form.Group controlId="positionMenu">
                       <Form.Label style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                        Posição no menu
+                        Posição
                         <OverlayTrigger
                           placement="right"
                           overlay={

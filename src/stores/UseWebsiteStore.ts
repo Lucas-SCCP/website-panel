@@ -368,8 +368,19 @@ export const UseWebsiteStore = create<WebsiteStore>()(
         )
         const updatedWebsite = { ...currentSelectedWebsite, pages: updatedPages }
 
-        const oldValue = originalComponent ? String(originalComponent[key]) : String(currentSelectedPage.components.find(c => c.id === componentId)?.[key])
-        const newValue = String(value)
+        // Tratamento especial para campos booleanos/numéricos
+        const originalValue = originalComponent ? originalComponent[key] : currentSelectedPage.components.find(c => c.id === componentId)?.[key]
+        let oldValue: string
+        let newValue: string
+        
+        if (key === 'enabled') {
+          // Para campos booleanos/numéricos, normalizar para string boolean
+          oldValue = String(!!originalValue)
+          newValue = String(!!value)
+        } else {
+          oldValue = String(originalValue)
+          newValue = String(value)
+        }
 
         const currentChanges = get().changes
         let updatedChanges: ChangeDetail

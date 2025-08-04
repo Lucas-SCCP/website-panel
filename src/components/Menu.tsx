@@ -281,22 +281,22 @@ export function Menu() {
                   {/* Mudanças no Website */}
                   {changes?.changes && changes.changes.length > 0 && (
                     <>
-                      <Col lg={12} style={{ background: '#007bff', color: 'white', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>
+                      <Col lg={12} style={{ background: '#868686ff', color: 'white', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>
                         <b>Website</b>
                       </Col>
                       {changes.changes.map((change, changeIndex) => (
                         <Col lg={12} className='mb-2' key={changeIndex}>
                           <Row className="d-flex gap-2">
-                            <div style={{ flex: 3, padding: '10px', borderRadius: '5px', background: '#eee' }}>
-                              {change.field}
+                            <div style={{ flex: 3, padding: '10px', borderRadius: '5px', border: '2px solid #868686ff' }}>
+                              <b>{change.field}</b>
                             </div>
-                            <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#ffe6e6' }}>
+                            <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #dc3545' }}>
                               {change.oldValue}
                             </div>
                             <div className='text-center' style={{ flex: 1, padding: '10px' }}>
                               <FaArrowAltCircleRight />
                             </div>
-                            <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#e6ffe6' }}>
+                            <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #198754' }}>
                               {change.newValue}
                             </div>
                           </Row>
@@ -308,22 +308,22 @@ export function Menu() {
                   {/* Mudanças na Página */}
                   {changes?.page?.changes && changes.page.changes.length > 0 && (
                     <>
-                      <Col lg={12} style={{ background: '#28a745', color: 'white', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>
-                        <b>Página</b>
+                      <Col lg={12} className='mb-2' style={{ background: '#a0a0a0ff', padding: '10px', borderRadius: '5px' }}>
+                        <b>Página: {page?.name}</b>
                       </Col>
                       {changes.page.changes.map((change, changeIndex) => (
                         <Col lg={12} className='mb-2' key={changeIndex}>
                           <Row className="d-flex gap-2">
-                            <div style={{ flex: 3, padding: '10px', borderRadius: '5px', background: '#eee' }}>
-                              {change.field}
+                            <div style={{ flex: 3, padding: '10px', borderRadius: '5px', border: '2px solid #a0a0a0ff' }}>
+                              <b>{change.field}</b>
                             </div>
-                            <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#ffe6e6' }}>
+                            <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #dc3545' }}>
                               {change.oldValue}
                             </div>
                             <div className='text-center' style={{ flex: 1, padding: '10px' }}>
                               <FaArrowAltCircleRight />
                             </div>
-                            <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#e6ffe6' }}>
+                            <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #198754' }}>
                               {change.newValue}
                             </div>
                           </Row>
@@ -336,23 +336,23 @@ export function Menu() {
                   {(changes?.page?.component && changes.page.component.length > 0) ? (
                     changes.page.component.map((component, index) => (
                       <>
-                        <Col lg={12} key={index} style={{ background: '#BBB', padding: '10px', borderRadius: '5px' }}>
+                        <Col lg={12} key={index} className='mb-2' style={{ background: '#BBBBBB', padding: '10px', borderRadius: '5px' }}>
                           <b>Componente: {component.name}</b>
                         </Col>
                         
                         {component.changes?.map((change, changeIndex) => (
                           <Col lg={12} className='mb-2' key={changeIndex}>
                             <Row className="d-flex gap-2">
-                              <div style={{ flex: 3, padding: '10px', borderRadius: '5px', background: '#eee' }}>
-                                {change.field}
+                              <div style={{ flex: 3, padding: '10px', borderRadius: '5px', border: '2px solid #BBBBBB' }}>
+                                <b>{change.field}</b>
                               </div>
-                              <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#ffe6e6' }}>
+                              <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #dc3545' }}>
                                 {change.oldValue}
                               </div>
                               <div className='text-center' style={{ flex: 1, padding: '10px' }}>
                                 <FaArrowAltCircleRight />
                               </div>
-                              <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#e6ffe6' }}>
+                              <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #198754' }}>
                                 {change.newValue}
                               </div>
                             </Row>
@@ -361,22 +361,22 @@ export function Menu() {
                         
                         {component.element?.map((el, elIndex) => (
                           <>
-                            <Col key={elIndex} lg={12} className='mt-2 mb-2' style={{ border: '2px solid #BBB', padding: '10px', borderRadius: '5px' }}>
-                              Elemento: {el.elementTypeId}
+                            <Col key={elIndex} lg={12} className='mb-2' style={{ background: '#DDDDDD', padding: '10px', borderRadius: '5px' }}>
+                              <b>Elemento: {el.elementTypeId}</b>
                             </Col>
                             {el.changes.map((change, changeIndex) => (
                               <Col lg={12} className='mb-2' key={changeIndex}>
                                 <Row className="d-flex gap-2">
-                                  <div style={{ flex: 3, padding: '10px', borderRadius: '5px', background: '#eee' }}>
-                                    {change.field}
+                                  <div style={{ flex: 3, padding: '10px', borderRadius: '5px', border: '2px solid #DDDDDD' }}>
+                                    <b>{change.field}</b>
                                   </div>
-                                  <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#ffe6e6' }}>
+                                  <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #dc3545' }}>
                                     {change.oldValue}
                                   </div>
                                   <div className='text-center' style={{ flex: 1, padding: '10px' }}>
                                     <FaArrowAltCircleRight />
                                   </div>
-                                  <div style={{ flex: 4, padding: '10px', borderRadius: '5px', background: '#e6ffe6' }}>
+                                  <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #198754' }}>
                                     {change.newValue}
                                   </div>
                                 </Row>

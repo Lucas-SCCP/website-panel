@@ -1,5 +1,6 @@
 import { useState, type JSX } from 'react'
 import { Row, Col, Accordion, Form, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import Switch from 'react-switch'
 import { ComponentFactory } from '../factories/ComponentFactory'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore';
 import { FaListUl, FaInfoCircle, FaTextHeight } from 'react-icons/fa'
@@ -39,7 +40,7 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
     }
   }
 
-  const setValue = (key: keyof ComponentType, value: string) => {
+  const setValue = (key: keyof ComponentType, value: string | boolean) => {
     console.log('setValue', key, value)
     console.log('selectedWebsite', selectedWebsite)
     console.log('selectedPage', selectedPage)
@@ -51,6 +52,7 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
     ) {
       return
     }
+
     updateSelectedComponentField(
       component.id,
       key,
@@ -125,7 +127,7 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
               />
             </Form.Group>
           </Col>
-          <Col xs={4} lg={6}>
+          <Col xs={4} lg={3}>
             <Form.Group className="mb-3" controlId="componentEnabledSwitch">
               <Form.Label>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
@@ -142,13 +144,13 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
                   </OverlayTrigger>
                 </span>
               </Form.Label>
-              <Form.Check
-                type="switch"
-                checked={updatedComponent?.enabled}
-                onChange={(e) => setValue('enabled', e.target.value)}
-                id="componentEnabledSwitch"
-                className="form-switch-lg"
-              />
+              <div style={{ display: 'flex', marginTop: '8px' }}>
+                <Switch
+                  onChange={(checked) => setValue('enabled', checked)}
+                  checked={!!updatedComponent?.enabled}
+                  className="react-switch"
+                />
+              </div>
             </Form.Group>
           </Col>
           <Col lg={12} style={{ display: 'none' }} id='aSerDesenvolvido'>
