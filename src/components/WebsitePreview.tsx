@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Container, Row, Col, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Row, Col, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { PageRenderer } from 'website-lib'
 import { FaSearchPlus } from 'react-icons/fa'
@@ -131,9 +131,7 @@ export function WebsitePreview() {
         </Col>
         <Col lg={12}>
           <main className="root background-image" style={{ borderRadius: '5px' }}>
-            <Container>
-              <PageRenderer ga4="T" title="" components={components} />
-            </Container>
+            <PageRenderer ga4="T" title="" components={components} />
           </main>
         </Col>
       </Row>
@@ -143,9 +141,7 @@ export function WebsitePreview() {
         </Modal.Header>
         <Modal.Body>
           <main className="root background-image">
-            <Container>
-              <PageRenderer ga4="T" title="" components={components} />
-            </Container>
+            <PageRenderer ga4="T" title="" components={components} />
           </main>
         </Modal.Body>
       </Modal>

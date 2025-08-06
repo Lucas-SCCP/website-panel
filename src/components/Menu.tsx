@@ -157,7 +157,7 @@ export function Menu() {
                   </Nav.Link>
                   <Nav.Link style={{ cursor: 'auto' }}>
                     <NavDropdown
-                      title={selectedWebsiteId ? allWebsites.find((w) => w.id === selectedWebsiteId)?.name : 'Selecione um site'}
+                      title={<b>{selectedWebsiteId ? allWebsites.find((w) => w.id === selectedWebsiteId)?.name : 'Selecione um site'}</b>}
                       className="website-navbar-button"
                     >
                       {allWebsites.map((website) => (
@@ -169,7 +169,7 @@ export function Menu() {
                   </Nav.Link>
                   <Nav.Link style={{ cursor: 'auto' }}>
                     <NavDropdown
-                      title={selectedPageId ? allWebsites.find((w) => w.id === selectedWebsiteId)?.pages.find((p) => p.id === selectedPageId)?.name : 'Selecione uma página'}
+                      title={<b>{selectedPageId ? allWebsites.find((w) => w.id === selectedWebsiteId)?.pages.find((p) => p.id === selectedPageId)?.name : 'Selecione uma página'}</b>}
                       className="website-navbar-button"
                     >
                       {website?.pages.map((page: { id: number; name: string }) => (

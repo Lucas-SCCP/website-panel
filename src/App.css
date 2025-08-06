@@ -48,13 +48,13 @@ body {
 }
 
 .website-navbar-button {
-  border: 1px solid #000;
+  border: 2px solid #BBBBBB;
   border-radius: 5px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #000;
+  color: #BBBBBB;
 }
 
 .website-navbar-button-icon {
@@ -82,14 +82,14 @@ body {
 }
 
 .website-navbar-action-exit {
-  border: 1px solid #000;
+  border: 2px solid #BBB;
   border-radius: 5px;
   cursor: pointer;
   padding: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #000;
+  color: #BBBBBB;
 }
 
 /** ACCORDION **/
@@ -131,6 +131,16 @@ body {
   display: flex;
   align-items: center;
   margin-right: 10px;
+}
+
+.accordion-button[aria-expanded="true"] {
+  background-color: #BBBBBB;
+  color: #000000;
+}
+
+.accordion-button:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 /** TABS **/

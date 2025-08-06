@@ -1,6 +1,7 @@
-import { Accordion, Row, Col, Form } from 'react-bootstrap'
+import { Accordion, Row, Col, Form, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore';
 import { MdOutlineSettings } from 'react-icons/md'
+import { FaInfoCircle } from 'react-icons/fa'
 import type { WebsiteType, PageType, ComponentType, ElementType } from 'website-lib'
 
 export function PropertiesSettings({ element }: { element: ElementType }) {
@@ -84,13 +85,39 @@ export function PropertiesSettings({ element }: { element: ElementType }) {
           </Col>
           <Col lg={3}>
             <Form.Group className="mb-3" controlId="pageName">
-              <Form.Label>Tamanho</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Digite o tamanho"
-                value={updatedElement.size}
-                onChange={(e) => setElementValue('size', Number(e.target.value))}
-              />
+              <Form.Label>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  Tamanho
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id="tooltip-component-enabled">
+                        Seguimos o padrão do Bootstrap onde a tela é dividida em 12 partes.
+                        Para mais informações consulte nossa página de ajuda.
+                      </Tooltip>
+                    }
+                  >
+                    <span className="website-info">
+                      <FaInfoCircle size={14} />
+                    </span>
+                  </OverlayTrigger>
+                </span>
+              </Form.Label>
+              <Form.Select value={updatedElement?.size ? updatedElement.size : ""} onChange={(e) => setElementValue('size', Number(e.target.value))} aria-label="Selecione">
+                <option value="">Selecione</option>
+                <option value="1">8%</option>
+                <option value="2">16%</option>
+                <option value="3">25%</option>
+                <option value="4">33%</option>
+                <option value="5">41%</option>
+                <option value="6">50%</option>
+                <option value="7">58%</option>
+                <option value="8">66%</option>
+                <option value="9">75%</option>
+                <option value="10">83%</option>
+                <option value="11">91%</option>
+                <option value="12">100%</option>
+              </Form.Select>
             </Form.Group>
           </Col>
           <Col lg={6}>

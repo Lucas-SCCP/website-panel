@@ -118,13 +118,39 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
           </Col>
           <Col xs={4} lg={3}>
             <Form.Group className="mb-3" controlId="componentSize">
-              <Form.Label>Tamanho</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Digite o tamanho do componente"
-                value={updatedComponent?.size}
-                onChange={(e) => setValue('size', e.target.value)}
-              />
+              <Form.Label>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  Tamanho
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id="tooltip-component-enabled">
+                        Seguimos o padrão do Bootstrap onde a tela é dividida em 12 partes.
+                        Para mais informações consulte nossa página de ajuda.
+                      </Tooltip>
+                    }
+                  >
+                    <span className="website-info">
+                      <FaInfoCircle size={14} />
+                    </span>
+                  </OverlayTrigger>
+                </span>
+              </Form.Label>
+              <Form.Select value={updatedComponent?.size ? updatedComponent.size : ""} onChange={(e) => setValue('size', e.target.value)} aria-label="Selecione">
+                <option value="">Selecione</option>
+                <option value="1">8%</option>
+                <option value="2">16%</option>
+                <option value="3">25%</option>
+                <option value="4">33%</option>
+                <option value="5">41%</option>
+                <option value="6">50%</option>
+                <option value="7">58%</option>
+                <option value="8">66%</option>
+                <option value="9">75%</option>
+                <option value="10">83%</option>
+                <option value="11">91%</option>
+                <option value="12">100%</option>
+              </Form.Select>
             </Form.Group>
           </Col>
           <Col xs={4} lg={3}>

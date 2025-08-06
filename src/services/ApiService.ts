@@ -4,7 +4,8 @@ import type {
   PageType,
   ComponentType,
   ElementType,
-  AuthenticateResponseType
+  AuthenticateResponseType,
+  TextAlign
 } from 'website-lib'
 
 import { AuthenticateException } from '../exceptions/AuthenticateException'
@@ -199,13 +200,16 @@ class ApiService {
                         styles: {
                           color: rawElement.styles.color,
                           fontSize: rawElement.styles.fontSize,
-                          textAlign: rawElement.styles.textAlign,
+                          textAlign: rawElement.styles.textAlign as TextAlign,
                           fontWeight: rawElement.styles.fontWeight,
                           display: rawElement.styles.display,
                           height: rawElement.styles.height,
                           alignItems: rawElement.styles.alignItems,
                           marginTop: rawElement.styles.marginTop,
-                          marginLeft: rawElement.styles?.marginLeft
+                          marginLeft: rawElement.styles?.marginLeft,
+                          backgroundColor: rawElement.styles?.backgroundColor ?? '',
+                          marginBottom: rawElement.styles?.marginBottom ?? '',
+                          float: rawElement.styles?.float ?? ''
                         },
                         created_at: rawElement.created_at,
                         updated_at: rawElement.updated_at,

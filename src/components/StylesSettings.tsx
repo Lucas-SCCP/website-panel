@@ -55,12 +55,12 @@ export function StylesSettings({ element }: { element: ElementType }) {
               <Form.Control
                 type="color"
                 placeholder="Digite o texto"
-                value={updatedElement.styles.color ? updatedElement.styles.color : ''}
+                value={updatedElement.styles.color ? updatedElement.styles.color : '#FFFFFF'}
                 onChange={(e) => setStylesValue('color', e.target.value)}
               />
             </Form.Group>
           </Col>
-          <Col lg={4}>
+          <Col lg={3}>
             <Form.Label htmlFor="basic-url">Tamanho</Form.Label>
             <InputGroup className="mb-3">
               <Form.Control 
@@ -85,7 +85,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
               </Form.Select>
             </Form.Group>
           </Col>
-          <Col lg={2}>
+          <Col lg={3}>
             <Form.Group className="mb-3" controlId="pageName">
               <Form.Label>Peso</Form.Label>
               <Form.Control
