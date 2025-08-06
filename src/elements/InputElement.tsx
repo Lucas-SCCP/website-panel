@@ -1,21 +1,37 @@
-import { useState } from 'react'
-import { Row, Col, Form, Dropdown, Accordion } from 'react-bootstrap'
+import { Row, Col, Form, Accordion } from 'react-bootstrap'
 import { PropertiesSettings } from '../components/PropertiesSettings'
 import { StylesSettings } from '../components/StylesSettings';
-import type { ElementType, InputPropertiesType } from 'website-lib'
+import { UseWebsiteStore } from '../stores/UseWebsiteStore';
+import type { WebsiteType, PageType, ComponentType, ElementType, InputPropertiesType } from 'website-lib'
 
 export function InputElement({ element }: { element: ElementType }) {
-  const properties = element.properties as InputPropertiesType
 
-  const [type, setType] = useState(properties.type)
-  const [inputValidateId, setValidationType] = useState(properties.inputValidateId)
+  const selectedWebsite: WebsiteType | null = UseWebsiteStore((state) => state.selectedWebsite)
+  const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
+  const component: ComponentType | undefined = selectedPage?.components.find((c) => c.id === element.component_id)
 
-  const handleSelectType = (selectedType: string) => {
-    setType(selectedType)
-  }
+  const updatedElement = component?.elements.content.find((e) => e.id === element.id) || element
+  const properties = updatedElement.properties as InputPropertiesType
 
-  const handleSelectValidationType = (selectedInputValidateId: number) => {
-    setValidationType(selectedInputValidateId)
+  const { updateSelectedElementField } = UseWebsiteStore()
+
+  const setValue = (key: string, value: string) => {
+    if (
+      selectedWebsite?.id == null ||
+      selectedPage?.id == null ||
+      component?.id == null
+    ) {
+      return
+    }
+    updateSelectedElementField(
+      component.id,
+      element.id,
+      'properties',
+      {
+        ...updatedElement.properties,
+        [key]: value
+      }
+    )
   }
 
   return (
@@ -27,6 +43,7 @@ export function InputElement({ element }: { element: ElementType }) {
             type="text"
             placeholder="Digite o texto de título do formulário"
             value={properties.name}
+            onChange={(e) => setValue('name', e.target.value)}
           />
         </Form.Group>
       </Col>
@@ -37,41 +54,40 @@ export function InputElement({ element }: { element: ElementType }) {
             type="text"
             placeholder="Digite o texto de placeholder"
             value={properties.placeholder}
+            onChange={(e) => setValue('placeholder', e.target.value)}
           />
         </Form.Group>
       </Col>
       <Col lg={6}>
         <Form.Group className="mb-3" controlId="pageName">
           <Form.Label>Tipo de input</Form.Label>
-          <Dropdown style={{ width: '100%' }}>
-            <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" style={{ width: '100%' }}>
-              {type ? type.charAt(0).toUpperCase() + type.slice(1) : 'Selecione'}
-            </Dropdown.Toggle>
-            <Dropdown.Menu style={{ width: '100%' }}>
-              <Dropdown.Item onClick={() => handleSelectType('texto')}>Texto</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleSelectType('numero')}>Número</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleSelectType('email')}>Email</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <Form.Select
+            value={updatedElement.properties.type ? updatedElement.properties.type : 'Selecione'}
+            onChange={(e) => setValue('type', e.target.value)}
+            aria-label="Selecione"
+          >
+            <option value="">Selecione</option>
+            <option value="texto">Texto</option>
+            <option value="numero">Número</option>
+            <option value="email">Email</option>
+          </Form.Select>
         </Form.Group>
       </Col>
       <Col lg={6}>
         <Form.Group className="mb-3" controlId="pageName">
           <Form.Label>Tipo de validação</Form.Label>
-          <Dropdown style={{ width: '100%' }}>
-            <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" style={{ width: '100%' }}>
-              {inputValidateId ? inputValidateId : 'Selecione'}
-            </Dropdown.Toggle>
-            <Dropdown.Menu style={{ width: '100%' }}>
-              <Dropdown.Item onClick={() => handleSelectValidationType(1)}>Nome</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleSelectValidationType(2)}>Celular</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleSelectValidationType(3)}>Email</Dropdown.Item>
-              <Dropdown.Item onClick={() => handleSelectValidationType(4)}>
-                Data de nascimento
-              </Dropdown.Item>
-              <Dropdown.Item onClick={() => handleSelectValidationType(5)}>CPF</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <Form.Select
+            value={properties.inputValidateId ? properties.inputValidateId : 'Selecione'}
+            onChange={(e) => setValue('inputValidateId', e.target.value)}
+            aria-label="Selecione"
+          >
+            <option value="">Selecione</option>
+            <option value="1">Nome</option>
+            <option value="2">Celular</option>
+            <option value="3">Email</option>
+            <option value="4">Data de nascimento</option>
+            <option value="5">CPF</option>
+          </Form.Select>
         </Form.Group>
       </Col>
       <Col lg={12}>
