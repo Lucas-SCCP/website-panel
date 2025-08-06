@@ -587,7 +587,11 @@ export const UseWebsiteStore = create<WebsiteStore>()(
               const currentChanges = get().changes
               let updatedChanges: ChangeDetail
               
-              if (JSON.stringify(propOldValue) === JSON.stringify(propNewValue)) {
+              // Normalizar os valores para comparação - converter ambos para string
+              const normalizedOldValue = String(propOldValue)
+              const normalizedNewValue = String(propNewValue)
+              
+              if (normalizedOldValue === normalizedNewValue) {
                 // Se os valores são iguais, remover do objeto de changes
                 if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
                   updatedChanges = { ...currentChanges }
