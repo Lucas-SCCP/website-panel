@@ -83,10 +83,10 @@ export function InputElement({ element }: { element: ElementType }) {
           >
             <option value="">Selecione</option>
             <option value="1">Nome</option>
-            <option value="2">Celular</option>
-            <option value="3">Email</option>
-            <option value="4">Data de nascimento</option>
-            <option value="5">CPF</option>
+            <option value="2">Data de nascimento</option>
+            <option value="3">CPF</option>
+            <option value="4">E-mail</option>
+            <option value="5">Celular</option>
           </Form.Select>
         </Form.Group>
       </Col>
