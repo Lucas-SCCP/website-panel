@@ -138,6 +138,15 @@ class ApiService {
       domain: rawWebsite.domain,
       domain_stage: rawWebsite.domain_stage,
       logo: rawWebsite.logo,
+      properties: {
+        header: rawWebsite.properties.header,
+        footer: rawWebsite.properties.footer,
+        social: rawWebsite.properties.social,
+      },
+      styles: {
+        color: rawWebsite.styles.color,
+        backgroundColor: rawWebsite.styles.backgroundColor,
+      },
       enabled: rawWebsite.enabled,
       published_at: rawWebsite.published_at,
       created_at: rawWebsite.created_at,
@@ -188,7 +197,7 @@ class ApiService {
                           ...(rawElement.properties.mask && { mask: rawElement.properties.mask }),
                           ...(rawElement.properties.placeholder && { placeholder: rawElement.properties.placeholder }),
                           ...(rawElement.properties.required && { required: rawElement.properties.required }),
-                          ...(rawElement.properties.validateTypeId && { validateTypeId: rawElement.properties.validateTypeId }),
+                          ...(rawElement.properties.inputValidateId && { inputValidateId: rawElement.properties.inputValidateId }),
 
                           ...(rawElement.properties.hideOnClick && { hideOnClick: rawElement.properties.hideOnClick }),
                           ...(rawElement.properties.actionId && { action: rawElement.properties.actionId }),
@@ -209,7 +218,6 @@ class ApiService {
                           marginLeft: rawElement.styles?.marginLeft,
                           backgroundColor: rawElement.styles?.backgroundColor ?? '',
                           marginBottom: rawElement.styles?.marginBottom ?? '',
-                          float: rawElement.styles?.float ?? ''
                         },
                         created_at: rawElement.created_at,
                         updated_at: rawElement.updated_at,
