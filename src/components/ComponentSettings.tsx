@@ -41,10 +41,6 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
   }
 
   const setValue = (key: keyof ComponentType, value: string | boolean) => {
-    console.log('setValue', key, value)
-    console.log('selectedWebsite', selectedWebsite)
-    console.log('selectedPage', selectedPage)
-    console.log('component', component)
     if (
       selectedWebsite?.id == null ||
       selectedPage?.id == null ||

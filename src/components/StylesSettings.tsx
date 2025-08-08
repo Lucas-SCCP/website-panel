@@ -5,7 +5,6 @@ import type { WebsiteType, PageType, ComponentType, ElementType } from 'website-
 
 export function StylesSettings({ element }: { element: ElementType }) {
 
-  // console.log('PropertiesSettings element:', element)
   const selectedWebsite: WebsiteType | null = UseWebsiteStore((state) => state.selectedWebsite)
   const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
   const component: ComponentType | undefined = selectedPage?.components.find((c) => c.id === element.component_id)
@@ -15,11 +14,6 @@ export function StylesSettings({ element }: { element: ElementType }) {
   const { updateSelectedElementField } = UseWebsiteStore()
 
   const setStylesValue = (key: string, value: string) => {
-    console.log('selectedWebsite', selectedWebsite)
-    console.log('selectedPage', selectedPage)
-    console.log('component', component)
-    console.log('key', key)
-    console.log('value', value)
     if (
       selectedWebsite?.id == null ||
       selectedPage?.id == null ||

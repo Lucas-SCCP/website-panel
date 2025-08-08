@@ -20,23 +20,19 @@ export function Login() {
     e.preventDefault()
 
     try {
-      console.log('LOGIN')
       const apiService = new ApiService()
       const response: AuthenticateResponseType = await apiService.authenticate(email, password)
-      console.log('LOGIN RESPONSE')
 
       if (response.status) {
         const user = response.data
         UseUserStore.getState().setUser(user, user.token)
 
-        console.log('GET ALL WEBSITES')
         const websites = await apiService.getAllWebsiteByUserId(user.id, user.token)
-        console.log('Websites fetched:', websites)
+        console.log('Websites fetched apos login:', websites)
 
         setAllWebsites(websites)
 
         const selectedWebsiteFound = websites.find((website) => website.id === user?.default_website_id)
-        console.log('selectedWebsiteFound:', selectedWebsiteFound)
         if (selectedWebsiteFound) {
           setSelectedWebsite(selectedWebsiteFound)
           setSelectedWebsiteId(selectedWebsiteFound.id)

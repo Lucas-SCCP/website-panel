@@ -70,13 +70,10 @@ export function Pages() {
   }
 
   useEffect(() => {
-    console.log('PAGE')
     const timeoutId = setTimeout(() => {
       const website = allWebsites.find((w) => w.id === selectedWebsiteId)
-      console.log('Selected website:', website)
       if (website) {
         const page = website.pages.find((p) => p.id === selectedPageId)
-        console.log('Selected page:', page)
         if (page) {
           setPage(page)
           setName(page.name)

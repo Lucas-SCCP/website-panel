@@ -345,10 +345,6 @@ export const UseWebsiteStore = create<WebsiteStore>()(
         }
       },
       updateSelectedComponentField: (componentId, key, value) => {
-        console.log('updateSelectedComponentField')
-        console.log('componentId', componentId)
-        console.log('key', key)
-        console.log('value', value)
         const allWebsites = get().allWebsites
         const currentSelectedPage = get().selectedPage
         const currentSelectedWebsite = get().selectedWebsite
@@ -506,7 +502,6 @@ export const UseWebsiteStore = create<WebsiteStore>()(
         })
       },
       updateSelectedElementField: (componentId, elementId, key, value) => {
-        console.log('updateSelectedElementField')
         const allWebsites = get().allWebsites
         const currentSelectedPage = get().selectedPage
         const currentSelectedWebsite = get().selectedWebsite

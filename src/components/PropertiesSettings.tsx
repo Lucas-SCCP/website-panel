@@ -6,7 +6,6 @@ import type { WebsiteType, PageType, ComponentType, ElementType } from 'website-
 
 export function PropertiesSettings({ element }: { element: ElementType }) {
 
-  // console.log('PropertiesSettings element:', element)
   const selectedWebsite: WebsiteType | null = UseWebsiteStore((state) => state.selectedWebsite)
   const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
   const component: ComponentType | undefined = selectedPage?.components.find((c) => c.id === element.component_id)
@@ -32,11 +31,6 @@ export function PropertiesSettings({ element }: { element: ElementType }) {
   }
 
   const setPropertiesValue = (key: string, value: string) => {
-    console.log('selectedWebsite', selectedWebsite)
-    console.log('selectedPage', selectedPage)
-    console.log('component', component)
-    console.log('key', key)
-    console.log('value', value)
     if (
       selectedWebsite?.id == null ||
       selectedPage?.id == null ||

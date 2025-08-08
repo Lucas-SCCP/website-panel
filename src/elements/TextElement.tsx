@@ -15,10 +15,6 @@ export function TextElement({ element }: { element: ElementType }) {
   const { updateSelectedElementField } = UseWebsiteStore()
 
   const setValue = (key: string, value: string) => {
-    console.log('setValue', key, value)
-    console.log('selectedWebsite', selectedWebsite)
-    console.log('selectedPage', selectedPage)
-    console.log('component', component)
     if (
       selectedWebsite?.id == null ||
       selectedPage?.id == null ||
