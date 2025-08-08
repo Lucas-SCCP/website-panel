@@ -73,9 +73,11 @@ class ApiService {
 
       const json = await response.json()
 
+      console.log('Websites retorno api:', json.data)
+
       const websites: WebsiteType[] = json.data.map((rawWebsite: RawWebsiteType) => this.parseWebsiteResponse(rawWebsite))
 
-      console.log('Websites fetched:', websites)
+      console.log('Websites após parse:', websites)
 
       return websites
     } catch (error: unknown) {
@@ -93,7 +95,6 @@ class ApiService {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          // Adicione aqui o token de autenticação se necessário
           // 'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(website)
@@ -207,17 +208,29 @@ class ApiService {
                           ...(rawElement.properties.errorMessageId && { errorMessageId: rawElement.properties.errorMessageId }),
                         },
                         styles: {
-                          color: rawElement.styles.color,
-                          fontSize: rawElement.styles.fontSize,
-                          textAlign: rawElement.styles.textAlign as TextAlign,
-                          fontWeight: rawElement.styles.fontWeight,
-                          display: rawElement.styles.display,
-                          height: rawElement.styles.height,
-                          alignItems: rawElement.styles.alignItems,
-                          marginTop: rawElement.styles.marginTop,
-                          marginLeft: rawElement.styles?.marginLeft,
-                          backgroundColor: rawElement.styles?.backgroundColor ?? '',
-                          marginBottom: rawElement.styles?.marginBottom ?? '',
+                          ...(rawElement.styles.alignItems && { alignItems: rawElement.styles.alignItems }),
+                          ...(rawElement.styles.backgroundColor && { backgroundColor: rawElement.styles.backgroundColor }),
+                          ...(rawElement.styles.borderColor && { borderColor: rawElement.styles.borderColor }),
+                          ...(rawElement.styles.borderRadius && { borderRadius: rawElement.styles.borderRadius }),
+                          ...(rawElement.styles.borderStyle && { borderStyle: rawElement.styles.borderStyle }),
+                          ...(rawElement.styles.borderWidth && { borderWidth: rawElement.styles.borderWidth }),
+                          ...(rawElement.styles.color && { color: rawElement.styles.color }),
+                          ...(rawElement.styles.display && { display: rawElement.styles.display }),
+                          ...(rawElement.styles.float && { float: rawElement.styles.float }),
+                          ...(rawElement.styles.fontSize && { fontSize: rawElement.styles.fontSize }),
+                          ...(rawElement.styles.fontWeight && { fontWeight: rawElement.styles.fontWeight }),
+                          ...(rawElement.styles.height && { height: rawElement.styles.height }),
+                          ...(rawElement.styles.marginTop && { marginTop: rawElement.styles.marginTop }),
+                          ...(rawElement.styles.marginLeft && { marginLeft: rawElement.styles.marginLeft }),
+                          ...(rawElement.styles.marginRight && { marginRight: rawElement.styles.marginRight }),
+                          ...(rawElement.styles.marginBottom && { marginBottom: rawElement.styles.marginBottom }),
+                          ...(rawElement.styles.objectFit && { objectFit: rawElement.styles.objectFit }),
+                          ...(rawElement.styles.paddingTop && { paddingTop: rawElement.styles.paddingTop }),
+                          ...(rawElement.styles.paddingLeft && { paddingLeft: rawElement.styles.paddingLeft }),
+                          ...(rawElement.styles.paddingRight && { paddingRight: rawElement.styles.paddingRight }),
+                          ...(rawElement.styles.paddingBottom && { paddingBottom: rawElement.styles.paddingBottom }),
+                          ...(rawElement.styles.textAlign && { textAlign: rawElement.styles.textAlign as TextAlign }),
+                          ...(rawElement.styles.width && { width: rawElement.styles.width }),
                         },
                         created_at: rawElement.created_at,
                         updated_at: rawElement.updated_at,
