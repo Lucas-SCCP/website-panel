@@ -42,30 +42,97 @@ export function StylesSettings({ element }: { element: ElementType }) {
         </div>
       </Accordion.Header>
       <Accordion.Body>
-        <Row>
+        <Row className='mb-2' style={{ border: '3px solid #EEEEEE', padding: '10px', borderRadius: '5px' }}>
+          <Col lg={4}>
+            <Form.Group className="mb-3" controlId="pageName">
+              <Form.Label>Cor do fundo</Form.Label>
+              <Form.Control
+                type="color"
+                value={updatedElement.styles.backgroundColor ? updatedElement.styles.backgroundColor : '#FFFFFF'}
+                onChange={(e) => setStylesValue('backgroundColor', e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col lg={4}>
+            <Form.Group className="mb-3" controlId="pageName">
+              <Form.Label>Largura</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder='width'
+                value={updatedElement.styles.width ? updatedElement.styles.width : ''}
+                onChange={(e) => setStylesValue('width', e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col lg={4}>
+            <Form.Group className="mb-3" controlId="pageName">
+              <Form.Label>Altura</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder='height'
+                value={updatedElement.styles.height ? updatedElement.styles.height : ''}
+                onChange={(e) => setStylesValue('height', e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col lg={6}>
+            <Form.Group className="mb-3" controlId="pageName">
+              <Form.Label>Display</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="display"
+                value={updatedElement.styles.display}
+                onChange={(e) => setStylesValue('display', e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col lg={6}>
+            <Form.Group className="mb-3" controlId="pageName">
+              <Form.Label>Alinhamento de itens</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="align-items"
+                value={updatedElement.styles.alignItems}
+                onChange={(e) => setStylesValue('alignItems', e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className='mb-2' style={{ border: '3px solid #EEEEEE', padding: '10px', borderRadius: '5px' }}>
+          <Col lg={12} className='mb-2' style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
+            <b>Fonte</b>
+          </Col>
           <Col lg={2}>
             <Form.Group className="mb-3" controlId="pageName">
               <Form.Label>Cor</Form.Label>
               <Form.Control
                 type="color"
-                placeholder="Digite o texto"
                 value={updatedElement.styles.color ? updatedElement.styles.color : '#FFFFFF'}
                 onChange={(e) => setStylesValue('color', e.target.value)}
               />
             </Form.Group>
           </Col>
-          <Col lg={3}>
+          <Col lg={4}>
             <Form.Label htmlFor="basic-url">Tamanho</Form.Label>
             <InputGroup className="mb-3">
               <Form.Control 
-                type="text"
-                placeholder="Digite o texto"
+                type="number"
                 value={updatedElement.styles?.fontSize?.replace('px', '')}
                 onChange={(e) => setStylesValue('fontSize', e.target.value + 'px')}                
               />
               <InputGroup.Text id="basic-addon3">
                 px
               </InputGroup.Text>
+            </InputGroup>
+          </Col>
+          <Col lg={4}>
+            <Form.Label htmlFor="basic-url">Peso</Form.Label>
+            <InputGroup className="mb-3">
+              <Form.Control 
+                type="number"
+                value={updatedElement.styles.fontWeight}
+                onChange={(e) => setStylesValue('fontWeight', e.target.value)}
+              />
             </InputGroup>
           </Col>
           <Col lg={4}>
@@ -79,14 +146,194 @@ export function StylesSettings({ element }: { element: ElementType }) {
               </Form.Select>
             </Form.Group>
           </Col>
-          <Col lg={3}>
+        </Row>
+        <Row className='mb-2' style={{ border: '3px solid #EEEEEE', padding: '10px', borderRadius: '5px' }}>
+          <Col lg={12} className='mb-2' style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
+            <b>Borda</b>
+          </Col>
+          <Col lg={2}>
             <Form.Group className="mb-3" controlId="pageName">
-              <Form.Label>Peso</Form.Label>
+              <Form.Label>Cor</Form.Label>
+              <Form.Control
+                type="color"
+                value={updatedElement.styles.borderColor ? updatedElement.styles.borderColor : '#FFFFFF'}
+                onChange={(e) => setStylesValue('borderColor', e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col lg={4}>
+            <Form.Group className="mb-3" controlId="pageName">
+              <Form.Label>border-radius</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder='border-radius'
+                value={updatedElement.styles.borderRadius ? updatedElement.styles.borderRadius.replace('px', '') : ''}
+                onChange={(e) => setStylesValue('borderRadius', e.target.value + 'px')}
+              />
+            </Form.Group>
+          </Col>
+          <Col lg={4}>
+            <Form.Group className="mb-3" controlId="pageName">
+              <Form.Label>Estilo</Form.Label>
+              <Form.Control
+                type="text"
+                value={updatedElement.styles.borderStyle ? updatedElement.styles.borderStyle : ''}
+                onChange={(e) => setStylesValue('borderStyle', e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col lg={4}>
+            <Form.Group className="mb-3" controlId="pageName">
+              <Form.Label>Grossura</Form.Label>
+              <Form.Control
+                type="number"
+                value={updatedElement.styles.borderWidth ? updatedElement.styles.borderWidth.replace('px', '') : ''}
+                onChange={(e) => setStylesValue('borderWidth', e.target.value + 'px')}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className='mb-2' style={{ border: '3px solid #EEEEEE', padding: '10px', borderRadius: '5px' }}>
+          <Col lg={12} className='mb-2' style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
+            <b>Margem</b>
+          </Col>
+          <Col lg={6}>
+            <Form.Label>Superior</Form.Label>
+            <InputGroup className="mb-3">
+              <Form.Control
+                type="number"
+                placeholder='margin-top'
+                value={updatedElement.styles.marginTop ? updatedElement.styles.marginTop.replace('px', '') : ''}
+                onChange={(e) => setStylesValue('marginTop', e.target.value + 'px')}
+              />
+              <InputGroup.Text id="basic-addon3">
+                px
+              </InputGroup.Text>
+            </InputGroup>
+          </Col>
+          <Col lg={6}>
+            <Form.Label>Esquerda</Form.Label>
+            <InputGroup className="mb-3">
+              <Form.Control
+                type="number"
+                placeholder='margin-left'
+                value={updatedElement.styles.marginLeft ? updatedElement.styles.marginLeft.replace('px', '') : ''}
+                onChange={(e) => setStylesValue('marginLeft', e.target.value + 'px')}
+              />
+              <InputGroup.Text id="basic-addon3">
+                px
+              </InputGroup.Text>
+            </InputGroup>
+          </Col>
+          <Col lg={6}>
+            <Form.Label>Direita</Form.Label>
+            <InputGroup className="mb-3">
+              <Form.Control
+                type="number"
+                placeholder='margin-right'
+                value={updatedElement.styles.marginRight ? updatedElement.styles.marginRight.replace('px', '') : ''}
+                onChange={(e) => setStylesValue('marginRight', e.target.value + 'px')}
+              />
+              <InputGroup.Text id="basic-addon3">
+                px
+              </InputGroup.Text>
+            </InputGroup>
+          </Col>
+          <Col lg={6}>
+            <Form.Label>Inferior</Form.Label>
+            <InputGroup className="mb-3">
+              <Form.Control
+                type="number"
+                placeholder='margin-bottom'
+                value={updatedElement.styles.marginBottom ? updatedElement.styles.marginBottom.replace('px', '') : ''}
+                onChange={(e) => setStylesValue('marginBottom', e.target.value + 'px')}
+              />
+              <InputGroup.Text id="basic-addon3">
+                px
+              </InputGroup.Text>
+            </InputGroup>
+          </Col>
+        </Row>
+        <Row className='mb-2' style={{ border: '3px solid #EEEEEE', padding: '10px', borderRadius: '5px' }}>
+          <Col lg={12} className='mb-2' style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
+            <b>Preenchimento</b>
+          </Col>
+          <Col lg={6}>
+            <Form.Label>Superior</Form.Label>
+            <InputGroup className="mb-3">
+              <Form.Control
+                type="number"
+                placeholder='padding-top'
+                value={updatedElement.styles.paddingTop ? updatedElement.styles.paddingTop.replace('px', '') : ''}
+                onChange={(e) => setStylesValue('paddingTop', e.target.value + 'px')}
+              />
+              <InputGroup.Text id="basic-addon3">
+                px
+              </InputGroup.Text>
+            </InputGroup>
+          </Col>
+          <Col lg={6}>
+            <Form.Label>Esquerda</Form.Label>
+            <InputGroup className="mb-3">
+              <Form.Control
+                type="number"
+                placeholder='padding-left'
+                value={updatedElement.styles.paddingLeft ? updatedElement.styles.paddingLeft.replace('px', '') : ''}
+                onChange={(e) => setStylesValue('paddingLeft', e.target.value + 'px')}
+              />
+              <InputGroup.Text id="basic-addon3">
+                px
+              </InputGroup.Text>
+            </InputGroup>
+          </Col>
+          <Col lg={6}>
+            <Form.Label>Direita</Form.Label>
+            <InputGroup className="mb-3">
+              <Form.Control
+                type="number"
+                placeholder='padding-right'
+                value={updatedElement.styles.paddingRight ? updatedElement.styles.paddingRight.replace('px', '') : ''}
+                onChange={(e) => setStylesValue('paddingRight', e.target.value + 'px')}
+              />
+              <InputGroup.Text id="basic-addon3">
+                px
+              </InputGroup.Text>
+            </InputGroup>
+          </Col>
+          <Col lg={6}>
+            <Form.Label>Inferior</Form.Label>
+            <InputGroup className="mb-3">
+              <Form.Control
+                type="number"
+                placeholder='padding-bottom'
+                value={updatedElement.styles.paddingBottom ? updatedElement.styles.paddingBottom.replace('px', '') : ''}
+                onChange={(e) => setStylesValue('paddingBottom', e.target.value + 'px')}
+              />
+              <InputGroup.Text id="basic-addon3">
+                px
+              </InputGroup.Text>
+            </InputGroup>
+          </Col>
+        </Row>
+        <Row style={{ display: 'none' }} id='camposOcultos'>
+          <Col lg={4} style={{ display: 'none' }}>
+            <Form.Group className="mb-3" controlId="pageName">
+              <Form.Label>Object fit</Form.Label>
+              <Form.Control
+                type="text"
+                value={updatedElement.styles.objectFit}
+                onChange={(e) => setStylesValue('objectFit', e.target.value)}
+              />
+            </Form.Group>
+          </Col>          
+          <Col lg={4} style={{ display: 'none' }}>
+            <Form.Group className="mb-3" controlId="pageName">
+              <Form.Label>Flutuação</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Digite o texto"
-                value={updatedElement.styles.fontWeight}
-                onChange={(e) => setStylesValue('fontWeight', e.target.value)}
+                value={updatedElement.styles.float}
+                onChange={(e) => setStylesValue('float', e.target.value)}
               />
             </Form.Group>
           </Col>
