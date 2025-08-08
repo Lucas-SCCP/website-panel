@@ -5,7 +5,8 @@ import type {
   ComponentType,
   ElementType,
   AuthenticateResponseType,
-  TextAlign
+  TextAlign,
+  FontWeight
 } from 'website-lib'
 
 import { AuthenticateException } from '../exceptions/AuthenticateException'
@@ -218,7 +219,7 @@ class ApiService {
                           ...(rawElement.styles.display && { display: rawElement.styles.display }),
                           ...(rawElement.styles.float && { float: rawElement.styles.float }),
                           ...(rawElement.styles.fontSize && { fontSize: rawElement.styles.fontSize }),
-                          ...(rawElement.styles.fontWeight && { fontWeight: rawElement.styles.fontWeight }),
+                          ...(rawElement.styles.fontWeight && { fontWeight: rawElement.styles.fontWeight as FontWeight }),
                           ...(rawElement.styles.height && { height: rawElement.styles.height }),
                           ...(rawElement.styles.marginTop && { marginTop: rawElement.styles.marginTop }),
                           ...(rawElement.styles.marginLeft && { marginLeft: rawElement.styles.marginLeft }),
