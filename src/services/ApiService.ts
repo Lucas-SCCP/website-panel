@@ -202,7 +202,7 @@ class ApiService {
                           ...(rawElement.properties.inputValidateId && { inputValidateId: rawElement.properties.inputValidateId }),
 
                           ...(rawElement.properties.hideOnClick && { hideOnClick: rawElement.properties.hideOnClick }),
-                          ...(rawElement.properties.actionId && { action: rawElement.properties.actionId }),
+                          ...(rawElement.properties.actionId && { actionId: rawElement.properties.actionId }),
                           ...(rawElement.properties.successActionId && { successActionId: rawElement.properties.successActionId }),
                           ...(rawElement.properties.errorActionId && { errorActionId: rawElement.properties.errorActionId }),
                           ...(rawElement.properties.successMessageId && { successMessageId: rawElement.properties.successMessageId }),
