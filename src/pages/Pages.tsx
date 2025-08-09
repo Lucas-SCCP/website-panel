@@ -241,7 +241,7 @@ export function Pages() {
                           </span>
                         </OverlayTrigger>
                       </Form.Label>
-                      <Form.Control type="number" value={menuOrder} onChange={(e) => handleMenuOrderChange(parseInt(e.target.value) || 0)}/>
+                      <Form.Control type="number" min={1} value={menuOrder} onChange={(e) => handleMenuOrderChange(parseInt(e.target.value) || 0)}/>
                     </Form.Group>
                   </Col>
                 </Row>

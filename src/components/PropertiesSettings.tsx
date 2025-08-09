@@ -71,6 +71,7 @@ export function PropertiesSettings({ element }: { element: ElementType }) {
               <Form.Label>Posição</Form.Label>
               <Form.Control
                 type="number"
+                min={1}
                 placeholder="Digite a posição"
                 value={updatedElement.sort}
                 onChange={(e) => setElementValue('sort', Number(e.target.value))}

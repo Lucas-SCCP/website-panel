@@ -16,18 +16,21 @@ import {
 } from 'react-bootstrap'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { UseUserStore } from '../stores/UseUserStore'
-import { FaHome } from 'react-icons/fa'
-import { MdOutlineSettings } from 'react-icons/md'
-import { MdAddCircleOutline } from 'react-icons/md'
+import { WebsiteFactory } from '../factories/WebsiteFactory'
+import { PageFactory } from '../factories/PageFactory'
+import { ComponentFactory } from '../factories/ComponentFactory'
+import { ElementFactory } from '../factories/ElementFactory'
+import { FaHome, FaRegSave, FaArrowAltCircleRight } from 'react-icons/fa'
+import { MdOutlineSettings, MdAddCircleOutline, MdSaveAlt, MdDeleteForever } from 'react-icons/md'
 import { HiOutlineLogout } from 'react-icons/hi'
-import { MdSaveAlt } from 'react-icons/md'
-import { FaRegSave } from "react-icons/fa";
-import { MdDeleteForever } from 'react-icons/md'
 import { TiWarningOutline } from 'react-icons/ti'
-import { FaArrowAltCircleRight } from 'react-icons/fa';
 import type { WebsiteType, PageType } from 'website-lib'
 
 export function Menu() {
+  const websiteFactory = new WebsiteFactory()
+  const pageFactory = new PageFactory()
+  const componentFactory = new ComponentFactory()
+  const elementFactory = new ElementFactory()
   const navigate = useNavigate()
 
   const [showModalComponent, setShowModalComponent] = useState(false)
@@ -120,7 +123,7 @@ export function Menu() {
     }, 100)
 
     return () => clearTimeout(timeoutId)
-  }, [allWebsites, selectedWebsiteId, selectedPageId, setSelectedWebsiteId, setSelectedWebsite, setSelectedPage]);
+  }, [allWebsites, selectedWebsiteId, selectedPageId, setSelectedWebsiteId, setSelectedWebsite, setSelectedPage])
 
   return (
     <>
@@ -278,7 +281,6 @@ export function Menu() {
             <Row style={{ padding: '10px' }}>
               {hasUnsavedChanges ? (
                 <>
-                  {/* Mudanças no Website */}
                   {changes?.changes && changes.changes.length > 0 && (
                     <>
                       <Col lg={12} style={{ background: '#868686ff', color: 'white', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>
@@ -288,24 +290,22 @@ export function Menu() {
                         <Col lg={12} className='mb-2' key={changeIndex}>
                           <Row className="d-flex gap-2">
                             <div style={{ flex: 3, padding: '10px', borderRadius: '5px', border: '2px solid #868686ff' }}>
-                              <b>{change.field}</b>
+                              <b>{websiteFactory.friendlyFieldName(change.field)}</b>
                             </div>
                             <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #dc3545' }}>
-                              {change.oldValue}
+                              {websiteFactory.friendlyValue(change.field, change.oldValue)}
                             </div>
                             <div className='text-center' style={{ flex: 1, padding: '10px' }}>
                               <FaArrowAltCircleRight />
                             </div>
                             <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #198754' }}>
-                              {change.newValue}
+                              {websiteFactory.friendlyValue(change.field, change.newValue)}
                             </div>
                           </Row>
                         </Col>
                       ))}
                     </>
                   )}
-
-                  {/* Mudanças na Página */}
                   {changes?.page?.changes && changes.page.changes.length > 0 && (
                     <>
                       <Col lg={12} className='mb-2' style={{ background: '#a0a0a0ff', padding: '10px', borderRadius: '5px' }}>
@@ -315,24 +315,22 @@ export function Menu() {
                         <Col lg={12} className='mb-2' key={changeIndex}>
                           <Row className="d-flex gap-2">
                             <div style={{ flex: 3, padding: '10px', borderRadius: '5px', border: '2px solid #a0a0a0ff' }}>
-                              <b>{change.field}</b>
+                              <b>{pageFactory.friendlyFieldName(change.field)}</b>
                             </div>
                             <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #dc3545' }}>
-                              {change.oldValue}
+                              {pageFactory.friendlyValue(change.field, change.oldValue)}
                             </div>
                             <div className='text-center' style={{ flex: 1, padding: '10px' }}>
                               <FaArrowAltCircleRight />
                             </div>
                             <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #198754' }}>
-                              {change.newValue}
+                              {pageFactory.friendlyValue(change.field, change.newValue)}
                             </div>
                           </Row>
                         </Col>
                       ))}
                     </>
                   )}
-
-                  {/* Mudanças nos Componentes */}
                   {(changes?.page?.component && changes.page.component.length > 0) ? (
                     changes.page.component.map((component, index) => (
                       <>
@@ -344,16 +342,16 @@ export function Menu() {
                           <Col lg={12} className='mb-2' key={changeIndex}>
                             <Row className="d-flex gap-2">
                               <div style={{ flex: 3, padding: '10px', borderRadius: '5px', border: '2px solid #BBBBBB' }}>
-                                <b>{change.field}</b>
+                                <b>{componentFactory.friendlyFieldName(change.field)}</b>
                               </div>
                               <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #dc3545' }}>
-                                {change.oldValue}
+                                {componentFactory.friendlyValue(change.field, change.oldValue)}
                               </div>
                               <div className='text-center' style={{ flex: 1, padding: '10px' }}>
                                 <FaArrowAltCircleRight />
                               </div>
                               <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #198754' }}>
-                                {change.newValue}
+                                {componentFactory.friendlyValue(change.field, change.newValue)}
                               </div>
                             </Row>
                           </Col>
@@ -368,16 +366,16 @@ export function Menu() {
                               <Col lg={12} className='mb-2' key={changeIndex}>
                                 <Row className="d-flex gap-2">
                                   <div style={{ flex: 3, padding: '10px', borderRadius: '5px', border: '2px solid #DDDDDD' }}>
-                                    <b>{change.field}</b>
+                                    <b>{elementFactory.friendlyFieldName(change.field)}</b>
                                   </div>
                                   <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #dc3545' }}>
-                                    {change.oldValue}
+                                    {elementFactory.friendlyValue(change.field, change.oldValue)}
                                   </div>
                                   <div className='text-center' style={{ flex: 1, padding: '10px' }}>
                                     <FaArrowAltCircleRight />
                                   </div>
                                   <div style={{ flex: 4, padding: '10px', borderRadius: '5px', border: '2px solid #198754' }}>
-                                    {change.newValue}
+                                    {elementFactory.friendlyValue(change.field, change.newValue)}
                                   </div>
                                 </Row>
                               </Col>
@@ -387,7 +385,6 @@ export function Menu() {
                       </>
                     ))
                   ) : (
-                    // Só mostrar esta mensagem se não há mudanças em website, página ou componente
                     !changes?.changes?.length && !changes?.page?.changes?.length && (
                       <Col lg={12}>
                         Nenhuma alteração encontrada.

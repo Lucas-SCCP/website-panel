@@ -45,7 +45,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
         <Row className='mb-2' style={{ border: '3px solid #EEEEEE', padding: '10px', borderRadius: '5px' }}>
           <Col lg={4}>
             <Form.Group className="mb-3" controlId="pageName">
-              <Form.Label>Cor do fundo</Form.Label>
+              <Form.Label>Cor de fundo</Form.Label>
               <Form.Control
                 type="color"
                 value={updatedElement.styles.backgroundColor ? updatedElement.styles.backgroundColor : '#FFFFFF'}
@@ -58,6 +58,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
               <Form.Label>Largura</Form.Label>
               <Form.Control
                 type="number"
+                min={1}
                 placeholder='width'
                 value={updatedElement.styles.width ? updatedElement.styles.width : ''}
                 onChange={(e) => setStylesValue('width', e.target.value)}
@@ -69,6 +70,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
               <Form.Label>Altura</Form.Label>
               <Form.Control
                 type="number"
+                min={1}
                 placeholder='height'
                 value={updatedElement.styles.height ? updatedElement.styles.height : ''}
                 onChange={(e) => setStylesValue('height', e.target.value)}
@@ -117,6 +119,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
             <InputGroup className="mb-3">
               <Form.Control 
                 type="number"
+                min={1}
                 value={updatedElement.styles?.fontSize?.replace('px', '')}
                 onChange={(e) => setStylesValue('fontSize', e.target.value + 'px')}                
               />
@@ -130,6 +133,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
             <InputGroup className="mb-3">
               <Form.Control 
                 type="number"
+                min={1}
                 value={updatedElement.styles.fontWeight}
                 onChange={(e) => setStylesValue('fontWeight', e.target.value)}
               />
@@ -166,6 +170,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
               <Form.Label>border-radius</Form.Label>
               <Form.Control
                 type="number"
+                min={1}
                 placeholder='border-radius'
                 value={updatedElement.styles.borderRadius ? updatedElement.styles.borderRadius.replace('px', '') : ''}
                 onChange={(e) => setStylesValue('borderRadius', e.target.value + 'px')}
@@ -184,9 +189,10 @@ export function StylesSettings({ element }: { element: ElementType }) {
           </Col>
           <Col lg={4}>
             <Form.Group className="mb-3" controlId="pageName">
-              <Form.Label>Grossura</Form.Label>
+              <Form.Label>Largura</Form.Label>
               <Form.Control
                 type="number"
+                min={1}
                 value={updatedElement.styles.borderWidth ? updatedElement.styles.borderWidth.replace('px', '') : ''}
                 onChange={(e) => setStylesValue('borderWidth', e.target.value + 'px')}
               />
@@ -202,6 +208,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
             <InputGroup className="mb-3">
               <Form.Control
                 type="number"
+                min={1}
                 placeholder='margin-top'
                 value={updatedElement.styles.marginTop ? updatedElement.styles.marginTop.replace('px', '') : ''}
                 onChange={(e) => setStylesValue('marginTop', e.target.value + 'px')}
@@ -216,6 +223,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
             <InputGroup className="mb-3">
               <Form.Control
                 type="number"
+                min={1}
                 placeholder='margin-left'
                 value={updatedElement.styles.marginLeft ? updatedElement.styles.marginLeft.replace('px', '') : ''}
                 onChange={(e) => setStylesValue('marginLeft', e.target.value + 'px')}
@@ -230,6 +238,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
             <InputGroup className="mb-3">
               <Form.Control
                 type="number"
+                min={1}
                 placeholder='margin-right'
                 value={updatedElement.styles.marginRight ? updatedElement.styles.marginRight.replace('px', '') : ''}
                 onChange={(e) => setStylesValue('marginRight', e.target.value + 'px')}
@@ -244,6 +253,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
             <InputGroup className="mb-3">
               <Form.Control
                 type="number"
+                min={1}
                 placeholder='margin-bottom'
                 value={updatedElement.styles.marginBottom ? updatedElement.styles.marginBottom.replace('px', '') : ''}
                 onChange={(e) => setStylesValue('marginBottom', e.target.value + 'px')}
@@ -263,6 +273,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
             <InputGroup className="mb-3">
               <Form.Control
                 type="number"
+                min={1}
                 placeholder='padding-top'
                 value={updatedElement.styles.paddingTop ? updatedElement.styles.paddingTop.replace('px', '') : ''}
                 onChange={(e) => setStylesValue('paddingTop', e.target.value + 'px')}
@@ -277,6 +288,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
             <InputGroup className="mb-3">
               <Form.Control
                 type="number"
+                min={1}
                 placeholder='padding-left'
                 value={updatedElement.styles.paddingLeft ? updatedElement.styles.paddingLeft.replace('px', '') : ''}
                 onChange={(e) => setStylesValue('paddingLeft', e.target.value + 'px')}
@@ -291,6 +303,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
             <InputGroup className="mb-3">
               <Form.Control
                 type="number"
+                min={1}
                 placeholder='padding-right'
                 value={updatedElement.styles.paddingRight ? updatedElement.styles.paddingRight.replace('px', '') : ''}
                 onChange={(e) => setStylesValue('paddingRight', e.target.value + 'px')}
@@ -305,6 +318,7 @@ export function StylesSettings({ element }: { element: ElementType }) {
             <InputGroup className="mb-3">
               <Form.Control
                 type="number"
+                min={1}
                 placeholder='padding-bottom'
                 value={updatedElement.styles.paddingBottom ? updatedElement.styles.paddingBottom.replace('px', '') : ''}
                 onChange={(e) => setStylesValue('paddingBottom', e.target.value + 'px')}

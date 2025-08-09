@@ -106,6 +106,7 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
               <Form.Label>Posição</Form.Label>
               <Form.Control
                 type="number"
+                min={1}
                 placeholder="Digite uma posição para o componente"
                 value={updatedComponent?.sort}
                 onChange={(e) => setValue('sort', e.target.value)}
