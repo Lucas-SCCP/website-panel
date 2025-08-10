@@ -12,8 +12,8 @@ export function ListComponent({ component }: { component: ComponentType }) {
   const elementFactory = new ElementFactory()
   const elements = component.elements.content
 
-  const icon = elements.filter((e) => e.element_type_id === 9).sort((a, b) => a.sort - b.sort)
-  const text = elements.filter((e) => e.element_type_id === 12).sort((a, b) => a.sort - b.sort)
+  const icon = elements.filter((e) => e.elementTypeId === 9).sort((a, b) => a.sort - b.sort)
+  const text = elements.filter((e) => e.elementTypeId === 12).sort((a, b) => a.sort - b.sort)
 
   const result = []
   const len = Math.max(icon.length, text.length)
@@ -81,10 +81,10 @@ export function ListComponent({ component }: { component: ComponentType }) {
           <Col lg={12}>
             <Tabs defaultActiveKey="icon" id="configs" fill>
               <Tab eventKey="icon" title={<span><MdInsertEmoticon /> Ícone</span>} className="website-tabs">
-                {elementFactory.build(item.icon.element_type_id, item.icon)}
+                {elementFactory.build(item.icon.elementTypeId, item.icon)}
               </Tab>
               <Tab eventKey="text" title={<span><MdOutlineTextFields /> Texto</span>} className="website-tabs">
-                {elementFactory.build(item.text.element_type_id, item.text)}
+                {elementFactory.build(item.text.elementTypeId, item.text)}
               </Tab>
             </Tabs>
           </Col>

@@ -66,7 +66,7 @@ export function TextComponent({ component }: { component: ComponentType }) {
       <Accordion.Header className="website-accordion-header-button-bg-gray">
         <div className="website-accordion-header-title-container">
           <div className="website-accordion-header-title">
-            {getIconByElementType(element.element_type_id)} - <b>{getNameElementByType(element.element_type_id)}</b>
+            {getIconByElementType(element.elementTypeId)} - <b>{getNameElementByType(element.elementTypeId)}</b>
           </div>
         </div>
         <span className="ms-auto website-accordion-header-action-buttons" style={{ display: 'none' }} id='aSerDesenvolvido'>
@@ -98,7 +98,7 @@ export function TextComponent({ component }: { component: ComponentType }) {
         </span>
       </Accordion.Header>
       <Accordion.Body>
-        {elementFactory.build(element.element_type_id, element)}
+        {elementFactory.build(element.elementTypeId, element)}
       </Accordion.Body>
     </Accordion.Item>
   ))

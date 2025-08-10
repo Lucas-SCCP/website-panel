@@ -8,7 +8,7 @@ import type { ComponentType } from 'website-lib'
 
 class ComponentFactory {
   build(component: ComponentType): React.ReactElement | null {
-    switch (component.component_type_id) {
+    switch (component.componentTypeId) {
       case ComponentTypeEnum.Text:
         return React.createElement(TextComponent, { component })
       case ComponentTypeEnum.List:

@@ -648,7 +648,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
                   
                   let existingElement = targetComponent.element?.find(el => el.id === elementId)
                   if (!existingElement) {
-                    existingElement = { id: elementId, elementTypeId: originalElement?.element_type_id ?? 0, changes: [] }
+                    existingElement = { id: elementId, elementTypeId: originalElement?.elementTypeId ?? 0, changes: [] }
                     targetComponent.element = targetComponent.element || []
                     targetComponent.element.push(existingElement)
                   }
@@ -678,7 +678,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
                         name: originalComponentForElement ? String(originalComponentForElement.name) : '',
                         element: [{
                           id: elementId,
-                          elementTypeId: originalElement?.element_type_id ?? 0,
+                          elementTypeId: originalElement?.elementTypeId ?? 0,
                           changes: [{
                             action: 'updated',
                             field: propKey,
@@ -761,7 +761,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
               
               let existingElement = targetComponent.element?.find(el => el.id === elementId)
               if (!existingElement) {
-                existingElement = { id: elementId, elementTypeId: originalElement?.element_type_id ?? 0, changes: [] }
+                existingElement = { id: elementId, elementTypeId: originalElement?.elementTypeId ?? 0, changes: [] }
                 targetComponent.element = targetComponent.element || []
                 targetComponent.element.push(existingElement)
               }
@@ -791,7 +791,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
                     name: originalComponentForElement ? String(originalComponentForElement.name) : '',
                     element: [{
                       id: elementId,
-                      elementTypeId: originalElement?.element_type_id ?? 0,
+                      elementTypeId: originalElement?.elementTypeId ?? 0,
                       changes: [{
                         action: 'updated',
                         field: fieldName,

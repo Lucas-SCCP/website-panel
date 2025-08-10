@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Row, Col, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
-import { PageRenderer } from 'website-lib'
+import { Header, Footer, PageRenderer } from 'website-lib'
 import { FaSearchPlus } from 'react-icons/fa'
 import { MdOutlineFindInPage } from 'react-icons/md'
-import type { PageType, ComponentType } from 'website-lib'
+import type { WebsiteType, PageType } from 'website-lib'
 
 export function WebsitePreview() {
   const [show, setShow] = useState(false)
@@ -12,11 +12,11 @@ export function WebsitePreview() {
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
+  const selectedWebsite: WebsiteType | null = UseWebsiteStore((state) => state.selectedWebsite)
   const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
 
+  console.log('Selected website in WebsitePreview:', selectedWebsite)
   console.log('Selected page in WebsitePreview:', selectedPage)
-
-  const components = selectedPage?.components as ComponentType[]
 
   return (
     <>
@@ -50,9 +50,11 @@ export function WebsitePreview() {
           </div>
         </Col>
         <Col lg={12}>
-          <main className="root background-image" style={{ borderRadius: '5px' }}>
-            <PageRenderer ga4="T" title="" components={components} />
-          </main>
+          <div style={{ border: '2px solid #BBBBBB', borderRadius: '5px' }}>
+            {selectedWebsite && selectedPage && (
+              <PageRenderer website={selectedWebsite} page={selectedPage} editionMode={true} />
+            )}
+          </div>
         </Col>
       </Row>
       <Modal show={show} onHide={handleClose} fullscreen>
@@ -60,9 +62,13 @@ export function WebsitePreview() {
           <Modal.Title>Pré visualização da página</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <main className="root background-image">
-            <PageRenderer ga4="T" title="" components={components} />
-          </main>
+          {selectedWebsite && selectedPage && (
+            <>
+              <Header website={selectedWebsite} />
+              <PageRenderer website={selectedWebsite} page={selectedPage} editionMode={true} />
+              <Footer website={selectedWebsite} />
+            </>
+          )}
         </Modal.Body>
       </Modal>
     </>

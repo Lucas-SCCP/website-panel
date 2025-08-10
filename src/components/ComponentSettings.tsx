@@ -7,7 +7,7 @@ import { FaListUl, FaInfoCircle, FaTextHeight } from 'react-icons/fa'
 import { RiInputField } from 'react-icons/ri'
 import { TiDelete } from 'react-icons/ti'
 import { TbSwitchVertical } from 'react-icons/tb'
-import type { WebsiteType, PageType, ComponentType  } from 'website-lib'
+import type { WebsiteType, PageType, ComponentType, PropertiesType  } from 'website-lib'
 
 export function ComponentSettings({ component, index }: { component: ComponentType, index: number }) {
 
@@ -51,8 +51,30 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
 
     updateSelectedComponentField(
       component.id,
-      key,
-      value
+      'properties',
+      {
+        ...updatedComponent?.properties,
+        [key]: value
+      }
+    )
+  }
+
+  const setPropertiesValue = (key: keyof PropertiesType, value: string | boolean) => {
+    if (
+      selectedWebsite?.id == null ||
+      selectedPage?.id == null ||
+      component?.id == null
+    ) {
+      return
+    }
+
+    updateSelectedComponentField(
+      component.id,
+      'properties',
+      {
+        ...updatedComponent?.properties,
+        [key]: value
+      }
     )
   }
 
@@ -64,7 +86,7 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
       <Accordion.Header className="website-accordion-header-button-bg-gray">
         <div className="website-accordion-header-title-container">
           <div className="website-accordion-header-title">
-            {getIconByComponentType(component.component_type_id)} - <b>{component.name}</b>
+            {getIconByComponentType(component.componentTypeId)} - <b>{component.name}</b>
           </div>
         </div>
         <span className="ms-auto website-accordion-header-action-buttons" style={{ display: 'none' }} id='aSerDesenvolvido'>
@@ -133,7 +155,11 @@ export function ComponentSettings({ component, index }: { component: ComponentTy
                   </OverlayTrigger>
                 </span>
               </Form.Label>
-              <Form.Select value={updatedComponent?.size ? updatedComponent.size : ""} onChange={(e) => setValue('size', e.target.value)} aria-label="Selecione">
+              <Form.Select
+                value={updatedComponent?.properties.size?.lg?.span ? updatedComponent?.properties.size?.lg?.span : ""}
+                onChange={(e) => setPropertiesValue('size', e.target.value)}
+                aria-label="Selecione"
+              >
                 <option value="">Selecione</option>
                 <option value="1">8%</option>
                 <option value="2">16%</option>

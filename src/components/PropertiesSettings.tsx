@@ -8,7 +8,7 @@ export function PropertiesSettings({ element }: { element: ElementType }) {
 
   const selectedWebsite: WebsiteType | null = UseWebsiteStore((state) => state.selectedWebsite)
   const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
-  const component: ComponentType | undefined = selectedPage?.components.find((c) => c.id === element.component_id)
+  const component: ComponentType | undefined = selectedPage?.components.find((c) => c.id === element.componentId)
 
   const updatedElement = component?.elements.content.find((e) => e.id === element.id) || element
 
@@ -98,7 +98,11 @@ export function PropertiesSettings({ element }: { element: ElementType }) {
                   </OverlayTrigger>
                 </span>
               </Form.Label>
-              <Form.Select value={updatedElement?.size ? updatedElement.size : ""} onChange={(e) => setElementValue('size', Number(e.target.value))} aria-label="Selecione">
+              <Form.Select
+                value={updatedElement?.properties.size?.lg?.span ? updatedElement.properties.size.lg.span : ""}
+                onChange={(e) => setPropertiesValue('size', e.target.value)}
+                aria-label="Selecione"
+              >
                 <option value="">Selecione</option>
                 <option value="1">8%</option>
                 <option value="2">16%</option>

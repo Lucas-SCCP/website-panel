@@ -48,7 +48,7 @@ export function Pages() {
 
   const handleMenuOrderChange = (newMenuOrder: number) => {
     setMenuOrder(newMenuOrder)
-    updateSelectedPageField('menu_order', newMenuOrder)
+    updateSelectedPageField('menuOrder', newMenuOrder)
   }
 
   const handleEnabledChange = (newEnabled: boolean) => {
@@ -80,7 +80,7 @@ export function Pages() {
           setTitle(page.title)
           setPath(page.path)
           setMenu(page.menu)
-          setMenuOrder(page.menu_order)
+          setMenuOrder(page.menuOrder)
           // Garantir que sempre trabalhamos com boolean na interface
           setEnabled(!!page.enabled)
         }

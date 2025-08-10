@@ -12,7 +12,7 @@ export function LinkElement({ element }: { element: ElementType }) {
 
   const selectedWebsite: WebsiteType | null = UseWebsiteStore((state) => state.selectedWebsite)
   const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
-  const component: ComponentType | undefined = selectedPage?.components.find((c) => c.id === element.component_id)
+  const component: ComponentType | undefined = selectedPage?.components.find((c) => c.id === element.componentId)
 
   const updatedElement = component?.elements.content.find((e) => e.id === element.id) || element
 
