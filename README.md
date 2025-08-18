@@ -1,69 +1,63 @@
-# React + TypeScript + Vite
+# website-panel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Um painel moderno desenvolvido em React + TypeScript + Vite para criação e gerenciamento de websites de forma simples e intuitiva.
 
-Currently, two official plugins are available:
+## Descrição
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+O website-panel é uma aplicação web que permite aos usuários criar, personalizar e gerenciar websites através de uma interface amigável. O painel oferece componentes reutilizáveis, visualização em tempo real, gerenciamento de páginas, autenticação e configurações personalizadas.
 
-## Expanding the ESLint configuration
+## Funcionalidades
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Criação e edição de páginas**: Adicione, edite e remova páginas do seu website.
+- **Componentes customizáveis**: Utilize e configure componentes como listas, formulários, carrosséis, menus, alertas, botões, ícones, inputs, links e textos.
+- **Visualização em tempo real**: Veja uma prévia do seu website enquanto edita.
+- **Gerenciamento de usuários**: Autenticação e controle de acesso.
+- **Configurações avançadas**: Personalize o comportamento e aparência dos componentes.
+- **Gráficos e estatísticas**: Visualize dados do website com gráficos de área e barras.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tecnologias Utilizadas
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
+- [ESLint](https://eslint.org/)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+## Estrutura do Projeto
+
+```
+src/
+  charts/           # Componentes de gráficos
+  components/       # Componentes principais do painel
+  elements/         # Elementos básicos reutilizáveis
+  enums/            # Enumerações de tipos
+  exceptions/       # Tratamento de exceções
+  factories/        # Fábricas de componentes e elementos
+  pages/            # Páginas do painel
+  services/         # Serviços
+  stores/           # Gerenciamento de estado
+  App.tsx           # Componente principal
+  main.tsx          # Ponto de entrada
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Instalação
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/Lucas-SCCP/website-panel.git
+   cd website-panel
+   ```
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Inicie o projeto:
+   ```bash
+   npm run dev
+   ```
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+## Scripts Disponíveis
+
+- `npm run dev` — Inicia o servidor de desenvolvimento.
+- `npm run build` — Gera a versão de produção.
+- `npm run preview` — Visualiza a build de produção localmente.
+- `npm run lint` — Executa o linter.

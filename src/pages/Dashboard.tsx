@@ -1,50 +1,52 @@
-import { Container, Row, Col, Card } from 'react-bootstrap';
-import Menu from '../components/Menu';
-import BarCharts from '../charts/BarCharts';
-import AreaCharts from '../charts/AreaCharts';
+import { useEffect } from 'react'
+import { Row, Col } from 'react-bootstrap'
+import { Main } from './Main'
+import { AreaCharts } from '../charts/AreaCharts'
+import { BarCharts } from '../charts/BarCharts'
+import { FaChartBar } from 'react-icons/fa'
+import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 
-export default function Home() {
+export function Dashboard() {
+  const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
+  
+  useEffect(() => {
+    setSelectedPageId(null)
+  }, [setSelectedPageId])
+
   return (
-    <Container fluid className='text-center'>
-      <Row>
-        <Menu />
-        <Col lg={10}>
-          <Row>
-            <Col lg={4} style={{ marginTop: '10px' }}>
-              <Card>
-                <Card.Body>
-                  <Card.Title>Visitantes por período</Card.Title>
-                  <BarCharts />
-                  <Card.Text>
-                    Gráfico com total de visitantes por dia/mes/ano
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col lg={4} style={{ marginTop: '10px' }}>
-              <Card>
-                <Card.Body>
-                  <Card.Title>Visitantes por página</Card.Title>
-                  <AreaCharts />
-                  <Card.Text>
-                    Gráfico com total de visitantes por página
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col lg={4} style={{ marginTop: '10px' }}>
-              <Card>
-                <Card.Body>
-                  <Card.Title>Formulário recebidos</Card.Title>
-                  <Card.Text>
-                    Gráfico com o total de formulários recebidos
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+    <Main>
+      <Row className="mt-3 mb-3">
+        <Col sm={12} md={12} lg={4}>
+          <div className="website-card">
+            <Row>
+              <Col lg={12} className="mb-2">
+                <div className="website-card-header krona">
+                  <FaChartBar size={18} />
+                  <b>VISITANTES POR PÁGINA</b>
+                </div>
+              </Col>
+              <Col lg={12}>
+                <BarCharts />
+              </Col>
+            </Row>
+          </div>
+        </Col>
+        <Col sm={12} md={12} lg={4} className="ps-0">
+          <div className="website-card">
+            <Row>
+              <Col lg={12} className="mb-2">
+                <div className="website-card-header krona">
+                  <FaChartBar size={18} />
+                  <b>VISITANTES POR PERÍODO</b>
+                </div>
+              </Col>
+              <Col lg={12}>
+                <AreaCharts />
+              </Col>
+            </Row>
+          </div>
         </Col>
       </Row>
-    </Container>
-  );
+    </Main>
+  )
 }
