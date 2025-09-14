@@ -143,7 +143,8 @@ class ApiService {
       logo: rawWebsite.logo,
       header: {
         properties: {
-          logoAlign: rawWebsite.header?.properties?.logoAlign
+          logoAlign: rawWebsite.header?.properties?.logoAlign,
+          showLogo: rawWebsite.header?.properties?.showLogo
         },
         styles: {
           ...(rawWebsite.header.styles.alignItems && { alignItems: rawWebsite.header.styles.alignItems }),

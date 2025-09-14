@@ -2,11 +2,10 @@ import { Row, Col, Form, Accordion } from 'react-bootstrap'
 import { PropertiesSettings } from '../components/PropertiesSettings';
 import { StylesSettings } from '../components/StylesSettings';
 import { UseWebsiteStore } from '../stores/UseWebsiteStore';
-import type { WebsiteType, PageType, ComponentType, ElementType  } from 'website-lib'
+import type { PageType, ComponentType, ElementType } from 'website-lib'
 
 export function TextElement({ element }: { element: ElementType }) {
 
-  const selectedWebsite: WebsiteType | null = UseWebsiteStore((state) => state.selectedWebsite)
   const selectedPage: PageType | null = UseWebsiteStore((state) => state.selectedPage)
   const component: ComponentType | undefined = selectedPage?.components.find((c) => c.id === element.componentId)
 
@@ -15,11 +14,7 @@ export function TextElement({ element }: { element: ElementType }) {
   const { updateSelectedElementField } = UseWebsiteStore()
 
   const setValue = (key: string, value: string) => {
-    if (
-      selectedWebsite?.id == null ||
-      selectedPage?.id == null ||
-      component?.id == null
-    ) {
+    if (component?.id == null) {
       return
     }
     updateSelectedElementField(

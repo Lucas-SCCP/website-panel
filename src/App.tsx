@@ -4,6 +4,7 @@ import { Login } from './pages/Login'
 import { Dashboard } from './pages/Dashboard'
 import { Pages } from './pages/Pages'
 import { Settings } from './pages/Settings'
+import { CreatePassword } from './pages/CreatePassword'
 
 function App() {
   return (
@@ -33,6 +34,12 @@ function App() {
             <ProtectedRouter>
               <Settings />
             </ProtectedRouter>
+          }
+        />
+        <Route
+          path="/criar-senha"
+          element={
+            <CreatePassword />
           }
         />
       </Routes>
