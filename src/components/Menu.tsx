@@ -13,6 +13,7 @@ import {
   Button,
   Modal,
   Dropdown,
+  Badge
 } from 'react-bootstrap'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { UseUserStore } from '../stores/UseUserStore'
@@ -24,6 +25,7 @@ import { FaHome, FaRegSave, FaArrowAltCircleRight } from 'react-icons/fa'
 import { MdOutlineSettings, MdAddCircleOutline, MdSaveAlt, MdDeleteForever } from 'react-icons/md'
 import { HiOutlineLogout } from 'react-icons/hi'
 import { TiWarningOutline } from 'react-icons/ti'
+import { IoNotificationsOutline } from "react-icons/io5"
 import type { WebsiteType, PageType } from 'website-lib'
 
 export function Menu() {
@@ -234,13 +236,23 @@ export function Menu() {
                       </Nav.Link>
                     </>
                   )}
-                  <Nav.Link className="ms-auto d-flex">
-                    <OverlayTrigger placement="left" overlay={<Tooltip id={'tooltip-bottom'}>Sair</Tooltip>}>
-                      <div onClick={handleExit} className="website-navbar-action-exit">
-                        <HiOutlineLogout size={30} />
+                  <div className="ms-auto d-flex">
+                    <Nav.Link style={{ display: 'none' }} id='aSerDesenvolvido'>
+                      <div className="website-navbar-action-exit">
+                        <IoNotificationsOutline size={30} />
+                        <Badge pill bg="danger" style={{ display: 'none', fontSize: '10px', position: 'absolute', top: 40, right: 84 }}>
+                          9
+                        </Badge>
                       </div>
-                    </OverlayTrigger>
-                  </Nav.Link>
+                    </Nav.Link>
+                    <Nav.Link>
+                      <OverlayTrigger placement="left" overlay={<Tooltip id={'tooltip-bottom'}>Sair</Tooltip>}>
+                        <div onClick={handleExit} className="website-navbar-action-exit">
+                          <HiOutlineLogout size={30} />
+                        </div>
+                      </OverlayTrigger>
+                    </Nav.Link>
+                  </div>
                 </Nav>
               </Offcanvas.Body>
             </Navbar.Offcanvas>

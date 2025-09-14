@@ -36,10 +36,12 @@ export function LinkElement({ element }: { element: ElementType }) {
         return
       }
 
-      const res = await fetch(`http://api.local/files/presigned_url/${file.name}/type/${encodeURIComponent(file.type)}`)
+      // obtem a url para upload
+      const res = await fetch(`${import.meta.env.VITE_API}/files/presigned_url/website/${selectedWebsite?.id}/file/${file.name}/type/${encodeURIComponent(file.type)}`)
       const response = await res.json()
       const { url, fileUrl } = response.data
 
+      // faz o upload do arquivo
       const upload = await fetch(url, {
         method: 'PUT',
         headers: {
