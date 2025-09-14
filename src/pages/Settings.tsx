@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Row, Col, Form, InputGroup, Image, Button, ProgressBar, OverlayTrigger, Tooltip, Alert } from 'react-bootstrap'
 import Switch from 'react-switch'
 import { Main } from './Main'
+import { ApiService } from '../services/ApiService'
 import { Header, Footer } from 'website-lib'
 import { GrConfigure } from 'react-icons/gr'
 import { BsFillMenuButtonWideFill } from "react-icons/bs"
@@ -10,10 +11,11 @@ import { IoFileTrayStacked } from "react-icons/io5"
 import { MdOutlineHistory } from "react-icons/md"
 import { RiBankLine } from "react-icons/ri"
 import { FaFilePdf, FaFileImage, FaUsersGear } from "react-icons/fa6"
-import { FaInfoCircle } from 'react-icons/fa'
+import { FaEnvelopeOpenText, FaInfoCircle } from 'react-icons/fa'
 import { MdAddCircle } from 'react-icons/md';
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import type { WebsiteType } from 'website-lib'
+import type { NotificationType } from '../types/NotificationType'
 
 export function Settings() {
   const [website, setWebsite] = useState<WebsiteType | null>(null)
@@ -30,6 +32,8 @@ export function Settings() {
   // const [photo, setPhoto] = useState<File | null>(null)
   // const [isActive, setIsActive] = useState(false)
 
+  const [notifications, setNotifications] = useState<NotificationType[]>([])
+
   const allWebsites = UseWebsiteStore((state) => state.allWebsites)
   const selectedWebsiteId = UseWebsiteStore((state) => state.selectedWebsiteId)
   const selectedPageId = UseWebsiteStore((state) => state.selectedPageId)
@@ -40,8 +44,22 @@ export function Settings() {
     setSelectedPageId(null)
   }, [setSelectedPageId])
 
-  const handleMenuClick = (menuId: number) => {
+  const handleMenuClick = async (menuId: number) => {
     console.log('handleMenuClick', menuId)
+
+    if (!selectedWebsiteId) {
+      console.error('No website selected')
+      return
+    }
+
+    const apiService = new ApiService()
+
+    if (menuId === 9) {
+      const notifications = await apiService.getNotificationByWebsiteId(selectedWebsiteId)
+      console.log('notifications', notifications)
+      setNotifications(notifications)
+    }
+
     setSelectedMenu(menuId)
   }
 
@@ -127,6 +145,12 @@ export function Settings() {
                 <div className={`website-settings-menu-item ${selectedMenu === 3 ? 'active' : ''}`} onClick={() => handleMenuClick(3)}>
                   <TbBoxAlignBottomFilled size={18} />
                   <b>Configurações do rodapé</b>
+                </div>
+              </Col>
+              <Col lg={12} className="mb-2">
+                <div className={`website-settings-menu-item ${selectedMenu === 9 ? 'active' : ''}`} onClick={() => handleMenuClick(9)}>
+                  <FaEnvelopeOpenText size={18} />
+                  <b>Formulários enviados</b>
                 </div>
               </Col>
               <Col id='aSerDesenvolvido' lg={12} className="mb-2">
@@ -514,6 +538,46 @@ export function Settings() {
               </Col>
               <Col lg={12} className='mt-2'>
                 <Footer website={website} />
+              </Col>
+            </Row>
+          </div>
+          <div id='websiteSettings' className="website-card" style={{ display: selectedMenu === 9 ? 'block' : 'none' }}>
+            <Row>
+              <Col lg={12} className="mb-2">
+                <div className="website-card-header krona">
+                  <FaEnvelopeOpenText size={18} />
+                  <b>FORMULÁRIOS ENVIADOS</b>
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12}>
+                <div style={{ border: '3px solid #EEEEEE', borderRadius: '5px', padding: '10px' }}>
+                  {notifications.map((notification, index) => (
+                    <Row key={index} className='notification-item'>
+                      <Col lg={2}>
+                        <div className='notification-date' style={{  }}>
+                          {notification.created_at && (
+                            <Row className="text-center">
+                              <Col lg={12}>{new Date(notification.created_at).toLocaleDateString('pt-BR')}</Col>
+                              <Col lg={12}>{new Date(notification.created_at).toLocaleTimeString('pt-BR')}</Col>
+                            </Row>
+                          )}
+                        </div>
+                      </Col>
+                      <Col lg={10}>
+                        <div key={index} style={{ fontSize: '18px', whiteSpace: 'pre-line', padding: '10px' }}>
+                          {JSON.parse(notification.message).message.split('\n').map((line: string, i: number) => {
+                            const regexLink = /(https?:\/\/[^\s]+)/g;
+                            const textoComLinks = line.replace(regexLink, '<a href="$1" target="_blank">Visualizar</a>');
+
+                            return (<div dangerouslySetInnerHTML={{ __html: textoComLinks }} key={i} />)
+                          })}
+                        </div>
+                      </Col>
+                    </Row>
+                  ))}
+                </div>
               </Col>
             </Row>
           </div>

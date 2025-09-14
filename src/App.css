@@ -218,3 +218,19 @@ body {
   border: 3px solid #DDD;
   background-color: #EEE;
 }
+
+.notification-date {
+  background: #EEEEEE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.notification-item:hover {
+  background-color: #EEE;
+}
+
+.notification-item:hover .notification-date {
+  background-color: #CCC;
+}

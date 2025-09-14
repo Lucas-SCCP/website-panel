@@ -8,7 +8,7 @@ import type {
   TextAlign,
   FontWeight
 } from 'website-lib'
-
+import type { NotificationType } from '../types/NotificationType'
 import { AuthenticateException } from '../exceptions/AuthenticateException'
 
 class ApiService {
@@ -446,6 +446,25 @@ class ApiService {
     }
 
     return website
+  }
+
+  async getNotificationByWebsiteId(websiteId: number): Promise<NotificationType[]> {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API}/notifications/website/${websiteId}`)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const json = await response.json()
+      console.log('Notifications fetched:', json)
+      return json.data as NotificationType[] || []
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to fetch notifications: ${error.message}`)
+      }
+      throw new Error('Failed to fetch notifications: Unknown error')
+    }
   }
 }
 
