@@ -27,8 +27,8 @@ export function Settings() {
   const [email, setEmail] = useState('')
   const [isDefaultSite, setIsDefaultSite] = useState(false)
   const [accessLevel, setAccessLevel] = useState('')
-  const [photo, setPhoto] = useState<File | null>(null)
-  const [isActive, setIsActive] = useState(false)
+  // const [photo, setPhoto] = useState<File | null>(null)
+  // const [isActive, setIsActive] = useState(false)
 
   const allWebsites = UseWebsiteStore((state) => state.allWebsites)
   const selectedWebsiteId = UseWebsiteStore((state) => state.selectedWebsiteId)
@@ -70,6 +70,10 @@ export function Settings() {
       return
     }
     updateSelectedWebsiteField(key, value)
+  }
+
+  const handleChangePassword = () => {
+    alert('Função de alterar senha ainda não implementada.')
   }
 
   useEffect(() => {
@@ -351,7 +355,7 @@ export function Settings() {
                       <div style={{ display: 'flex', marginTop: '8px' }}>
                         <Switch
                           onChange={(checked) => setValue('header', checked)}
-                          checked={!!website.header.properties.showMenu}
+                          checked={false}
                           className="react-switch"
                         />
                       </div>
@@ -472,7 +476,7 @@ export function Settings() {
                         <div style={{ display: 'flex', marginTop: '8px' }}>
                           <Switch
                             onChange={(checked) => setValue('header', checked)}
-                            checked={!!website.header.properties.showMenu}
+                            checked={false}
                             className="react-switch"
                           />
                         </div>
@@ -585,7 +589,7 @@ export function Settings() {
                             </Col>
                             <Col lg={6}>
                               <Form.Label htmlFor="basic-url">Ativo</Form.Label>
-                              <Form.Select aria-label="Selecione" value={isActive} onChange={(e) => setIsActive(e.target.value)}>
+                              <Form.Select aria-label="Selecione" value='false'>
                                 <option value="">Selecione</option>
                                 <option value="1">Sim</option>
                                 <option value="2">Não</option>
@@ -605,11 +609,6 @@ export function Settings() {
                               <InputGroup className="mb-2 text-center" style={{ justifyContent: 'center' }}>
                                 <Image src="./public/user_avatar.png" rounded style={{ maxWidth: '100%', height: 'auto' }}/>
                               </InputGroup>
-                              <Form.Control type="file" accept="image/*" onChange={(e) => {
-                                if (e.target.files && e.target.files.length > 0) {
-                                  setPhoto(e.target.files[0]);
-                                }
-                              }} />
                             </Col>
                           </Row>
                         </Col>
