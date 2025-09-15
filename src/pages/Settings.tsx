@@ -598,8 +598,16 @@ export function Settings() {
                         <div className='notification-date' style={{  }}>
                           {notification.created_at && (
                             <Row className="text-center">
-                              <Col lg={12}>{new Date(notification.created_at).toLocaleDateString('pt-BR')}</Col>
-                              <Col lg={12}>{new Date(notification.created_at).toLocaleTimeString('pt-BR')}</Col>
+                              <Col lg={12}>
+                                {new Date(
+                                  new Date(notification.created_at).getTime() - 3 * 60 * 60 * 1000
+                                ).toLocaleDateString('pt-BR')}
+                              </Col>
+                              <Col lg={12}>
+                                {new Date(
+                                  new Date(notification.created_at).getTime() - 3 * 60 * 60 * 1000
+                                ).toLocaleTimeString('pt-BR')}
+                              </Col>
                             </Row>
                           )}
                         </div>
