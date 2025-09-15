@@ -74,11 +74,7 @@ class ApiService {
 
       const json = await response.json()
 
-      console.log('Websites retorno api:', json.data)
-
       const websites: WebsiteType[] = json.data.map((rawWebsite: RawWebsiteType) => this.parseWebsiteResponse(rawWebsite))
-
-      console.log('Websites após parse:', websites)
 
       return websites
     } catch (error: unknown) {
@@ -134,7 +130,6 @@ class ApiService {
   }
 
   parseWebsiteResponse(rawWebsite: RawWebsiteType): WebsiteType {
-    console.log('Parsing website response:', rawWebsite)
     const website: WebsiteType = {
       id: rawWebsite.id,
       name: rawWebsite.name,
@@ -457,7 +452,6 @@ class ApiService {
       }
 
       const json = await response.json()
-      console.log('Notifications fetched:', json)
       return json.data as NotificationType[] || []
     } catch (error: unknown) {
       if (error instanceof Error) {

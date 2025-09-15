@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Row, Col, Form, InputGroup, Image, Button, ProgressBar, OverlayTrigger, Tooltip, Alert } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
+import { Row, Col, Form, InputGroup, Image, Button, ProgressBar, OverlayTrigger, Tooltip, Alert, Dropdown } from 'react-bootstrap'
 import Switch from 'react-switch'
 import { Main } from './Main'
 import { ApiService } from '../services/ApiService'
@@ -13,11 +14,13 @@ import { RiBankLine } from "react-icons/ri"
 import { FaFilePdf, FaFileImage, FaUsersGear } from "react-icons/fa6"
 import { FaEnvelopeOpenText, FaInfoCircle } from 'react-icons/fa'
 import { MdAddCircle } from 'react-icons/md';
+import { ImExit } from "react-icons/im";
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import type { WebsiteType } from 'website-lib'
 import type { NotificationType } from '../types/NotificationType'
 
 export function Settings() {
+  const navigate = useNavigate()
   const [website, setWebsite] = useState<WebsiteType | null>(null)
   const [selectedMenu, setSelectedMenu] = useState(1)
   const [selectedUser, setSelectedUser] = useState(0)
@@ -39,15 +42,31 @@ export function Settings() {
   const selectedPageId = UseWebsiteStore((state) => state.selectedPageId)
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
   const { updateSelectedWebsiteField } = UseWebsiteStore()
+  const setSelectedWebsiteId = UseWebsiteStore((state) => state.setSelectedWebsiteId)
+  const setSelectedWebsite = UseWebsiteStore((state) => state.setSelectedWebsite)
   
   useEffect(() => {
-    console.log('>>>>>>>>>>>>> 1')
     setSelectedPageId(null)
   }, [setSelectedPageId])
 
-  const handleMenuClick = async (menuId: number) => {
-    console.log('handleMenuClick', menuId)
+  const selectedWebsiteClick = (event: React.MouseEvent<HTMLElement>) => {
+    const website = allWebsites.find((w) => w.id.toString() === event.currentTarget.id)
+    if (website) {
+      setSelectedPageId(null)
+      setSelectedWebsite(website)
+      setSelectedWebsiteId(website.id)
+      navigate('/')
+    }
+  }
 
+  const handleExit = () => {
+    setSelectedWebsiteId(null)
+    setSelectedPageId(null)
+    // setSelectedWebsite(null)
+    navigate('/login')
+  }
+
+  const handleMenuClick = async (menuId: number) => {
     if (!selectedWebsiteId) {
       console.error('No website selected')
       return
@@ -57,7 +76,6 @@ export function Settings() {
 
     if (menuId === 9) {
       const notifications = await apiService.getNotificationByWebsiteId(selectedWebsiteId)
-      console.log('notifications', notifications)
       setNotifications(notifications)
     }
 
@@ -65,7 +83,6 @@ export function Settings() {
   }
 
   const handleUserClick = (userId: number) => {
-    console.log('handleUserClick', userId)
     if (userId === 0) {
       setFirstName('')
       setLastName('')
@@ -96,7 +113,6 @@ export function Settings() {
   }
 
   useEffect(() => {
-    console.log('>>>>>>>>>>>>> 2')
     setSelectedMenu(1)
     const timeoutId = setTimeout(() => {
       const website = allWebsites.find((w) => w.id === selectedWebsiteId)
@@ -131,6 +147,20 @@ export function Settings() {
                   <BsFillMenuButtonWideFill size={18} />
                   <b>MENU</b>
                 </div>
+              </Col>
+              <Col lg={12} className="mb-2">
+                <Dropdown>
+                  <Dropdown.Toggle className='krona dropdown-website-select' variant="light" style={{ width: '100%', border: '3px solid #DDD' }}>
+                      {selectedWebsiteId ? allWebsites.find((w) => w.id === selectedWebsiteId)?.name : 'Selecione um site'}
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu className='krona dropdown-website-select-item' style={{ width: '100%', border: '3px solid #DDD' }}>
+                    {allWebsites.map((website) => (
+                      <Dropdown.Item onClick={selectedWebsiteClick} id={website.id.toString()} key={website.id} active={website.id === selectedWebsiteId}>
+                        {website.name}
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
               </Col>
               <Col lg={12} className="mb-2">
                 <div className={`website-settings-menu-item ${selectedMenu === 1 ? 'active' : ''}`} onClick={() => handleMenuClick(1)}>
@@ -184,6 +214,12 @@ export function Settings() {
                 <div className={`website-settings-menu-item ${selectedMenu === 8 ? 'active' : ''}`} onClick={() => handleMenuClick(8)}>
                   <RiBankLine size={18} />
                   <b>Meu plano</b>
+                </div>
+              </Col>
+              <Col lg={12} className="mb-2">
+                <div className={`website-settings-menu-item ${selectedMenu === 8 ? 'active' : ''}`} onClick={() => handleExit()}>
+                  <ImExit size={18} />
+                  <b>Sair</b>
                 </div>
               </Col>
             </Row>

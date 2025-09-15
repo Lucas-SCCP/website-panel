@@ -88,7 +88,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
       },
       clearAllWebsites: () => {
         set({ allWebsites: [] })
-        localStorage.removeItem('website-storage')
+        sessionStorage.removeItem('website-storage')
       },
       
       selectedWebsiteId: null,
@@ -849,14 +849,14 @@ export const UseWebsiteStore = create<WebsiteStore>()(
         typeof window !== 'undefined'
           ? {
               getItem: (name) => {
-                const item = localStorage.getItem(name)
+                const item = sessionStorage.getItem(name)
                 return item ? JSON.parse(item) : null
               },
               setItem: (name, value) => {
-                localStorage.setItem(name, JSON.stringify(value))
+                sessionStorage.setItem(name, JSON.stringify(value))
               },
               removeItem: (name) => {
-                localStorage.removeItem(name)
+                sessionStorage.removeItem(name)
               }
             }
           : undefined

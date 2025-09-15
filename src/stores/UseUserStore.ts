@@ -20,7 +20,7 @@ export const UseUserStore = create<UserStore>()(
 
       clearUser: () => {
         set({ user: null, token: null })
-        localStorage.removeItem('user-storage')
+        sessionStorage.removeItem('user-storage')
       },
 
       updateUserField: (key, value) => {
@@ -35,14 +35,14 @@ export const UseUserStore = create<UserStore>()(
         typeof window !== 'undefined'
           ? {
               getItem: (name) => {
-                const item = localStorage.getItem(name)
+                const item = sessionStorage.getItem(name)
                 return item ? JSON.parse(item) : null
               },
               setItem: (name, value) => {
-                localStorage.setItem(name, JSON.stringify(value))
+                sessionStorage.setItem(name, JSON.stringify(value))
               },
               removeItem: (name) => {
-                localStorage.removeItem(name)
+                sessionStorage.removeItem(name)
               }
             }
           : undefined

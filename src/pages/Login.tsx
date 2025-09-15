@@ -28,7 +28,6 @@ export function Login() {
         UseUserStore.getState().setUser(user, user.token)
 
         const websites = await apiService.getAllWebsiteByUserId(user.id, user.token)
-        console.log('Websites fetched apos login:', websites)
 
         setAllWebsites(websites)
 
@@ -57,9 +56,9 @@ export function Login() {
   }
 
   return (
-    <Container className="website-login-container" style={{ height: '100vh' }}>
+    <Container className="website-login-container py-5 px-3" style={{ height: '100vh' }}>
       <Row className="h-100 d-flex justify-content-center align-items-center">
-        <Col lg={6} className="website-card website-login-card">
+        <Col xs={12} sm={10} md={8} lg={6} className="website-card website-login-card">
           <Form onSubmit={handleSubmit} className="mb-5">
             <Row className="text-center">
               <Col lg={12} className="website-login-logo">
