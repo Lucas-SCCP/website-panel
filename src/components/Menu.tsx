@@ -143,7 +143,7 @@ export function Menu() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="w-100">
-                  <Nav.Link style={{ cursor: 'auto' }}>
+                  <Nav.Link style={{ cursor: 'auto', display: 'none' }} id='aSerDesenvolvido'>
                     <OverlayTrigger
                       placement="bottom"
                       overlay={<Tooltip id={'tooltip-bottom'}>Página inicial</Tooltip>}
@@ -153,7 +153,7 @@ export function Menu() {
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
-                  <Nav.Link style={{ cursor: 'auto' }}>
+                  <Nav.Link style={{ cursor: 'auto', display: 'none' }} id='aSerDesenvolvido'>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Configurações</Tooltip>}>
                       <div onClick={goToSettingsClick} className="website-navbar-button website-navbar-button-icon">
                         <MdOutlineSettings size={30} />
@@ -172,7 +172,7 @@ export function Menu() {
                       ))}
                     </NavDropdown>
                   </Nav.Link>
-                  <Nav.Link style={{ cursor: 'auto' }}>
+                  <Nav.Link style={{ cursor: 'auto', display: 'none' }} id='aSerDesenvolvido'>
                     <NavDropdown
                       title={<b>{selectedPageId ? allWebsites.find((w) => w.id === selectedWebsiteId)?.pages.find((p) => p.id === selectedPageId)?.name : 'Selecione uma página'}</b>}
                       className="website-navbar-button"

@@ -16,7 +16,7 @@ function App() {
           path="/"
           element={
             <ProtectedRouter>
-              <Dashboard />
+              <Settings />
             </ProtectedRouter>
           }
         />
@@ -32,7 +32,7 @@ function App() {
           path="/settings"
           element={
             <ProtectedRouter>
-              <Settings />
+              <Dashboard />
             </ProtectedRouter>
           }
         />
