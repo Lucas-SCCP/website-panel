@@ -173,7 +173,7 @@ body {
 }
 
 .website-card-header {
-  background-color: #eee;
+  background-color: #DDD;
   border-radius: 5px;
   padding: 10px;
   display: flex;
@@ -232,4 +232,29 @@ body {
 
 .notification-item:hover .notification-date {
   background-color: #CCC;
+}
+
+.dropdown-website-select:hover {
+  background-color: #EEE;
+}
+
+.dropdown-website-select-item:hover {
+  background-color: #FFF;
+}
+
+.btn.show {
+  background-color: #EEE !important;
+}
+
+.dropdown-item {
+  padding: 5px;
+}
+
+.dropdown-item:hover {
+  background-color: #EEE;
+}
+
+.dropdown-item.active {
+  background-color: #DDD;
+  color: #000;
 }
