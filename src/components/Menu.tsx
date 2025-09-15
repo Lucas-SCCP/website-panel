@@ -134,7 +134,7 @@ export function Menu() {
           <Container fluid>
             <Navbar.Brand className="website-navbar-brand">
               <img alt="NOIS" src="/favicon.ico" className="d-inline-block align-top website-navbar-brand-logo" />
-              <span className="krona">PAINEL ADMINISTRATIVO</span>
+              <span className="krona" style={{ fontSize: '1.0rem' }}>PAINEL ADMINISTRATIVO</span>
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="offcanvasNavbar-expand" />
             <Navbar.Offcanvas id="offcanvasNavbar-expand" aria-labelledby="offcanvasNavbarLabel-expand" placement="end">
