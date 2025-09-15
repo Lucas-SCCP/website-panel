@@ -189,7 +189,7 @@ export function Settings() {
             </Row>
           </div>
         </Col>
-        <Col sm={12} md={12} lg={9} className="ps-0">
+        <Col sm={12} md={12} lg={9} className="ps-md-0 mt-md-0 mt-3">
           <div id='websiteSettings' className="website-card" style={{ display: selectedMenu === 1 ? 'block' : 'none' }}>
             <Row>
               <Col lg={12} className="mb-2">
@@ -220,24 +220,24 @@ export function Settings() {
                       <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.domainStage} readOnly />
                     </InputGroup>
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
                     <Form.Label htmlFor="basic-url">E-mail de notificação</Form.Label>
                     <InputGroup className="mb-2">
                       <Form.Control id="basic-url" aria-describedby="basic-addon3" />
                     </InputGroup>
                   </Col>
-                  <Col lg={12}>
+                  <Col lg={12} style={{ display: 'none' }} id='aSerDesenvolvido'>
                     <div className='website-card-header krona mb-2'>
                       REDES SOCIAIS
                     </div>
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
                     <Form.Label htmlFor="basic-url">Instagram</Form.Label>
                     <InputGroup className="mb-2">
                       <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.properties.social.instagram.path} />
                     </InputGroup>
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
                     <Form.Label htmlFor="basic-url">Facebook</Form.Label>
                     <InputGroup className="mb-2">
                       <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.properties.social.facebook.path} />
