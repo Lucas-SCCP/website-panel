@@ -41,6 +41,7 @@ export function Settings() {
   const { updateSelectedWebsiteField } = UseWebsiteStore()
   
   useEffect(() => {
+    console.log('>>>>>>>>>>>>> 1')
     setSelectedPageId(null)
   }, [setSelectedPageId])
 
@@ -95,6 +96,8 @@ export function Settings() {
   }
 
   useEffect(() => {
+    console.log('>>>>>>>>>>>>> 2')
+    setSelectedMenu(1)
     const timeoutId = setTimeout(() => {
       const website = allWebsites.find((w) => w.id === selectedWebsiteId)
       if (website) {
@@ -132,16 +135,16 @@ export function Settings() {
               <Col lg={12} className="mb-2">
                 <div className={`website-settings-menu-item ${selectedMenu === 1 ? 'active' : ''}`} onClick={() => handleMenuClick(1)}>
                   <GrConfigure size={18} />
-                  <b>Configurações do site</b>
+                  <b>Configurações gerais</b>
                 </div>
               </Col>
-              <Col lg={12} className="mb-2">
+              <Col lg={12} className="mb-2" style={{ display: 'none' }} id='aSerDesenvolvido'>
                 <div className={`website-settings-menu-item ${selectedMenu === 2 ? 'active' : ''}`} onClick={() => handleMenuClick(2)}>
                   <TbBoxAlignTopFilled size={18} />
                   <b>Configurações do cabeçalho</b>
                 </div>
               </Col>
-              <Col lg={12} className="mb-2">
+              <Col lg={12} className="mb-2" style={{ display: 'none' }} id='aSerDesenvolvido'>
                 <div className={`website-settings-menu-item ${selectedMenu === 3 ? 'active' : ''}`} onClick={() => handleMenuClick(3)}>
                   <TbBoxAlignBottomFilled size={18} />
                   <b>Configurações do rodapé</b>
@@ -153,7 +156,7 @@ export function Settings() {
                   <b>Formulários enviados</b>
                 </div>
               </Col>
-              <Col id='aSerDesenvolvido' lg={12} className="mb-2">
+              <Col id='aSerDesenvolvido' lg={12} className="mb-2" style={{ display: 'none' }}>
                 <div className={`website-settings-menu-item ${selectedMenu === 4 ? 'active' : ''}`} onClick={() => handleMenuClick(4)}>
                   <FaUsersGear size={18} />
                   <b>Gerenciar usuários</b>
@@ -192,7 +195,7 @@ export function Settings() {
               <Col lg={12} className="mb-2">
                 <div className="website-card-header krona">
                   <GrConfigure size={18} />
-                  <b>CONFIGURAÇÕES DO SITE</b>
+                  <b>CONFIGURAÇÕES GERAIS</b>
                 </div>
               </Col>
             </Row>
@@ -240,18 +243,18 @@ export function Settings() {
                       <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.properties.social.facebook.path} />
                     </InputGroup>
                   </Col>
-                  <Col lg={12}>
+                  <Col lg={12} style={{ display: 'none' }} id='aSerDesenvolvido'>
                     <div className='website-card-header krona mb-2'>
                       ESTILO
                     </div>
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
                     <Form.Label htmlFor="basic-url">Cor padrão do texto</Form.Label>
                     <InputGroup className="mb-2">
                       <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.styles.color} />
                     </InputGroup>
                   </Col>
-                  <Col lg={6}>
+                  <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
                     <Form.Label htmlFor="basic-url">Cor de fundo</Form.Label>
                     <InputGroup className="mb-2">
                       <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.styles.backgroundColor} />
@@ -259,7 +262,7 @@ export function Settings() {
                   </Col>
                 </Row>
               </Col>
-              <Col lg={6}>
+              <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
                 <Row>
                   <Col lg={12}>
                     <Form.Label htmlFor="basic-url">Logo</Form.Label>
