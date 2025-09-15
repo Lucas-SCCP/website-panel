@@ -90,7 +90,7 @@ export function Login() {
                   ENTRAR
                 </Button>
               </Col>
-              <Col lg={{ span: 8, offset: 2 }} className="text-center" style={{ cursor: 'pointer' }}>
+              <Col lg={{ span: 8, offset: 2 }} className="text-center" style={{ cursor: 'pointer', display: 'none' }} id='aSerDesenvolvido'>
                 <span onClick={handleForgetPassword}>Recuperar minha senha</span>
               </Col>
               <Col lg={{ span: 8, offset: 2 }} className="mt-3">
