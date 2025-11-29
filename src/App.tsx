@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ProtectedRouter } from './pages/ProtectedRouter'
 import { Login } from './pages/Login'
 import { Dashboard } from './pages/Dashboard'
+import { Leads } from './pages/Leads'
+import { Posts } from './pages/Posts'
 import { Pages } from './pages/Pages'
 import { Settings } from './pages/Settings'
 import { CreatePassword } from './pages/CreatePassword'
@@ -16,7 +18,23 @@ function App() {
           path="/"
           element={
             <ProtectedRouter>
-              <Settings />
+              <Dashboard />
+            </ProtectedRouter>
+          }
+        />
+        <Route
+          path="/leads"
+          element={
+            <ProtectedRouter>
+              <Leads />
+            </ProtectedRouter>
+          }
+        />
+        <Route
+          path="/posts"
+          element={
+            <ProtectedRouter>
+              <Posts />
             </ProtectedRouter>
           }
         />
@@ -32,7 +50,7 @@ function App() {
           path="/settings"
           element={
             <ProtectedRouter>
-              <Dashboard />
+              <Settings />
             </ProtectedRouter>
           }
         />

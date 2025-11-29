@@ -374,7 +374,7 @@ export function Settings() {
   return (
     <Main>
       <Row className="mt-3 mb-3">
-        <Col sm={12} md={12} lg={3}>
+        <Col sm={12} md={12} lg={3} style={{ display: 'none' }}>
           <div className="website-card">
             <Row>
               <Col lg={12} className="mb-2">
@@ -466,11 +466,11 @@ export function Settings() {
             </Row>
           </div>
         </Col>
-        <Col sm={12} md={12} lg={9} className="ps-md-0 mt-md-0 mt-3">
+        <Col sm={12} md={12} lg={12} className="mt-md-0 mt-3">
           <div id='websiteSettings' className="website-card" style={{ display: selectedMenu === 1 ? 'block' : 'none' }}>
             <Row>
               <Col lg={12} className="mb-2">
-                <div className="website-card-header krona">
+                <div className="website-card-header tiktok-sans">
                   <GrConfigure size={18} />
                   <b>CONFIGURAÇÕES GERAIS</b>
                 </div>

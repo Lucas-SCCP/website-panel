@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Form, Button, Container, Row, Col, Alert, FloatingLabel } from 'react-bootstrap'
+import { Form, Button, Container, Row, Col, Alert, FloatingLabel, Image } from 'react-bootstrap'
 import { ApiService } from '../services/ApiService'
 import { UseUserStore } from '../stores/UseUserStore'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
@@ -61,8 +61,16 @@ export function Login() {
         <Col xs={12} sm={10} md={8} lg={6} className="website-card website-login-card">
           <Form onSubmit={handleSubmit} className="mb-5">
             <Row className="text-center">
-              <Col lg={12} className="website-login-logo">
-                <span className="modak">NOIS</span>
+              <Col lg={12} className="website-login-logo mt-5 mb-5">
+                <div>
+                  <Image src="./icon_pixelbuild.png" alt="PixelBuild Logo" width={150} height={150} />
+                </div>
+                <div>
+                  <span className="tiktok-sans fw-700" style={{ fontSize: '52px' }}>PixelBuild</span>
+                </div>
+                <div>
+                  <span className="roboto" style={{ fontSize: '20px' }}>PAINEL ADMINISTRATIVO</span>
+                </div>
               </Col>
               <Col lg={{ span: 8, offset: 2 }}>
                 <FloatingLabel controlId="emailInput" label="Digite seu email" className="mb-3">
@@ -85,8 +93,8 @@ export function Login() {
                 </FloatingLabel>
               </Col>
               <Col lg={{ span: 8, offset: 2 }} className="text-center">
-                <Button variant="secondary" type="submit" className="w-100 mb-3">
-                  ENTRAR
+                <Button type="submit" className="w-100 mb-3" style={{ border: 'none', background: 'var(--orange)' }}>
+                  <b>ENTRAR</b>
                 </Button>
               </Col>
               <Col lg={{ span: 8, offset: 2 }} className="text-center" style={{ cursor: 'pointer', display: 'none' }} id='aSerDesenvolvido'>

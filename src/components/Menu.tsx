@@ -26,6 +26,8 @@ import { MdOutlineSettings, MdAddCircleOutline, MdSaveAlt, MdDeleteForever } fro
 import { HiOutlineLogout } from 'react-icons/hi'
 import { TiWarningOutline } from 'react-icons/ti'
 import { IoNotificationsOutline } from "react-icons/io5"
+import { IoIosPeople } from "react-icons/io";
+import { FaPencil } from "react-icons/fa6";
 import type { WebsiteType, PageType } from 'website-lib'
 
 export function Menu() {
@@ -59,6 +61,16 @@ export function Menu() {
   const goToDashboardClick = () => {
     setSelectedPageId(null)
     navigate('/')
+  }
+
+  const goToLeadsClick = () => {
+    setSelectedPageId(null)
+    navigate('/leads')
+  }
+
+  const goToPostsClick = () => {
+    setSelectedPageId(null)
+    navigate('/posts')
   }
 
   const goToSettingsClick = () => {
@@ -134,7 +146,7 @@ export function Menu() {
           <Container fluid>
             <Navbar.Brand className="website-navbar-brand">
               <img alt="NOIS" src="/favicon.ico" className="d-inline-block align-top website-navbar-brand-logo" />
-              <span className="krona" style={{ fontSize: '1.0rem' }}>PAINEL ADMINISTRATIVO</span>
+              <span className="tiktok-sans fw-700" style={{ color: '#FFF', fontSize: '1.5rem' }}>PixelBuild</span>
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="offcanvasNavbar-expand" />
             <Navbar.Offcanvas id="offcanvasNavbar-expand" aria-labelledby="offcanvasNavbarLabel-expand" placement="end">
@@ -143,23 +155,6 @@ export function Menu() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="w-100">
-                  <Nav.Link style={{ cursor: 'auto', display: 'none' }} id='aSerDesenvolvido'>
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={<Tooltip id={'tooltip-bottom'}>Página inicial</Tooltip>}
-                    >
-                      <div onClick={goToDashboardClick} className="website-navbar-button website-navbar-button-icon">
-                        <FaHome size={30} />
-                      </div>
-                    </OverlayTrigger>
-                  </Nav.Link>
-                  <Nav.Link style={{ cursor: 'auto', display: 'none' }} id='aSerDesenvolvido'>
-                    <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Configurações</Tooltip>}>
-                      <div onClick={goToSettingsClick} className="website-navbar-button website-navbar-button-icon">
-                        <MdOutlineSettings size={30} />
-                      </div>
-                    </OverlayTrigger>
-                  </Nav.Link>
                   <Nav.Link style={{ cursor: 'auto' }}>
                     <NavDropdown
                       title={<b>{selectedWebsiteId ? allWebsites.find((w) => w.id === selectedWebsiteId)?.name : 'Selecione um site'}</b>}
@@ -171,6 +166,38 @@ export function Menu() {
                         </NavDropdown.Item>
                       ))}
                     </NavDropdown>
+                  </Nav.Link>
+                  <Nav.Link style={{ cursor: 'auto' }}>
+                    <OverlayTrigger
+                      placement="bottom"
+                      overlay={<Tooltip id={'tooltip-bottom'}>Página inicial</Tooltip>}
+                    >
+                      <div onClick={goToDashboardClick} className="website-navbar-button website-navbar-button-icon">
+                        <FaHome size={30} />
+                      </div>
+                    </OverlayTrigger>
+                  </Nav.Link>
+                  <Nav.Link style={{ cursor: 'auto' }}>
+                    <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Leads</Tooltip>}>
+                      <div onClick={goToLeadsClick} className="website-navbar-button website-navbar-button-icon">
+                        <IoIosPeople size={30} />
+                      </div>
+                    </OverlayTrigger>
+                  </Nav.Link>
+                  <Nav.Link style={{ cursor: 'auto' }}>
+                    <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Posts</Tooltip>}>
+                      <div onClick={goToPostsClick} className="website-navbar-button website-navbar-button-icon">
+                        <FaPencil size={26} />
+                      </div>
+                    </OverlayTrigger>
+                  </Nav.Link>
+
+                  <Nav.Link style={{ cursor: 'auto' }}>
+                    <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Configurações</Tooltip>}>
+                      <div onClick={goToSettingsClick} className="website-navbar-button website-navbar-button-icon">
+                        <MdOutlineSettings size={30} />
+                      </div>
+                    </OverlayTrigger>
                   </Nav.Link>
                   <Nav.Link style={{ cursor: 'auto', display: 'none' }} id='aSerDesenvolvido'>
                     <NavDropdown
@@ -237,16 +264,18 @@ export function Menu() {
                     </>
                   )}
                   <div className="ms-auto d-flex">
-                    <Nav.Link style={{ display: 'none' }} id='aSerDesenvolvido'>
-                      <div className="website-navbar-action-exit">
-                        <IoNotificationsOutline size={30} />
-                        <Badge pill bg="danger" style={{ display: 'none', fontSize: '10px', position: 'absolute', top: 40, right: 84 }}>
-                          9
-                        </Badge>
-                      </div>
+                    <Nav.Link>
+                      <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Notificações</Tooltip>}>
+                        <div onClick={handleExit} className="website-navbar-action-exit">
+                          <IoNotificationsOutline size={30} />
+                        </div>
+                      </OverlayTrigger>
+                      <Badge pill bg="danger" style={{ display: 'none', fontSize: '10px', position: 'absolute', top: 40, right: 84 }}>
+                        9
+                      </Badge>
                     </Nav.Link>
                     <Nav.Link>
-                      <OverlayTrigger placement="left" overlay={<Tooltip id={'tooltip-bottom'}>Sair</Tooltip>}>
+                      <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Sair</Tooltip>}>
                         <div onClick={handleExit} className="website-navbar-action-exit">
                           <HiOutlineLogout size={30} />
                         </div>
