@@ -20,7 +20,7 @@ export function Dashboard() {
           <div className="website-card">
             <Row>
               <Col lg={12} className="mb-2">
-                <div className="website-card-header krona">
+                <div className="website-card-header tiktok-sans">
                   <FaChartBar size={18} />
                   <b>VISITANTES POR PÁGINA</b>
                 </div>
@@ -35,7 +35,7 @@ export function Dashboard() {
           <div className="website-card">
             <Row>
               <Col lg={12} className="mb-2">
-                <div className="website-card-header krona">
+                <div className="website-card-header tiktok-sans">
                   <FaChartBar size={18} />
                   <b>VISITANTES POR PERÍODO</b>
                 </div>
