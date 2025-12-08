@@ -4,6 +4,7 @@ import { Login } from './pages/Login'
 import { Dashboard } from './pages/Dashboard'
 import { Leads } from './pages/Leads'
 import { Posts } from './pages/Posts'
+import { Users } from './pages/Users'
 import { Pages } from './pages/Pages'
 import { Settings } from './pages/Settings'
 import { CreatePassword } from './pages/CreatePassword'
@@ -35,6 +36,14 @@ function App() {
           element={
             <ProtectedRouter>
               <Posts />
+            </ProtectedRouter>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <ProtectedRouter>
+              <Users />
             </ProtectedRouter>
           }
         />

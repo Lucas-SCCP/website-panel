@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
 import { Row, Col, Form } from 'react-bootstrap'
 import { Main } from './Main'
-import { IoIosPeople } from 'react-icons/io'
+import { GoPeople, GoTrash, GoSearch, GoCalendar, GoPerson } from "react-icons/go";
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
-import { MdDeleteForever } from 'react-icons/md'
 
 export function Leads() {
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
@@ -36,8 +35,8 @@ export function Leads() {
           <div className="website-card">
             <Row>
               <Col lg={12} className="mb-2">
-                <div className="website-card-header tiktok-sans">
-                  <IoIosPeople size={24} />
+                <div className="website-card-header tiktok-sans fw-100" style={{ fontSize: '20px' }}>
+                  <GoPeople size={24} />
                   <b>GESTÃO DE LEADS</b>
                 </div>
               </Col>
@@ -48,6 +47,7 @@ export function Leads() {
                       <Row>
                         <Col lg={12} className='mb-3 text-center'>
                           <div style={{ background: 'var(--blue3)', borderRadius: '5px', padding: '5px' }}>
+                            <GoSearch />
                             <b>FILTROS</b>
                           </div>
                         </Col>
@@ -79,9 +79,11 @@ export function Leads() {
                           <div style={{ background: 'var(--blue3)', borderRadius: '5px 5px', padding: '5px' }}>
                             <Row>
                               <Col lg={2} style={{ borderRight: '1px solid var(--blue1)' }}>
+                                <GoCalendar />
                                 <b>DATA DE REGISTRO</b>
                               </Col>
                               <Col lg={4} style={{ borderRight: '1px solid var(--blue1)' }}>
+                                <GoPerson />
                                 <b>NOME</b>
                               </Col>
                               <Col lg={2} style={{ borderRight: '1px solid var(--blue1)' }}>
@@ -114,7 +116,7 @@ export function Leads() {
                                 </Col>
                                 <Col lg={1} className='text-center'>
                                   <div style={{ cursor: 'pointer' }}>
-                                    <MdDeleteForever size={20} color="red" />
+                                    <GoTrash size={20} color="red" />
                                   </div>
                                 </Col>
                               </Row>

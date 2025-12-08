@@ -18,6 +18,7 @@ import { ImExit } from "react-icons/im";
 import { TbPencil } from "react-icons/tb";
 import { TbPencilPlus } from "react-icons/tb";
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
+import { GoGear } from "react-icons/go";
 import type { WebsiteType } from 'website-lib'
 import type { NotificationType } from '../types/NotificationType'
 
@@ -470,96 +471,100 @@ export function Settings() {
           <div id='websiteSettings' className="website-card" style={{ display: selectedMenu === 1 ? 'block' : 'none' }}>
             <Row>
               <Col lg={12} className="mb-2">
-                <div className="website-card-header tiktok-sans">
-                  <GrConfigure size={18} />
+                <div className="website-card-header tiktok-sans fw-100" style={{ fontSize: '20px' }}>
+                  <GoGear size={24} />
                   <b>CONFIGURAÇÕES GERAIS</b>
                 </div>
               </Col>
             </Row>
             <Row>
-              <Col lg={6}>
-                <Row>
-                  <Col lg={12}>
-                    <Form.Label htmlFor="basic-url">Nome</Form.Label>
-                    <InputGroup className="mb-2">
-                      <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.name} />
-                    </InputGroup>
+              <Col lg={12}>
+                <div style={{ border: '1px solid var(--blue1)', borderRadius: '5px', padding: '10px' }}>
+                  <Col lg={6}>
+                    <Row>
+                      <Col lg={12}>
+                        <Form.Label htmlFor="basic-url">Nome</Form.Label>
+                        <InputGroup className="mb-2">
+                          <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.name} />
+                        </InputGroup>
+                      </Col>
+                      <Col lg={6}>
+                        <Form.Label htmlFor="basic-url">Endereço</Form.Label>
+                        <InputGroup className="mb-2">
+                          <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.domain} readOnly />
+                        </InputGroup>
+                      </Col>
+                      <Col lg={6}>
+                        <Form.Label htmlFor="basic-url">Endereço de homologação</Form.Label>
+                        <InputGroup className="mb-2">
+                          <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.domainStage} readOnly />
+                        </InputGroup>
+                      </Col>
+                      <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
+                        <Form.Label htmlFor="basic-url">E-mail de notificação</Form.Label>
+                        <InputGroup className="mb-2">
+                          <Form.Control id="basic-url" aria-describedby="basic-addon3" />
+                        </InputGroup>
+                      </Col>
+                      <Col lg={12} style={{ display: 'none' }} id='aSerDesenvolvido'>
+                        <div className='website-card-header krona mb-2'>
+                          REDES SOCIAIS
+                        </div>
+                      </Col>
+                      <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
+                        <Form.Label htmlFor="basic-url">Instagram</Form.Label>
+                        <InputGroup className="mb-2">
+                          <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.properties.social.instagram.path} />
+                        </InputGroup>
+                      </Col>
+                      <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
+                        <Form.Label htmlFor="basic-url">Facebook</Form.Label>
+                        <InputGroup className="mb-2">
+                          <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.properties.social.facebook.path} />
+                        </InputGroup>
+                      </Col>
+                      <Col lg={12} style={{ display: 'none' }} id='aSerDesenvolvido'>
+                        <div className='website-card-header krona mb-2'>
+                          ESTILO
+                        </div>
+                      </Col>
+                      <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
+                        <Form.Label htmlFor="basic-url">Cor padrão do texto</Form.Label>
+                        <InputGroup className="mb-2">
+                          <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.styles.color} />
+                        </InputGroup>
+                      </Col>
+                      <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
+                        <Form.Label htmlFor="basic-url">Cor de fundo</Form.Label>
+                        <InputGroup className="mb-2">
+                          <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.styles.backgroundColor} />
+                        </InputGroup>
+                      </Col>
+                    </Row>
                   </Col>
                   <Col lg={6}>
-                    <Form.Label htmlFor="basic-url">Endereço</Form.Label>
-                    <InputGroup className="mb-2">
-                      <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.domain} readOnly />
-                    </InputGroup>
+                    <Row>
+                      <Col lg={12}>
+                        <Form.Label htmlFor="basic-url">Logo</Form.Label>
+                        <InputGroup className="mb-3">
+                          <Image
+                            src={`https://noisdev-website-images.s3.sa-east-1.amazonaws.com/ctcleanfoodscombr/${website?.logo}`}
+                            style={{ objectFit: 'cover', maxWidth: '250px' }}
+                          />
+                        </InputGroup>
+                      </Col>
+                      <Col lg={12}>
+                        <Form.Label htmlFor="basic-url">Imagem de fundo</Form.Label>
+                        <InputGroup className="mb-3">
+                          <Image
+                            src={website.styles.backgroundImage}
+                            style={{ objectFit: 'cover', maxWidth: '500px' }}
+                          />
+                        </InputGroup>
+                      </Col>
+                    </Row>
                   </Col>
-                  <Col lg={6}>
-                    <Form.Label htmlFor="basic-url">Endereço de homologação</Form.Label>
-                    <InputGroup className="mb-2">
-                      <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.domainStage} readOnly />
-                    </InputGroup>
-                  </Col>
-                  <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
-                    <Form.Label htmlFor="basic-url">E-mail de notificação</Form.Label>
-                    <InputGroup className="mb-2">
-                      <Form.Control id="basic-url" aria-describedby="basic-addon3" />
-                    </InputGroup>
-                  </Col>
-                  <Col lg={12} style={{ display: 'none' }} id='aSerDesenvolvido'>
-                    <div className='website-card-header krona mb-2'>
-                      REDES SOCIAIS
-                    </div>
-                  </Col>
-                  <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
-                    <Form.Label htmlFor="basic-url">Instagram</Form.Label>
-                    <InputGroup className="mb-2">
-                      <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.properties.social.instagram.path} />
-                    </InputGroup>
-                  </Col>
-                  <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
-                    <Form.Label htmlFor="basic-url">Facebook</Form.Label>
-                    <InputGroup className="mb-2">
-                      <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.properties.social.facebook.path} />
-                    </InputGroup>
-                  </Col>
-                  <Col lg={12} style={{ display: 'none' }} id='aSerDesenvolvido'>
-                    <div className='website-card-header krona mb-2'>
-                      ESTILO
-                    </div>
-                  </Col>
-                  <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
-                    <Form.Label htmlFor="basic-url">Cor padrão do texto</Form.Label>
-                    <InputGroup className="mb-2">
-                      <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.styles.color} />
-                    </InputGroup>
-                  </Col>
-                  <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
-                    <Form.Label htmlFor="basic-url">Cor de fundo</Form.Label>
-                    <InputGroup className="mb-2">
-                      <Form.Control id="basic-url" aria-describedby="basic-addon3" value={website.styles.backgroundColor} />
-                    </InputGroup>
-                  </Col>
-                </Row>
-              </Col>
-              <Col lg={6} style={{ display: 'none' }} id='aSerDesenvolvido'>
-                <Row>
-                  <Col lg={12}>
-                    <Form.Label htmlFor="basic-url">Logo</Form.Label>
-                    <InputGroup className="mb-3">
-                      <Image
-                        src={`https://noisdev-website-images.s3.sa-east-1.amazonaws.com/ctcleanfoodscombr/${website?.logo}`}
-                        style={{ objectFit: 'cover', maxWidth: '250px' }}
-                      />
-                    </InputGroup>
-                  </Col>
-                  <Col lg={12}>
-                    <Form.Label htmlFor="basic-url">Imagem de fundo</Form.Label>
-                    <InputGroup className="mb-3">
-                      <Image
-                        src={website.styles.backgroundImage}
-                        style={{ objectFit: 'cover', maxWidth: '500px' }}
-                      />
-                    </InputGroup>
-                  </Col>
-                </Row>
+                </div>
               </Col>
             </Row>
           </div>
