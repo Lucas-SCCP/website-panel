@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import {
   Row,
   Col,
@@ -21,16 +21,14 @@ import { WebsiteFactory } from '../factories/WebsiteFactory'
 import { PageFactory } from '../factories/PageFactory'
 import { ComponentFactory } from '../factories/ComponentFactory'
 import { ElementFactory } from '../factories/ElementFactory'
-import { FaHome, FaRegSave, FaArrowAltCircleRight } from 'react-icons/fa'
-import { MdOutlineSettings, MdAddCircleOutline, MdSaveAlt, MdDeleteForever } from 'react-icons/md'
-import { HiOutlineLogout } from 'react-icons/hi'
+import { FaRegSave, FaArrowAltCircleRight } from 'react-icons/fa'
+import { MdAddCircleOutline, MdSaveAlt, MdDeleteForever } from 'react-icons/md'
 import { TiWarningOutline } from 'react-icons/ti'
-import { IoNotificationsOutline } from "react-icons/io5"
-import { IoIosPeople } from "react-icons/io";
-import { FaPencil } from "react-icons/fa6";
+import { GoPencil, GoHome, GoPeople, GoGear, GoBell, GoSignOut, GoKey } from "react-icons/go";
 import type { WebsiteType, PageType } from 'website-lib'
 
 export function Menu() {
+  const location = useLocation()
   const websiteFactory = new WebsiteFactory()
   const pageFactory = new PageFactory()
   const componentFactory = new ComponentFactory()
@@ -73,14 +71,21 @@ export function Menu() {
     navigate('/posts')
   }
 
+  const goToUsersClick = () => {
+    setSelectedPageId(null)
+    navigate('/users')
+  }
+
   const goToSettingsClick = () => {
     setSelectedPageId(null)
     navigate('/settings')
   }
 
   const selectedWebsiteClick = (event: React.MouseEvent<HTMLElement>) => {
+    console.log('selectedWebsiteClick')
     const website = allWebsites.find((w) => w.id.toString() === event.currentTarget.id)
     if (website) {
+      console.log('selectedWebsiteClick IF')
       setSelectedPageId(null)
       setSelectedWebsite(website)
       setSelectedWebsiteId(website.id)
@@ -159,6 +164,7 @@ export function Menu() {
                     <NavDropdown
                       title={<b>{selectedWebsiteId ? allWebsites.find((w) => w.id === selectedWebsiteId)?.name : 'Selecione um site'}</b>}
                       className="website-navbar-button"
+                      style={{ border: '1px solid var(--blue3)' }}
                     >
                       {allWebsites.map((website) => (
                         <NavDropdown.Item id={website.id.toString()} key={website.id} onClick={selectedWebsiteClick}>
@@ -172,30 +178,37 @@ export function Menu() {
                       placement="bottom"
                       overlay={<Tooltip id={'tooltip-bottom'}>Página inicial</Tooltip>}
                     >
-                      <div onClick={goToDashboardClick} className="website-navbar-button website-navbar-button-icon">
-                        <FaHome size={30} />
+                      <div onClick={goToDashboardClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/' ? 'active' : ''}`}>
+                        <GoHome size={30} />
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
                   <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Leads</Tooltip>}>
-                      <div onClick={goToLeadsClick} className="website-navbar-button website-navbar-button-icon">
-                        <IoIosPeople size={30} />
+                      <div onClick={goToLeadsClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/leads' ? 'active' : ''}`}>
+                        <GoPeople size={30} />
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
                   <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Posts</Tooltip>}>
-                      <div onClick={goToPostsClick} className="website-navbar-button website-navbar-button-icon">
-                        <FaPencil size={26} />
+                      <div onClick={goToPostsClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/posts' ? 'active' : ''}`}>
+                        <GoPencil size={30} />
+                      </div>
+                    </OverlayTrigger>
+                  </Nav.Link>
+                  <Nav.Link style={{ cursor: 'auto' }}>
+                    <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Usuários</Tooltip>}>
+                      <div onClick={goToUsersClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/users' ? 'active' : ''}`}>
+                        <GoKey size={30} />
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
 
                   <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Configurações</Tooltip>}>
-                      <div onClick={goToSettingsClick} className="website-navbar-button website-navbar-button-icon">
-                        <MdOutlineSettings size={30} />
+                      <div onClick={goToSettingsClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/settings' ? 'active' : ''}`}>
+                        <GoGear size={30} />
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
@@ -264,20 +277,30 @@ export function Menu() {
                     </>
                   )}
                   <div className="ms-auto d-flex">
-                    <Nav.Link>
-                      <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Notificações</Tooltip>}>
-                        <div onClick={handleExit} className="website-navbar-action-exit">
-                          <IoNotificationsOutline size={30} />
-                        </div>
-                      </OverlayTrigger>
-                      <Badge pill bg="danger" style={{ display: 'none', fontSize: '10px', position: 'absolute', top: 40, right: 84 }}>
-                        9
-                      </Badge>
-                    </Nav.Link>
+                    <NavDropdown 
+                      title={
+                        <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Notificações</Tooltip>}>
+                          <div className="website-navbar-action-exit website-navbar-button-icon">
+                            <Badge pill bg="danger" >
+                              3
+                            </Badge>
+                            <GoBell size={30} />
+                          </div>
+                        </OverlayTrigger>
+                      }
+                      id="basic-nav-dropdown"
+                      drop="down"
+                      align="end"
+                      className='no-caret'
+                    >
+                      <NavDropdown.Item style={{ padding: '10px' }}>
+                        Novo usuário cadastrado via formulário
+                      </NavDropdown.Item>
+                    </NavDropdown>
                     <Nav.Link>
                       <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Sair</Tooltip>}>
-                        <div onClick={handleExit} className="website-navbar-action-exit">
-                          <HiOutlineLogout size={30} />
+                        <div onClick={handleExit} className="website-navbar-action-exit website-navbar-button-icon">
+                          <GoSignOut size={30} />
                         </div>
                       </OverlayTrigger>
                     </Nav.Link>

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { Main } from './Main'
-import { FaChartBar } from 'react-icons/fa'
+import { GoPencil } from 'react-icons/go'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 
 export function Posts() {
@@ -18,8 +18,8 @@ export function Posts() {
           <div className="website-card">
             <Row>
               <Col lg={12} className="mb-2">
-                <div className="website-card-header tiktok-sans">
-                  <FaChartBar size={18} />
+                <div className="website-card-header tiktok-sans fw-100" style={{ fontSize: '20px' }}>
+                  <GoPencil size={24} />
                   <b>GESTÃO DE POSTS</b>
                 </div>
               </Col>

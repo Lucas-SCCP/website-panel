@@ -74,7 +74,11 @@ class ApiService {
 
       const json = await response.json()
 
+      console.log('JSON', json)
+
       const websites: WebsiteType[] = json.data.map((rawWebsite: RawWebsiteType) => this.parseWebsiteResponse(rawWebsite))
+
+      console.log('RAWTYPE', websites)
 
       return websites
     } catch (error: unknown) {
@@ -139,7 +143,8 @@ class ApiService {
       header: {
         properties: {
           logoAlign: rawWebsite.header?.properties?.logoAlign,
-          showLogo: rawWebsite.header?.properties?.showLogo
+          showLogo: rawWebsite.header?.properties?.showLogo,
+          showMenu: rawWebsite.header?.properties?.showMenu
         },
         styles: {
           ...(rawWebsite.header.styles.alignItems && { alignItems: rawWebsite.header.styles.alignItems }),
