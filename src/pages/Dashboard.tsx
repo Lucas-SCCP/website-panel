@@ -5,14 +5,14 @@ import { ApiService } from '../services/ApiService'
 import { LineCharts } from '../charts/LineCharts'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { GoStar, GoGraph, GoEye, GoCloud } from "react-icons/go";
-import type { WebsiteType } from 'website-lib'
+//import type { WebsiteType } from 'website-lib'
 import type { DashboardType } from '../types/DashboardType'
 
 export function Dashboard() {
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
   const websiteId = UseWebsiteStore((s) => s.selectedWebsiteId)
   const allWebsite = UseWebsiteStore((s) => s.allWebsites)
-  const [websiteSelected, setWebsiteSelected] = useState<WebsiteType | null>(null)
+  //const [websiteSelected, setWebsiteSelected] = useState<WebsiteType | null>(null)
   const [dashboard, setDashboard] = useState<DashboardType | null>(null)
   
   useEffect(() => {
@@ -21,7 +21,7 @@ export function Dashboard() {
       console.log('All website', allWebsite)
       const selected = allWebsite.find(w => w.id === websiteId)
       console.log('Website Selected', selected)
-      setWebsiteSelected(selected || null)
+      //setWebsiteSelected(selected || null)
 
       const fetchDashboardInfo = async () => {
         const apiService = new ApiService()
