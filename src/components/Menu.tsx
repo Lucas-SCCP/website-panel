@@ -153,7 +153,7 @@ export function Menu() {
               <img alt="NOIS" src="/favicon.ico" className="d-inline-block align-top website-navbar-brand-logo" />
               <span className="tiktok-sans fw-700" style={{ color: '#FFF', fontSize: '1.5rem' }}>PixelBuild</span>
             </Navbar.Brand>
-            <Navbar.Toggle aria-controls="offcanvasNavbar-expand" />
+            <Navbar.Toggle aria-controls="offcanvasNavbar-expand" style={{ border: '1px solid var(--blue3)' }} />
             <Navbar.Offcanvas id="offcanvasNavbar-expand" aria-labelledby="offcanvasNavbarLabel-expand" placement="end">
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id="offcanvasNavbarLabel-expand">Painel Administrativo</Offcanvas.Title>
@@ -190,14 +190,14 @@ export function Menu() {
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
-                  <Nav.Link style={{ cursor: 'auto' }}>
+                  <Nav.Link style={{ cursor: 'auto', display: 'none' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Posts</Tooltip>}>
                       <div onClick={goToPostsClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/posts' ? 'active' : ''}`}>
                         <GoPencil size={30} />
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
-                  <Nav.Link style={{ cursor: 'auto' }}>
+                  <Nav.Link style={{ cursor: 'auto',  display: 'none' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Usuários</Tooltip>}>
                       <div onClick={goToUsersClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/users' ? 'active' : ''}`}>
                         <GoKey size={30} />
@@ -205,7 +205,7 @@ export function Menu() {
                     </OverlayTrigger>
                   </Nav.Link>
 
-                  <Nav.Link style={{ cursor: 'auto' }}>
+                  <Nav.Link style={{ cursor: 'auto',  display: 'none' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Configurações</Tooltip>}>
                       <div onClick={goToSettingsClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/settings' ? 'active' : ''}`}>
                         <GoGear size={30} />
@@ -276,7 +276,7 @@ export function Menu() {
                       </Nav.Link>
                     </>
                   )}
-                  <div className="ms-auto d-flex">
+                  <div className="menu-direita">
                     <NavDropdown 
                       title={
                         <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Notificações</Tooltip>}>
@@ -292,6 +292,7 @@ export function Menu() {
                       drop="down"
                       align="end"
                       className='no-caret'
+                      style={{ display: 'none' }}
                     >
                       <NavDropdown.Item style={{ padding: '10px' }}>
                         Novo usuário cadastrado via formulário

@@ -9,9 +9,13 @@ import type {
   FontWeight
 } from 'website-lib'
 import type { NotificationType } from '../types/NotificationType'
+import type { DashboardType } from '../types/DashboardType'
+import type { FormsType } from '../types/FormsType'
+import type { LeadsType } from '../types/LeadsType'
 import { AuthenticateException } from '../exceptions/AuthenticateException'
 
 class ApiService {
+  // Primeira requisição, para realizar o login
   async authenticate(email: string, password: string): Promise<AuthenticateResponseType> {
     const data = {
       email: email,
@@ -58,6 +62,7 @@ class ApiService {
     }
   }
 
+  // Segunda requisição, para obter os dados dos websites que o usuário tem acesso
   async getAllWebsiteByUserId(userId: number, userToken: string): Promise<WebsiteType[]> {
     try {
       const response = await fetch(`${import.meta.env.VITE_API}/website/user/${userId}`, {
@@ -464,6 +469,39 @@ class ApiService {
       }
       throw new Error('Failed to fetch notifications: Unknown error')
     }
+  }
+
+  async getDashboardInfoByWebsiteId(websiteId: number): Promise<DashboardType>{
+    const response = await fetch(`${import.meta.env.VITE_API}/website/dashboard/${websiteId}`)
+
+    if (!response.ok) {
+      throw new Error('')
+    }
+
+    const json = await response.json()
+    return json.data as DashboardType
+  }
+
+  async getFormsByWebsiteId(websiteId: number): Promise<FormsType>{
+    const response = await fetch(`${import.meta.env.VITE_API}/website/${websiteId}/forms`)
+
+    if (!response.ok) {
+      throw new Error('')
+    }
+
+    const json = await response.json()
+    return json.data as FormsType
+  }
+
+  async getLeadsByWebsiteId(websiteId: number): Promise<LeadsType>{
+    const response = await fetch(`${import.meta.env.VITE_API}/website/${websiteId}/leads`)
+
+    if (!response.ok) {
+      throw new Error('')
+    }
+
+    const json = await response.json()
+    return json.data as LeadsType
   }
 }
 

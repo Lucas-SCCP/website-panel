@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react'
 import { Row, Col, Badge, ProgressBar } from 'react-bootstrap'
 import { Main } from './Main'
+import { ApiService } from '../services/ApiService'
 import { LineCharts } from '../charts/LineCharts'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { GoStar, GoGraph, GoEye, GoCloud } from "react-icons/go";
 import type { WebsiteType } from 'website-lib'
+import type { DashboardType } from '../types/DashboardType'
 
 export function Dashboard() {
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
   const websiteId = UseWebsiteStore((s) => s.selectedWebsiteId)
   const allWebsite = UseWebsiteStore((s) => s.allWebsites)
   const [websiteSelected, setWebsiteSelected] = useState<WebsiteType | null>(null)
+  const [dashboard, setDashboard] = useState<DashboardType | null>(null)
   
   useEffect(() => {
     setSelectedPageId(null)
@@ -19,6 +22,13 @@ export function Dashboard() {
       const selected = allWebsite.find(w => w.id === websiteId)
       console.log('Website Selected', selected)
       setWebsiteSelected(selected || null)
+
+      const fetchDashboardInfo = async () => {
+        const apiService = new ApiService()
+        const dashboardInfo = await apiService.getDashboardInfoByWebsiteId(websiteId)
+        setDashboard(dashboardInfo)
+      }
+      fetchDashboardInfo()
     }  
   }, [setSelectedPageId, websiteId, allWebsite])
 
@@ -40,13 +50,13 @@ export function Dashboard() {
                     <div style={{ border: '1px solid black', padding: '10px', borderRadius: '5px' }}>
                       <Row>
                         <Col lg={12}>
-                          <b>Plano atual:</b> Teste {websiteSelected?.id} (R$ 9,90)
+                          <b>Plano atual:</b> {dashboard?.plan.name} (R$ {dashboard?.plan.price})
                         </Col>
                         <Col lg={12}>
-                          <b>Renovação:</b> 12/12/2022
+                          <b>Renovação:</b> {dashboard?.plan.endDate}
                         </Col>
                         <Col lg={12}>
-                          <b>Forma de pagamento:</b> Pix
+                          <b>Forma de pagamento:</b> {dashboard?.plan.paymentType}
                         </Col>
                       </Row>
                     </div>
@@ -55,7 +65,7 @@ export function Dashboard() {
               </div>
             </Col>
 
-            <Col lg={12} className='mt-3'>
+            <Col lg={12} className='mt-3' style={{ display: 'none' }}>
               <div className="website-card">
                 <Row>
                   <Col lg={12} className="mb-2">
@@ -80,11 +90,9 @@ export function Dashboard() {
               </div>
             </Col>
           </Row>
-          
-          
         </Col>
 
-        <Col sm={12} md={12} lg={3} className="ps-0">
+        <Col sm={12} md={12} lg={3} className="mt-3 mt-md-0 ps-lg-0" style={{ display: 'none' }}>
           <div className="website-card">
             <Row>
               <Col lg={12} className="mb-2">
@@ -132,7 +140,7 @@ export function Dashboard() {
           </div>
         </Col>
 
-        <Col sm={12} md={12} lg={6} className="ps-0">
+        <Col sm={12} md={12} lg={6} className="mt-3 mt-md-0 ps-lg-0" style={{ display: 'none' }}>
           <div className="website-card">
             <Row>
               <Col lg={12} className="mb-2">
