@@ -25,6 +25,14 @@ body {
   display: none;
 }
 
+.navbar-toggler {
+  border-color: transparent;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%232BA8E8' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
 /** FONTS **/
 .tiktok-sans {
   font-family: "TikTok Sans", sans-serif;
@@ -258,6 +266,11 @@ body {
 }
 
 /* SETTINGS MENU */
+.menu-direita {
+  display: flex;
+  margin-left: auto !important;
+}
+
 .website-settings-menu {
   display: flex;
   flex-direction: column;
@@ -325,9 +338,19 @@ body {
   color: #000;
 }
 
+/** LEADS **/
+.list-item:hover {
+  background: #EEE;
+}
+
 /** MOBILE **/
 @media (max-width: 768px) {
   .website-login {
     padding: 10px;
+  }
+
+  .menu-direita {
+    display: block;
+    margin: 0 !important;
   }
 }
