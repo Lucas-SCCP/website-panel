@@ -21,10 +21,20 @@ import { WebsiteFactory } from '../factories/WebsiteFactory'
 import { PageFactory } from '../factories/PageFactory'
 import { ComponentFactory } from '../factories/ComponentFactory'
 import { ElementFactory } from '../factories/ElementFactory'
-import { FaRegSave, FaArrowAltCircleRight } from 'react-icons/fa'
-import { MdAddCircleOutline, MdSaveAlt, MdDeleteForever } from 'react-icons/md'
+import { FaArrowAltCircleRight } from 'react-icons/fa'
 import { TiWarningOutline } from 'react-icons/ti'
-import { GoPencil, GoHome, GoPeople, GoGear, GoBell, GoSignOut, GoKey } from "react-icons/go";
+import { 
+  LiaBell,
+  LiaSave,
+  LiaPlusCircleSolid,
+  LiaTrashAlt,
+  LiaCogSolid,
+  LiaUserLockSolid,
+  LiaUserFriendsSolid,
+  LiaHomeSolid,
+  LiaSignOutAltSolid,
+  LiaBookSolid
+} from "react-icons/lia";
 import type { WebsiteType, PageType } from 'website-lib'
 
 export function Menu() {
@@ -179,36 +189,36 @@ export function Menu() {
                       overlay={<Tooltip id={'tooltip-bottom'}>Página inicial</Tooltip>}
                     >
                       <div onClick={goToDashboardClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/' ? 'active' : ''}`}>
-                        <GoHome size={30} />
+                        <LiaHomeSolid size={30} />
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
                   <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Leads</Tooltip>}>
                       <div onClick={goToLeadsClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/leads' ? 'active' : ''}`}>
-                        <GoPeople size={30} />
+                        <LiaUserFriendsSolid size={30} />
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
                   <Nav.Link style={{ cursor: 'auto', display: 'none' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Posts</Tooltip>}>
                       <div onClick={goToPostsClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/posts' ? 'active' : ''}`}>
-                        <GoPencil size={30} />
+                        <LiaBookSolid size={30} />
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
-                  <Nav.Link style={{ cursor: 'auto',  display: 'none' }}>
+                  <Nav.Link style={{ cursor: 'auto', display: 'none' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Usuários</Tooltip>}>
                       <div onClick={goToUsersClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/users' ? 'active' : ''}`}>
-                        <GoKey size={30} />
+                        <LiaUserLockSolid size={30} />
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
 
-                  <Nav.Link style={{ cursor: 'auto',  display: 'none' }}>
+                  <Nav.Link style={{ cursor: 'auto', display: 'none' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Configurações</Tooltip>}>
                       <div onClick={goToSettingsClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/settings' ? 'active' : ''}`}>
-                        <GoGear size={30} />
+                        <LiaCogSolid size={30} />
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
@@ -232,7 +242,7 @@ export function Menu() {
                           overlay={<Tooltip id="tooltip-delete-page">Excluir página</Tooltip>}
                         >
                           <div className="website-navbar-action-buttons website-navbar-action-buttons-danger">
-                            <MdDeleteForever size={30} />
+                            <LiaTrashAlt size={30} />
                           </div>
                         </OverlayTrigger>
                       </Nav.Link>
@@ -246,7 +256,7 @@ export function Menu() {
                           }
                         >
                           <div className="website-navbar-action-buttons website-navbar-action-buttons-success" onClick={handleShowModalComponent}>
-                            <MdAddCircleOutline size={30} />
+                            <LiaPlusCircleSolid size={30} />
                           </div>
                         </OverlayTrigger>
                       </Nav.Link>
@@ -260,7 +270,7 @@ export function Menu() {
                           }
                         >
                           <div className="website-navbar-action-buttons website-navbar-action-buttons-success" onClick={handleOpenModalSaveClick}>
-                            <FaRegSave size={30} />
+                            <LiaSave size={30} />
                           </div>
                         </OverlayTrigger>
                       </Nav.Link>
@@ -284,7 +294,7 @@ export function Menu() {
                             <Badge pill bg="danger" >
                               3
                             </Badge>
-                            <GoBell size={30} />
+                            <LiaBell size={30} />
                           </div>
                         </OverlayTrigger>
                       }
@@ -301,7 +311,7 @@ export function Menu() {
                     <Nav.Link>
                       <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Sair</Tooltip>}>
                         <div onClick={handleExit} className="website-navbar-action-exit website-navbar-button-icon">
-                          <GoSignOut size={30} />
+                          <LiaSignOutAltSolid size={30} />
                         </div>
                       </OverlayTrigger>
                     </Nav.Link>
@@ -333,7 +343,7 @@ export function Menu() {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="success">
-            <MdSaveAlt />
+            <LiaSave />
           </Button>
         </Modal.Footer>
       </Modal>

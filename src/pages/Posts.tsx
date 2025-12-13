@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { Main } from './Main'
-import { GoPencil } from 'react-icons/go'
+import { LiaBookSolid } from 'react-icons/lia'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 
 export function Posts() {
@@ -19,7 +19,7 @@ export function Posts() {
             <Row>
               <Col lg={12} className="mb-2">
                 <div className="website-card-header tiktok-sans fw-100" style={{ fontSize: '20px' }}>
-                  <GoPencil size={24} />
+                  <LiaBookSolid size={24} />
                   <b>GESTÃO DE POSTS</b>
                 </div>
               </Col>

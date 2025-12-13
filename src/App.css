@@ -33,6 +33,14 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%232BA8E8' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
+.nav-link.show {
+  color: var(--blue3) !important;
+}
+
+.nav-link:focus {
+  color: var(--blue3) !important;
+}
+
 /** FONTS **/
 .tiktok-sans {
   font-family: "TikTok Sans", sans-serif;
@@ -330,7 +338,7 @@ body {
 }
 
 .dropdown-item:hover {
-  background-color: #EEE;
+  background-color: var(--blue2);
 }
 
 .dropdown-item.active {
@@ -338,9 +346,15 @@ body {
   color: #000;
 }
 
+.dropdown-menu {
+  background: var(--blueDark);
+  border: 1px solid var(--blue3);
+}
+
 /** LEADS **/
-.list-item:hover {
-  background: #EEE;
+.table-head-row th {
+  background-color: var(--blue3) !important;
+  border-radius: 5px 5px 0px 0px;
 }
 
 /** MOBILE **/

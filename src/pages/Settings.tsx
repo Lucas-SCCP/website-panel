@@ -18,7 +18,7 @@ import { ImExit } from "react-icons/im";
 import { TbPencil } from "react-icons/tb";
 import { TbPencilPlus } from "react-icons/tb";
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
-import { GoGear } from "react-icons/go";
+import { LiaCogSolid } from "react-icons/lia";
 import type { WebsiteType } from 'website-lib'
 import type { NotificationType } from '../types/NotificationType'
 
@@ -472,7 +472,7 @@ export function Settings() {
             <Row>
               <Col lg={12} className="mb-2">
                 <div className="website-card-header tiktok-sans fw-100" style={{ fontSize: '20px' }}>
-                  <GoGear size={24} />
+                  <LiaCogSolid size={24} />
                   <b>CONFIGURAÇÕES GERAIS</b>
                 </div>
               </Col>
