@@ -26,6 +26,13 @@ export function Leads() {
 
   const [loadingForms, setLoadingForms] = useState(false)
   const [loadingLeads, setLoadingLeads] = useState(false)
+
+  function formatDateBR(date: string) {
+    return new Intl.DateTimeFormat('pt-BR', {
+      dateStyle: 'short',
+      timeStyle: 'short'
+    }).format(new Date(date))
+  }
   
   useEffect(() => {
     setSelectedPageId(null)
@@ -95,16 +102,10 @@ export function Leads() {
 
       // Comparador especializado para colunas específicas
       if (sortBy === 'createdAt') {
-        // tentar parsear data (assumindo string)
-        const na = Date.parse(String(va))
-        const nb = Date.parse(String(vb))
-        if (isNaN(na) || isNaN(nb)) {
-          // fallback para comparar strings se não for data válida
-          const cmp = String(va).localeCompare(String(vb), undefined, { sensitivity: 'base' })
-          return sortDir === 'asc' ? cmp : -cmp
-        }
-        const diff = na - nb
-        return sortDir === 'asc' ? diff : -diff
+        const na = new Date(a.createdAt).getTime()
+        const nb = new Date(b.createdAt).getTime()
+
+        return sortDir === 'asc' ? na - nb : nb - na
       }
 
       // se algum campo for number (por exemplo, se LeadsType tiver number)
@@ -237,11 +238,11 @@ export function Leads() {
                           <Table striped hover bordered responsive>
                             <thead className='table-head'>
                               <tr className='table-head-row'>
-                                <th onClick={() => handleSort('createdAt')} style={{ cursor: 'pointer', width: '16%' }}>
+                                <th onClick={() => handleSort('createdAt')} style={{ cursor: 'pointer', width: '14%' }}>
                                   <div className="d-flex align-items-center justify-content-between">
                                     <div className="d-flex align-items-center gap-2">
                                       <LiaCalendar />
-                                      <b>DATA DE REGISTRO</b>
+                                      <b>DATA</b>
                                     </div>
                                     {renderSortArrow('createdAt')}
                                   </div>
@@ -285,7 +286,7 @@ export function Leads() {
                               )}
                               {paginatedLeads && paginatedLeads.map((lead) => (
                                 <tr key={lead.id}>
-                                  <td style={{ textAlign: 'center' }}>{lead.createdAt}</td>
+                                  <td style={{ textAlign: 'center' }}>{formatDateBR(lead.createdAt)}</td>
                                   <td>{lead.firstName}</td>
                                   <td style={{ textAlign: 'center' }}>{lead.phone}</td>
                                   <td>{lead.email}</td>
