@@ -357,6 +357,21 @@ body {
   border-radius: 5px 5px 0px 0px;
 }
 
+/** USERS **/
+.users-itens {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  border: 1px solid var(--blue1);
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.users-itens:hover {
+  background-color: #EEE;
+}
+
 /** MOBILE **/
 @media (max-width: 768px) {
   .website-login {

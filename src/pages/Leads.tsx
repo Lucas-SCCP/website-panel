@@ -260,7 +260,7 @@ export function Leads() {
                                   <div className="d-flex align-items-center justify-content-between">
                                     <div className="d-flex align-items-center gap-2">
                                       <LiaPhoneVolumeSolid />
-                                      <b>TELEFONE</b>
+                                      <b>CELULAR</b>
                                     </div>
                                     {renderSortArrow('phone')}
                                   </div>

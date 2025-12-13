@@ -505,6 +505,17 @@ class ApiService {
     const json = await response.json()
     return json.data as LeadsType
   }
+
+  async getUsersByWebsiteId(websiteId: number): Promise<Array<any>>{
+    const response = await fetch(`${import.meta.env.VITE_API}/users/website/${websiteId}`)
+
+    if (!response.ok) {
+      throw new Error('')
+    }
+
+    const json = await response.json()
+    return json.data as any[]
+  }
 }
 
 export { ApiService }
