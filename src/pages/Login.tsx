@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Form, Button, Container, Row, Col, Alert, FloatingLabel, Image } from 'react-bootstrap'
+import { Form, Button, Container, Row, Col, Alert, FloatingLabel, Image, Spinner } from 'react-bootstrap'
 import { ApiService } from '../services/ApiService'
 import { UseUserStore } from '../stores/UseUserStore'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
@@ -13,6 +13,7 @@ export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const { setAllWebsites, setSelectedWebsiteId, setSelectedWebsite } = UseWebsiteStore((state) => state)
 
@@ -20,6 +21,7 @@ export function Login() {
     e.preventDefault()
 
     try {
+      setLoading(true)
       const apiService = new ApiService()
       const response: AuthenticateResponseType = await apiService.authenticate(email, password)
 
@@ -30,6 +32,7 @@ export function Login() {
         const websites = await apiService.getAllWebsiteByUserId(user.id, user.token)
 
         setAllWebsites(websites)
+        setLoading(false)
 
         // adicionar tratamento para caso nao tenha website default definir algum para nao ficar sem nenhum
         const selectedWebsiteFound = websites.find((website) => website.id === user?.default_website_id)
@@ -41,6 +44,7 @@ export function Login() {
         navigate('/')
       }
     } catch (err) {
+      setLoading(false)
       if (err instanceof AuthenticateException) {
         setError(err.message)
       } else if (err instanceof Error) {
@@ -91,7 +95,20 @@ export function Login() {
               </Col>
               <Col lg={{ span: 8, offset: 2 }} className="text-center">
                 <Button type="submit" className="w-100 mb-3" style={{ border: 'none', background: 'var(--orange)' }}>
-                  <b>ENTRAR</b>
+                  {loading ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />{" "}
+                      CARREGANDO
+                    </>
+                  ) : (
+                    "ENTRAR"
+                  )}
                 </Button>
               </Col>
               <Col lg={{ span: 8, offset: 2 }} className="text-center" style={{ cursor: 'pointer' }}>

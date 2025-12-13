@@ -55,7 +55,8 @@ class ApiService {
       return this.parseWebsiteResponse(json.data)
     } catch (error: unknown) {
       if (error instanceof Error) {
-        throw new Error(`Erro ao buscar dados da API: ${error.message}`)
+        // @todo salvar o erro no log error.message
+        throw new Error('Erro ao buscar dados da API')
       } else {
         throw new Error('Erro desconhecido na API')
       }
@@ -88,7 +89,8 @@ class ApiService {
       return websites
     } catch (error: unknown) {
       if (error instanceof Error) {
-        throw new Error(`Erro ao buscar dados da API: ${error.message}`)
+        // @todo salvar o erro no log error.message
+        throw new Error('Ops! Ocorreu um erro, entre em contato com o suporte.')
       } else {
         throw new Error('Erro desconhecido na API')
       }

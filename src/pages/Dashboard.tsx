@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Row, Col, Badge, ProgressBar } from 'react-bootstrap'
+import { Row, Col, Badge, ProgressBar, Spinner } from 'react-bootstrap'
 import { Main } from './Main'
 import { ApiService } from '../services/ApiService'
 import { LineCharts } from '../charts/LineCharts'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
-import { GoStar, GoGraph, GoEye, GoCloud } from "react-icons/go";
+import { GoGraph, GoEye, GoCloud } from "react-icons/go";
+import { LiaStar } from "react-icons/lia";
 //import type { WebsiteType } from 'website-lib'
 import type { DashboardType } from '../types/DashboardType'
 
@@ -14,6 +15,7 @@ export function Dashboard() {
   const allWebsite = UseWebsiteStore((s) => s.allWebsites)
   //const [websiteSelected, setWebsiteSelected] = useState<WebsiteType | null>(null)
   const [dashboard, setDashboard] = useState<DashboardType | null>(null)
+  const [loadingPlan, setLoadingPlan] = useState(false)
   
   useEffect(() => {
     setSelectedPageId(null)
@@ -24,9 +26,12 @@ export function Dashboard() {
       //setWebsiteSelected(selected || null)
 
       const fetchDashboardInfo = async () => {
+        setLoadingPlan(true)
+        setDashboard(null)
         const apiService = new ApiService()
         const dashboardInfo = await apiService.getDashboardInfoByWebsiteId(websiteId)
         setDashboard(dashboardInfo)
+        setLoadingPlan(false)
       }
       fetchDashboardInfo()
     }  
@@ -38,11 +43,27 @@ export function Dashboard() {
         <Col sm={12} md={12} lg={3}>
           <Row>
             <Col lg={12}>
-              <div className="website-card">
+              <div className="website-card" style={{ position: 'relative' }}>
+                {loadingPlan && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      backgroundColor: 'rgba(0,0,0,0.5)',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      zIndex: 10,
+                      borderRadius: '5px'
+                    }}
+                  >
+                    <Spinner animation="border" variant="light" />
+                  </div>
+                )}
                 <Row>
                   <Col lg={12} className="mb-2">
                     <div className="website-card-header tiktok-sans fw-100" style={{ fontSize: '20px' }}>
-                      <GoStar size={24} />
+                      <LiaStar size={24} />
                       <b>MEU PLANO</b>
                     </div>
                   </Col>

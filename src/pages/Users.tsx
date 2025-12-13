@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Row, Col, Form, Alert } from 'react-bootstrap'
 import { Main } from './Main'
-import { GoKey } from 'react-icons/go'
+import { LiaUserLockSolid } from 'react-icons/lia'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 
 export function Users() {
@@ -19,7 +19,7 @@ export function Users() {
             <Row>
               <Col lg={12} className="mb-2">
                 <div className="website-card-header tiktok-sans fw-100" style={{ fontSize: '20px' }}>
-                  <GoKey size={24} />
+                  <LiaUserLockSolid size={24} />
                   <b>GESTÃO DE USUÁRIOS</b>
                 </div>
               </Col>
