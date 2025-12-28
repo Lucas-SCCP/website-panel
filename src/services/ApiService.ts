@@ -537,13 +537,13 @@ class ApiService {
     }
   }
 
-  async createUser(userData: object): Promise<void>{
-    const response = await fetch(`${import.meta.env.VITE_API}/users/create`, {
+  async createUser(websiteId: number, userData: object): Promise<void>{
+    const response = await fetch(`${import.meta.env.VITE_API}/users/website/${websiteId}/add`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify({ userData }),
     })
 
     if (!response.ok) {
@@ -551,13 +551,13 @@ class ApiService {
     }
   }
 
-  async updateUser(userData: object): Promise<void>{
-    const response = await fetch(`${import.meta.env.VITE_API}/users/create`, {
+  async updateUser(websiteId: number, userData: object): Promise<void>{
+    const response = await fetch(`${import.meta.env.VITE_API}/users/website/${websiteId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify({ userData }),
     })
 
     if (!response.ok) {
@@ -576,6 +576,7 @@ class ApiService {
     if (!response.ok) {
       return { isValid: false }
     }
+    const responseJson = await response.json()
     return responseJson.data
   }
 
