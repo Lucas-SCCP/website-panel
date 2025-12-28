@@ -99,16 +99,17 @@ export function Users() {
   function handleSaveUser() {
     const apiService = new ApiService()
     const userData = {
+      websiteId,
       firstName,
       lastName,
       email,
       accessLevelId,
-      isDefaultWebsite
+      'websiteDefault': isDefaultWebsite
     }
     if (newUser) {
-      apiService.createUser(websiteId!, userData)
+      apiService.createUser(userData)
     } else {
-      apiService.updateUser(websiteId!, userData)
+      apiService.updateUser(userData)
     }
   }
 
