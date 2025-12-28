@@ -29,8 +29,6 @@ export function Users() {
   const [email, setEmail] = useState('')
   const [accessLevelId, setAccessLevelId] = useState(3)
   const [isDefaultWebsite, setIsDefaultWebsite] = useState(false)
-
-  const [searchUser, setSearchUser] = useState(false)
   
   const [inputValue, setInputValue] = useState('')
   const [options, setOptions] = useState<Option[]>([])
@@ -74,10 +72,8 @@ export function Users() {
               isDisabled: true
             }
           ])
-          setSearchUser(false)
         } else {
           // console.log('userData', userData)
-          setSearchUser(true)
           setFirstName(userData.firstName)
           setLastName(userData.lastName)
           setEmail(userData.email)
@@ -91,7 +87,6 @@ export function Users() {
           ])
         }
       } else {
-        setSearchUser(false)
         setOptions([])
       }
 
@@ -122,7 +117,6 @@ export function Users() {
     setEditUser(false)
     setValue(null)
     setIsOwnProfile(true)
-    setSearchUser(false)
     setFirstName('')
     setLastName('')
     setEmail('')
@@ -131,7 +125,6 @@ export function Users() {
   }
 
   function handleEditUser(id: number) {
-    setSearchUser(false)
     setEditUser(true)
     setNewUser(false)
     setFirstName(users.find(u => u.id === id)?.firstName || '')
