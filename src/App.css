@@ -173,6 +173,16 @@ body {
   color: #2ba8e8;
 }
 
+.default-button {
+  background: var(--blue3) !important;
+  border: none;
+}
+
+.default-button:hover {
+  background: var(--blue2) !important;
+  border: none;
+}
+
 /** ACCORDION **/
 .website-accordion-selected {
   border: 3px solid #eee !important;
