@@ -38,7 +38,7 @@ export function Users() {
   const [loading, setLoading] = useState(false)
 
   function isValidEmail(email: string) {
-    console.log('isValidEmail')
+    // console.log('isValidEmail')
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
   
@@ -48,7 +48,6 @@ export function Users() {
   }, [setSelectedPageId])
 
   useEffect(() => {
-    console.log('inputValue changed:', inputValue)
     if (!isValidEmail(inputValue) || websiteId === null) {
       setOptions([])
       return
@@ -56,7 +55,7 @@ export function Users() {
 
     const timeout = setTimeout(async () => {
       setLoading(true)
-      console.log('Buscando usuário por email:', inputValue)
+      // console.log('Buscando usuário por email:', inputValue)
 
       const api = new ApiService()
       const userData = await api.getUserByEmail(websiteId, inputValue)
@@ -66,7 +65,7 @@ export function Users() {
         const isAlreadyLinked = users.some(u => u.id === userData.id)
         
         if (isAlreadyLinked) {
-          console.log('Usuário já vinculado ao site')
+          // console.log('Usuário já vinculado ao site')
           setOptions([
             {
               label: `${userData.email} - Já vinculado`,
@@ -77,7 +76,7 @@ export function Users() {
           ])
           setSearchUser(false)
         } else {
-          console.log('userData', userData)
+          // console.log('userData', userData)
           setSearchUser(true)
           setFirstName(userData.firstName)
           setLastName(userData.lastName)
@@ -124,6 +123,11 @@ export function Users() {
     setValue(null)
     setIsOwnProfile(true)
     setSearchUser(false)
+    setFirstName('')
+    setLastName('')
+    setEmail('')
+    setAccessLevelId(3)
+    setIsDefaultWebsite(false)
   }
 
   function handleEditUser(id: number) {
@@ -153,7 +157,7 @@ export function Users() {
 
     if (websiteId !== null && user !== null) {
       const fetchUsers = async () => {
-        console.log('user store', user)
+        // console.log('user store', user)
         setLoadingUsers(true)
         const apiService = new ApiService()
         const usersData = await apiService.getUsersByWebsiteId(websiteId)
@@ -327,7 +331,8 @@ export function Users() {
                                   placeholder="Nome do usuário"
                                   readOnly={!isOwnProfile}
                                   disabled={!isOwnProfile}
-                                  value={editUser || searchUser ? firstName : ''}
+                                  value={firstName}
+                                  onChange={(e) => setFirstName(e.target.value)}
                                 />
                               </Form.Group>
                             </Col>
@@ -339,7 +344,8 @@ export function Users() {
                                   placeholder="Sobrenome do usuário"
                                   readOnly={!isOwnProfile}
                                   disabled={!isOwnProfile}
-                                  value={editUser ? lastName : ''}
+                                  value={lastName}
+                                  onChange={(e) => setLastName(e.target.value)}
                                 />
                               </Form.Group>
                             </Col>
@@ -347,9 +353,15 @@ export function Users() {
                               <Form.Group className="mb-3">
                                 <Form.Label>Nível de acesso</Form.Label>
                                 <Form.Select>
-                                  <option value="1" selected={editUser ? accessLevelId === 1 : true}>Administrador</option>
-                                  <option value="2" selected={editUser ? accessLevelId === 2 : true}>Editor</option>
-                                  <option value="3" selected={editUser ? accessLevelId === 3 : true}>Visualizador</option>
+                                  <option value="1" selected={editUser ? accessLevelId === 1 : true}>
+                                    Administrador
+                                  </option>
+                                  <option value="2" selected={editUser ? accessLevelId === 2 : true}>
+                                    Editor
+                                  </option>
+                                  <option value="3" selected={editUser ? accessLevelId === 3 : true}>
+                                    Visualizador
+                                  </option>
                                 </Form.Select>
                               </Form.Group>
                             </Col>
@@ -377,8 +389,12 @@ export function Users() {
                                   </OverlayTrigger>
                                 </Form.Label>
                                 <Form.Select disabled={editUser && !isOwnProfile}>
-                                  <option value="1" selected={editUser ? isDefaultWebsite : true}>Sim</option>
-                                  <option value="2" selected={editUser ? !isDefaultWebsite : true}>Não</option>
+                                  <option value="1" selected={editUser ? isDefaultWebsite : true}>
+                                    Sim
+                                  </option>
+                                  <option value="2" selected={editUser ? !isDefaultWebsite : true}>
+                                    Não
+                                  </option>
                                 </Form.Select>
                               </Form.Group>
                             </Col>
