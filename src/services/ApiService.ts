@@ -537,13 +537,13 @@ class ApiService {
     }
   }
 
-  async createUser(websiteId: number, userData: object): Promise<void>{
-    const response = await fetch(`${import.meta.env.VITE_API}/users/website/${websiteId}/add`, {
+  async createUser(userData: object): Promise<void>{
+    const response = await fetch(`${import.meta.env.VITE_API}/users/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userData }),
+      body: JSON.stringify(userData),
     })
 
     if (!response.ok) {
@@ -551,13 +551,13 @@ class ApiService {
     }
   }
 
-  async updateUser(websiteId: number, userData: object): Promise<void>{
-    const response = await fetch(`${import.meta.env.VITE_API}/users/website/${websiteId}`, {
+  async updateUser(userData: object): Promise<void>{
+    const response = await fetch(`${import.meta.env.VITE_API}/users/update`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userData }),
+      body: JSON.stringify(userData),
     })
 
     if (!response.ok) {
