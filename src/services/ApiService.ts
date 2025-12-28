@@ -580,7 +580,7 @@ class ApiService {
     return responseJson.data
   }
 
-  async createPassword(userId: number, password: string): Promise<void> {
+  async createPassword(userId: number, password: string): Promise<any> {
     const response = await fetch(`${import.meta.env.VITE_API}/users/password/create`, {
       method: 'POST',
       headers: {
