@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Row, Col, Button, Form, Modal, Spinner, Alert, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { Main } from './Main'
 import { LiaBookSolid, LiaEditSolid, LiaPlusSolid, LiaSave, LiaTrashAlt } from 'react-icons/lia'
-import { FaTrash, FaSave, FaInfoCircle } from 'react-icons/fa'
+import { FaTrash, FaInfoCircle } from 'react-icons/fa'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { UseUserStore } from '../stores/UseUserStore'
 import { ApiService } from '../services/ApiService'
@@ -336,11 +336,11 @@ export function Posts() {
                                       {(() => {
                                         try {
                                           // Handle date object from API (PHP format)
-                                          const dateValue = typeof post.createdAt === 'object' && post.createdAt.date 
+                                          const dateValue = typeof post.createdAt === 'object' && post.createdAt !== null && 'date' in post.createdAt
                                             ? post.createdAt.date 
                                             : post.createdAt
                                           
-                                          const date = new Date(dateValue)
+                                          const date = new Date(dateValue as string)
                                           if (isNaN(date.getTime())) {
                                             return String(dateValue)
                                           }
@@ -351,7 +351,7 @@ export function Posts() {
                                             hour: '2-digit',
                                             minute: '2-digit'
                                           })
-                                        } catch (e) {
+                                        } catch {
                                           return String(post.createdAt)
                                         }
                                       })()}

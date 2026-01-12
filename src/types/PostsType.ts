@@ -8,7 +8,7 @@ export interface PostType {
   images: string[] | null
   status: 'published' | 'draft'
   publishedAt: string | null
-  createdAt: string
+  createdAt: string | { date: string }
   updatedAt: string
   deletedAt: string | null
 }
