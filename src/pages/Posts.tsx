@@ -13,6 +13,30 @@ export function Posts() {
   const selectedWebsite = UseWebsiteStore((state) => state.selectedWebsite)
   const token = UseUserStore((state) => state.token)
 
+  // Função auxiliar para obter a URL da imagem
+  const getImageUrl = (imageUrl: string): string => {
+    console.log('getImageUrl', imageUrl)
+    // Se for uma URL blob (imagem local temporária), retorna diretamente
+    if (imageUrl.startsWith('blob:')) {
+      return imageUrl
+    }
+    
+    // Se já for uma URL completa (http/https), retorna diretamente
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl
+    }
+    
+    // Constrói a URL do S3
+    const s3BucketUrl = import.meta.env.VITE_S3_IMAGES_BUCKET_URL
+    console.log('S3 Bucket URL:', s3BucketUrl)
+    if (!s3BucketUrl) {
+      console.error('VITE_S3_IMAGES_BUCKET_URL não está definida')
+      return imageUrl // Retorna a URL relativa como fallback
+    }
+    
+    return `${s3BucketUrl}/posts/${imageUrl}`
+  }
+
   // Função auxiliar para converter imagens de objeto para array
   const parseImages = (images: string[] | Record<string, string> | string | null | undefined): string[] => {
     if (!images) return []
@@ -652,7 +676,7 @@ export function Posts() {
                                           }}
                                         >
                                           <img
-                                            src={imageUrl.startsWith('blob:') ? imageUrl : `${import.meta.env.VITE_S3_IMAGES_BUCKET_URL}/posts/${imageUrl}`}
+                                            src={getImageUrl(imageUrl)}
                                             alt={`Preview ${index + 1}`}
                                             style={{
                                               width: '100%',
