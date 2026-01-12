@@ -652,7 +652,7 @@ export function Posts() {
                                           }}
                                         >
                                           <img
-                                            src={`${import.meta.env.VITE_S3_IMAGES_BUCKET_URL}/posts/${imageUrl}`}
+                                            src={imageUrl.startsWith('blob:') ? imageUrl : `${import.meta.env.VITE_S3_IMAGES_BUCKET_URL}/posts/${imageUrl}`}
                                             alt={`Preview ${index + 1}`}
                                             style={{
                                               width: '100%',
