@@ -200,7 +200,7 @@ export function Menu() {
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
-                  <Nav.Link style={{ cursor: 'auto', display: 'none' }}>
+                  <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Posts</Tooltip>}>
                       <div onClick={goToPostsClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/posts' ? 'active' : ''}`}>
                         <LiaBookSolid size={30} />

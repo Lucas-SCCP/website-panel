@@ -13,6 +13,7 @@ import type { DashboardType } from '../types/DashboardType'
 import type { FormsType } from '../types/FormsType'
 import type { LeadsType } from '../types/LeadsType'
 import type { ValidateTokenResponseType } from '../types/ValidateTokenType'
+import type { PostType, CreatePostData, UpdatePostData } from '../types/PostsType'
 import { AuthenticateException } from '../exceptions/AuthenticateException'
 
 class ApiService {
@@ -596,6 +597,160 @@ class ApiService {
       throw new Error(`HTTP error! Status: ${response.status}`)
     }
     return await response.json()
+  }
+
+  // Posts API methods
+  async getPostsByWebsiteId(websiteId: number, filters?: { status?: string; user_id?: number }): Promise<PostType[]> {
+    try {
+      const queryParams = new URLSearchParams()
+      if (filters?.status) queryParams.append('status', filters.status)
+      if (filters?.user_id) queryParams.append('user_id', filters.user_id.toString())
+      
+      const queryString = queryParams.toString()
+      const url = `${import.meta.env.VITE_API}/website/${websiteId}/posts${queryString ? `?${queryString}` : ''}`
+      
+      const response = await fetch(url)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const json = await response.json()
+      console.log('Raw API response for posts:', json)
+      
+      // A API pode retornar um array diretamente ou um objeto com a propriedade data
+      if (Array.isArray(json)) {
+        return json as PostType[]
+      } else if (json.data && Array.isArray(json.data)) {
+        return json.data as PostType[]
+      } else {
+        console.warn('Unexpected API response format:', json)
+        return []
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to fetch posts: ${error.message}`)
+      }
+      throw new Error('Failed to fetch posts: Unknown error')
+    }
+  }
+
+  async getPostById(postId: number): Promise<PostType> {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API}/post/${postId}`)
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Post not found')
+        }
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const json = await response.json()
+      return json as PostType
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to fetch post: ${error.message}`)
+      }
+      throw new Error('Failed to fetch post: Unknown error')
+    }
+  }
+
+  async getPostBySlug(websiteId: number, slug: string): Promise<PostType> {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API}/website/${websiteId}/post/${slug}`)
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Post not found')
+        }
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const json = await response.json()
+      return json as PostType
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to fetch post: ${error.message}`)
+      }
+      throw new Error('Failed to fetch post: Unknown error')
+    }
+  }
+
+  async createPost(postData: CreatePostData, token: string): Promise<{ message: string; id: number }> {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API}/post`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(postData)
+      })
+
+      if (!response.ok) {
+        const errorJson = await response.json()
+        throw new Error(errorJson.error || `HTTP error! Status: ${response.status}`)
+      }
+
+      const json = await response.json()
+      return json
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to create post: ${error.message}`)
+      }
+      throw new Error('Failed to create post: Unknown error')
+    }
+  }
+
+  async updatePost(postId: number, updates: UpdatePostData, token: string): Promise<{ message: string; success: boolean }> {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API}/post/${postId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updates)
+      })
+
+      if (!response.ok) {
+        const errorJson = await response.json()
+        throw new Error(errorJson.error || `HTTP error! Status: ${response.status}`)
+      }
+
+      const json = await response.json()
+      return json
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to update post: ${error.message}`)
+      }
+      throw new Error('Failed to update post: Unknown error')
+    }
+  }
+
+  async deletePost(postId: number, token: string): Promise<{ message: string; success: boolean }> {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API}/post/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (!response.ok) {
+        const errorJson = await response.json()
+        throw new Error(errorJson.error || `HTTP error! Status: ${response.status}`)
+      }
+
+      const json = await response.json()
+      return json
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to delete post: ${error.message}`)
+      }
+      throw new Error('Failed to delete post: Unknown error')
+    }
   }
 }
 
