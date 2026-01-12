@@ -6,6 +6,7 @@ export interface PostType {
   text: string
   slug: string
   images: string[] | null
+  main_image_index?: number
   status: 'published' | 'draft'
   publishedAt: string | null
   createdAt: string | { date: string }
@@ -19,6 +20,7 @@ export interface CreatePostData {
   text: string
   slug?: string
   images?: string[] | null
+  main_image_index?: number
   status?: 'published' | 'draft'
 }
 
@@ -27,5 +29,6 @@ export interface UpdatePostData {
   text?: string
   slug?: string
   images?: string[] | null
+  main_image_index?: number
   status?: 'published' | 'draft'
 }

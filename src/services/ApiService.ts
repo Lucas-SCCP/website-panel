@@ -14,7 +14,14 @@ import type { FormsType } from '../types/FormsType'
 import type { LeadsType } from '../types/LeadsType'
 import type { ValidateTokenResponseType } from '../types/ValidateTokenType'
 import type { PostType, CreatePostData, UpdatePostData } from '../types/PostsType'
+import type { UserType, CreateUserData, UpdateUserData } from '../types/UserType'
 import { AuthenticateException } from '../exceptions/AuthenticateException'
+
+interface CreatePasswordResponse {
+  message: string
+  success: boolean
+  status?: boolean
+}
 
 class ApiService {
   // Primeira requisição, para realizar o login
@@ -508,7 +515,7 @@ class ApiService {
     return json.data as LeadsType
   }
 
-  async getUsersByWebsiteId(websiteId: number): Promise<Array<any>>{
+  async getUsersByWebsiteId(websiteId: number): Promise<UserType[]>{
     const response = await fetch(`${import.meta.env.VITE_API}/users/website/${websiteId}`)
 
     if (!response.ok) {
@@ -516,10 +523,10 @@ class ApiService {
     }
 
     const json = await response.json()
-    return json.data as any[]
+    return json.data as UserType[]
   }
 
-  async getUserByEmail(websiteId: number, email: string): Promise<any | null>{
+  async getUserByEmail(websiteId: number, email: string): Promise<UserType | null>{
     try {
       const response = await fetch(`${import.meta.env.VITE_API}/users/website/${websiteId}/email/${encodeURIComponent(email)}`)
 
@@ -531,14 +538,14 @@ class ApiService {
       }
 
       const json = await response.json()
-      return json.data
+      return json.data as UserType
     } catch (error) {
       console.error('Erro ao buscar usuário por email:', error)
       return null
     }
   }
 
-  async createUser(userData: object): Promise<void>{
+  async createUser(userData: CreateUserData): Promise<void>{
     const response = await fetch(`${import.meta.env.VITE_API}/users/create`, {
       method: 'POST',
       headers: {
@@ -552,7 +559,7 @@ class ApiService {
     }
   }
 
-  async updateUser(userData: object): Promise<void>{
+  async updateUser(userData: UpdateUserData): Promise<void>{
     const response = await fetch(`${import.meta.env.VITE_API}/users/update`, {
       method: 'PUT',
       headers: {
@@ -581,7 +588,7 @@ class ApiService {
     return responseJson.data
   }
 
-  async createPassword(userId: number, password: string): Promise<any> {
+  async createPassword(userId: number, password: string): Promise<CreatePasswordResponse> {
     const response = await fetch(`${import.meta.env.VITE_API}/users/password/create`, {
       method: 'POST',
       headers: {

@@ -6,6 +6,7 @@ import CreatableSelect from 'react-select/creatable'
 import { LiaUserLockSolid, LiaUsersCogSolid, LiaUserPlusSolid, LiaSave, LiaTrashAlt, LiaInfoCircleSolid } from 'react-icons/lia'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { UseUserStore } from '../stores/UseUserStore'
+import type { UserType } from '../types/UserType'
 
 type Option = {
   label: string
@@ -19,7 +20,7 @@ export function Users() {
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
   const [newUser, setNewUser] = useState(false)
   const [editUser, setEditUser] = useState(false)
-  const [users, setUsers] = useState<Array<any>>([])
+  const [users, setUsers] = useState<UserType[]>([])
   const [loadingUsers, setLoadingUsers] = useState(false)
   const [isOwnProfile, setIsOwnProfile] = useState(false)
   const { user } = UseUserStore()
@@ -27,6 +28,7 @@ export function Users() {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
+  const [userId, setUserId] = useState<number | null>(null)
   const [accessLevelId, setAccessLevelId] = useState(3)
   const [isDefaultWebsite, setIsDefaultWebsite] = useState(false)
   
@@ -97,19 +99,37 @@ export function Users() {
   }, [inputValue, users, websiteId])
 
   function handleSaveUser() {
-    const apiService = new ApiService()
-    const userData = {
-      websiteId,
-      firstName,
-      lastName,
-      email,
-      accessLevelId,
-      'websiteDefault': isDefaultWebsite
+    if (!websiteId) {
+      console.error('Website ID is required')
+      return
     }
+
+    const apiService = new ApiService()
+    
     if (newUser) {
-      apiService.createUser(userData)
+      const createData = {
+        websiteId,
+        firstName,
+        lastName,
+        email,
+        accessLevelId,
+        websiteDefault: isDefaultWebsite
+      }
+      apiService.createUser(createData)
     } else {
-      apiService.updateUser(userData)
+      if (!userId) {
+        console.error('User ID is required for update')
+        return
+      }
+      const updateData = {
+        id: userId,
+        firstName,
+        lastName,
+        email,
+        accessLevelId,
+        websiteDefault: isDefaultWebsite
+      }
+      apiService.updateUser(updateData)
     }
   }
 
@@ -118,6 +138,7 @@ export function Users() {
     setEditUser(false)
     setValue(null)
     setIsOwnProfile(true)
+    setUserId(null)
     setFirstName('')
     setLastName('')
     setEmail('')
@@ -128,6 +149,7 @@ export function Users() {
   function handleEditUser(id: number) {
     setEditUser(true)
     setNewUser(false)
+    setUserId(id)
     setFirstName(users.find(u => u.id === id)?.firstName || '')
     setLastName(users.find(u => u.id === id)?.lastName || '')
     setEmail(users.find(u => u.id === id)?.email || '')

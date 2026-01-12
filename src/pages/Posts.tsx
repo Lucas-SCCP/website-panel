@@ -12,6 +12,34 @@ export function Posts() {
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
   const selectedWebsite = UseWebsiteStore((state) => state.selectedWebsite)
   const token = UseUserStore((state) => state.token)
+
+  // Função auxiliar para converter imagens de objeto para array
+  const parseImages = (images: string[] | Record<string, string> | string | null | undefined): string[] => {
+    if (!images) return []
+    if (Array.isArray(images)) return images
+    
+    // Se for string, tenta parsear como JSON
+    if (typeof images === 'string') {
+      try {
+        const parsed = JSON.parse(images)
+        if (typeof parsed === 'object' && !Array.isArray(parsed)) {
+          // Converte objeto {"0": "img1.jpg", "1": "img2.jpg"} para array
+          return Object.values(parsed)
+        }
+        if (Array.isArray(parsed)) return parsed
+        return []
+      } catch {
+        return []
+      }
+    }
+    
+    // Se for objeto, converte para array
+    if (typeof images === 'object') {
+      return Object.values(images)
+    }
+    
+    return []
+  }
   
   const [posts, setPosts] = useState<PostType[]>([])
   const [selectedPost, setSelectedPost] = useState<PostType | null>(null)
@@ -28,9 +56,8 @@ export function Posts() {
   const [slug, setSlug] = useState('')
   const [status, setStatus] = useState<'draft' | 'published'>('draft')
   const [images, setImages] = useState<string[]>([])
+  const [mainImageIndex, setMainImageIndex] = useState<number>(0)
   const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all')
-
-  console.log('Posts component rendered, selectedWebsite:', selectedWebsite)
 
   const loadPosts = async () => {
     if (!selectedWebsite) {
@@ -38,14 +65,12 @@ export function Posts() {
       setPosts([])
       return
     }
-    
-    console.log('Loading posts for website:', selectedWebsite.id)
+
     setLoading(true)
     setError(null)
     try {
       const apiService = new ApiService()
       const postsData = await apiService.getPostsByWebsiteId(selectedWebsite.id)
-      console.log('Posts carregados:', postsData)
       setPosts(postsData || [])
     } catch (err) {
       console.error('Erro ao carregar posts:', err)
@@ -57,7 +82,6 @@ export function Posts() {
   }
 
   useEffect(() => {
-    console.log('useEffect triggered')
     setSelectedPageId(null)
     if (selectedWebsite) {
       loadPosts()
@@ -72,7 +96,10 @@ export function Posts() {
     setText(post.text)
     setSlug(post.slug)
     setStatus(post.status)
-    setImages(post.images || [])
+    console.log('Post images:', post.images)
+    const parsedImages = parseImages(post.images)
+    setImages(parsedImages)
+    setMainImageIndex(post.main_image_index ?? 0)
     setError(null)
     setSuccess(null)
   }
@@ -85,6 +112,7 @@ export function Posts() {
     setSlug('')
     setStatus('draft')
     setImages([])
+    setMainImageIndex(0)
     setError(null)
     setSuccess(null)
   }
@@ -113,6 +141,7 @@ export function Posts() {
           text: text.trim(),
           slug: slug.trim() || undefined,
           images: imagesArray,
+          main_image_index: images.length > 0 ? mainImageIndex : undefined,
           status
         }
         
@@ -126,6 +155,7 @@ export function Posts() {
           text: text.trim(),
           slug: slug.trim() || undefined,
           images: imagesArray,
+          main_image_index: images.length > 0 ? mainImageIndex : undefined,
           status
         }
         
@@ -143,6 +173,7 @@ export function Posts() {
         setSlug('')
         setStatus('draft')
         setImages([])
+        setMainImageIndex(0)
         setSelectedPost(null)
         setIsCreatingNew(false)
       }, 1500)
@@ -176,6 +207,7 @@ export function Posts() {
         setSlug('')
         setStatus('draft')
         setImages([])
+        setMainImageIndex(0)
       }
 
       // Reload posts
@@ -214,9 +246,14 @@ export function Posts() {
       URL.revokeObjectURL(imageToRemove)
     }
     setImages(images.filter((_, i) => i !== index))
+    
+    // Ajusta o índice da imagem principal se necessário
+    if (mainImageIndex === index) {
+      setMainImageIndex(0) // Se remover a imagem principal, seleciona a primeira
+    } else if (mainImageIndex > index) {
+      setMainImageIndex(mainImageIndex - 1) // Ajusta o índice se remover uma imagem anterior
+    }
   }
-
-  console.log('About to render, posts:', posts.length, 'loading:', loading)
 
   // Filter posts by status
   const filteredPosts = Array.isArray(posts) ? posts.filter(post => {
@@ -529,7 +566,23 @@ export function Posts() {
 
                             <Col lg={12} className="mb-3">
                               <Form.Group>
-                                <Form.Label><b>Imagens</b></Form.Label>
+                                <Form.Label>
+                                  <b>Imagens</b>
+                                  <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={
+                                      <Tooltip>
+                                        <strong>Imagem Principal</strong><br />
+                                        Clique em uma imagem para defini-la como principal.<br />
+                                        A imagem principal será exibida nas listagens de posts.
+                                      </Tooltip>
+                                    }
+                                  >
+                                    <span style={{ marginLeft: '8px', cursor: 'pointer', color: 'var(--blue3)' }}>
+                                      <FaInfoCircle size={14} />
+                                    </span>
+                                  </OverlayTrigger>
+                                </Form.Label>
                                 <Row>
                                   <Col lg={2} className="mb-2">
                                     <div style={{
@@ -570,21 +623,36 @@ export function Posts() {
                                       </div>
                                     </div>
                                   </Col>
-                                    {images.length > 0 && images.map((imageUrl, index) => (
-                                      <Col lg={2} className="mb-3">
+                                    {Array.isArray(images) && images.length > 0 && images.map((imageUrl, index) => (
+                                      <Col lg={2} className="mb-3" key={index}>
                                         <div
-                                          key={index}
                                           style={{
                                             position: 'relative',
                                             borderRadius: '8px',
                                             overflow: 'hidden',
-                                            border: '1px solid #CCC',
+                                            border: mainImageIndex === index ? '3px solid var(--blue3)' : '1px solid #CCC',
                                             aspectRatio: '1',
-                                            backgroundColor: '#f5f5f5'
+                                            backgroundColor: '#f5f5f5',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s',
+                                            boxShadow: mainImageIndex === index ? '0 0 15px rgba(0, 123, 255, 0.3)' : 'none'
+                                          }}
+                                          onClick={() => setMainImageIndex(index)}
+                                          onMouseEnter={(e) => {
+                                            if (mainImageIndex !== index) {
+                                              e.currentTarget.style.borderColor = 'var(--blue3)'
+                                              e.currentTarget.style.opacity = '0.8'
+                                            }
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            if (mainImageIndex !== index) {
+                                              e.currentTarget.style.borderColor = '#CCC'
+                                              e.currentTarget.style.opacity = '1'
+                                            }
                                           }}
                                         >
                                           <img
-                                            src={imageUrl}
+                                            src={`${import.meta.env.VITE_S3_IMAGES_BUCKET_URL}/posts/${imageUrl}`}
                                             alt={`Preview ${index + 1}`}
                                             style={{
                                               width: '100%',
@@ -592,18 +660,42 @@ export function Posts() {
                                               objectFit: 'cover'
                                             }}
                                           />
+                                          {mainImageIndex === index && (
+                                            <div
+                                              style={{
+                                                position: 'absolute',
+                                                top: '0',
+                                                left: '0',
+                                                right: '0',
+                                                padding: '4px 8px',
+                                                backgroundColor: 'var(--blue3)',
+                                                color: 'white',
+                                                fontSize: '0.7em',
+                                                fontWeight: 'bold',
+                                                textAlign: 'center',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: '0.5px'
+                                              }}
+                                            >
+                                              DESTAQUE
+                                            </div>
+                                          )}
                                           <Button
                                             variant="danger"
                                             size="sm"
-                                            onClick={() => handleRemoveImage(index)}
+                                            onClick={(e) => {
+                                              e.stopPropagation()
+                                              handleRemoveImage(index)
+                                            }}
                                             disabled={loading}
                                             style={{
                                               position: 'absolute',
-                                              top: '5px',
+                                              bottom: '5px',
                                               right: '5px',
                                               padding: '4px 8px',
                                               fontSize: '0.75em',
-                                              borderRadius: '4px'
+                                              borderRadius: '4px',
+                                              zIndex: 10
                                             }}
                                           >
                                             <FaTrash size={10} />
