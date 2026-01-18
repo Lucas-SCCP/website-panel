@@ -69,7 +69,13 @@ export function Posts() {
     if (Array.isArray(images)) {
       return images.map(item => {
         if (typeof item === 'string') return { name: item }
-        if (typeof item === 'object' && item !== null) return { name: String(item.name ?? ''), cover: !!item.cover }
+        if (
+          typeof item === 'object' &&
+          item !== null &&
+          'name' in item
+        ) {
+          return { name: String((item as { name?: string }).name ?? ''), cover: !!(item as { cover?: boolean }).cover }
+        }
         return { name: String(item) }
       })
     }
@@ -78,7 +84,7 @@ export function Posts() {
     if (typeof images === 'string') {
       try {
         const parsed = JSON.parse(images)
-        return parseImages(parsed as any)
+        return parseImages(parsed as string[] | Record<string, unknown> | string | null | undefined)
       } catch {
         // string simples (nome da imagem)
         return [{ name: images }]
@@ -87,7 +93,7 @@ export function Posts() {
 
     // Se for objeto (map), converte valores para array
     if (typeof images === 'object') {
-      const vals = Object.values(images as Record<string, any>)
+      const vals = Object.values(images as Record<string, { name?: string; cover?: boolean }>)
       return vals.map(v => {
         if (typeof v === 'string') return { name: v }
         if (typeof v === 'object' && v !== null) return { name: String(v.name ?? ''), cover: !!v.cover }
@@ -236,7 +242,7 @@ export function Posts() {
           else if (Array.isArray(json.files)) uploadedFiles = json.files
           else if (Array.isArray(json.data?.files)) uploadedFiles = json.data.files
           else if (Array.isArray(json.savedFiles)) uploadedFiles = json.savedFiles
-        } catch (e) {
+        } catch {
           // fallback: usa os newName que enviamos
           uploadedFiles = imagesToUpload.map(u => u.newName)
         }
@@ -303,7 +309,7 @@ export function Posts() {
           setImages(imagesFinal)
           setMainImageIndex(Math.min(mainImageIndex, imagesFinal.length - 1))
         }
-      } catch (e) {
+      } catch {
         // ignore
       }
 
@@ -317,7 +323,7 @@ export function Posts() {
       } else if (isCreatingNew) {
         // tenta selecionar o post recém-criado (se encontrado por título/slug mais recente)
         if (Array.isArray(reloaded) && reloaded.length > 0) {
-          const found = reloaded.find(p => p.title === title && p.website_id === selectedWebsite?.id) || reloaded[0]
+          const found = reloaded.find(p => p.title === title && p.websiteId === selectedWebsite?.id) || reloaded[0]
           if (found) handleSelectPost(found)
         }
       }
