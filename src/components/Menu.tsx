@@ -188,37 +188,62 @@ export function Menu() {
                       placement="bottom"
                       overlay={<Tooltip id={'tooltip-bottom'}>Página inicial</Tooltip>}
                     >
-                      <div onClick={goToDashboardClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/' ? 'active' : ''}`}>
+                      <div 
+                        onClick={goToDashboardClick} 
+                        className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/' ? 'active' : ''}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
+                      >
                         <LiaHomeSolid size={30} />
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>INICIO</div>
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
                   <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Leads</Tooltip>}>
-                      <div onClick={goToLeadsClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/leads' ? 'active' : ''}`}>
+                      <div
+                        onClick={goToLeadsClick}
+                        className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/leads' ? 'active' : ''}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
+                      >
                         <LiaUserFriendsSolid size={30} />
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>LEADS</div>
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
                   <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Posts</Tooltip>}>
-                      <div onClick={goToPostsClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/posts' ? 'active' : ''}`}>
+                      <div
+                        onClick={goToPostsClick}
+                        className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/posts' ? 'active' : ''}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
+                      >
                         <LiaBookSolid size={30} />
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>POSTS</div>
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
                   <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Usuários</Tooltip>}>
-                      <div onClick={goToUsersClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/users' ? 'active' : ''}`}>
+                      <div
+                        onClick={goToUsersClick}
+                        className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/users' ? 'active' : ''}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
+                      >
                         <LiaUserLockSolid size={30} />
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>USUÁRIOS</div>
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
 
                   <Nav.Link style={{ cursor: 'auto', display: 'none' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Configurações</Tooltip>}>
-                      <div onClick={goToSettingsClick} className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/settings' ? 'active' : ''}`}>
+                      <div
+                        onClick={goToSettingsClick}
+                        className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/settings' ? 'active' : ''}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
+                      >
                         <LiaCogSolid size={30} />
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>CONFIGURAÇÕES</div>
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>

@@ -6,15 +6,33 @@ import { FaTrash, FaInfoCircle } from 'react-icons/fa'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { UseUserStore } from '../stores/UseUserStore'
 import { ApiService } from '../services/ApiService'
-import type { PostType, CreatePostData, UpdatePostData } from '../types/PostsType'
+import type { PostType } from '../types/PostsType'
 
 export function Posts() {
+  
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
   const selectedWebsite = UseWebsiteStore((state) => state.selectedWebsite)
   const token = UseUserStore((state) => state.token)
+  
+  const [posts, setPosts] = useState<PostType[]>([])
+  const [selectedPost, setSelectedPost] = useState<PostType | null>(null)
+  const [isCreatingNew, setIsCreatingNew] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [postToDelete, setPostToDelete] = useState<PostType | null>(null)
+  
+  const [title, setTitle] = useState('')
+  const [text, setText] = useState('')
+  const [slug, setSlug] = useState('')
+  const [status, setStatus] = useState<'draft' | 'published'>('draft')
+  const [images, setImages] = useState<Array<{ name: string; cover?: boolean }>>([])
+  const [mainImageIndex, setMainImageIndex] = useState<number>(0)
+  const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all')
 
-  // Função auxiliar para obter a URL da imagem
   const getImageUrl = (imageUrl: string): string => {
+    console.log('imageUrl input:', imageUrl)
     console.log('getImageUrl', imageUrl)
     // Se for uma URL blob (imagem local temporária), retorna diretamente
     if (imageUrl.startsWith('blob:')) {
@@ -33,55 +51,52 @@ export function Posts() {
       console.error('VITE_S3_IMAGES_BUCKET_URL não está definida')
       return imageUrl // Retorna a URL relativa como fallback
     }
+
+    const websiteDomain = import.meta.env.VITE_WEBSITE_DOMAIN
+    const domainFormatted = websiteDomain
+      .replace(/^https?:\/\//, '')
+      .replace(/^www\./, '')
+      .replace(/\./g, '')
+      .replace(/-/g, '')
     
-    return `${s3BucketUrl}/posts/${imageUrl}`
+    return `${s3BucketUrl}/${domainFormatted}/${imageUrl}`
   }
 
-  // Função auxiliar para converter imagens de objeto para array
-  const parseImages = (images: string[] | Record<string, string> | string | null | undefined): string[] => {
+  const parseImages = (images: string[] | Record<string, unknown> | string | null | undefined): Array<{ name: string; cover?: boolean }> => {
     if (!images) return []
-    if (Array.isArray(images)) return images
-    
+
+    // Se já for um array, normalize cada item
+    if (Array.isArray(images)) {
+      return images.map(item => {
+        if (typeof item === 'string') return { name: item }
+        if (typeof item === 'object' && item !== null) return { name: String(item.name ?? ''), cover: !!item.cover }
+        return { name: String(item) }
+      })
+    }
+
     // Se for string, tenta parsear como JSON
     if (typeof images === 'string') {
       try {
         const parsed = JSON.parse(images)
-        if (typeof parsed === 'object' && !Array.isArray(parsed)) {
-          // Converte objeto {"0": "img1.jpg", "1": "img2.jpg"} para array
-          return Object.values(parsed)
-        }
-        if (Array.isArray(parsed)) return parsed
-        return []
+        return parseImages(parsed as any)
       } catch {
-        return []
+        // string simples (nome da imagem)
+        return [{ name: images }]
       }
     }
-    
-    // Se for objeto, converte para array
+
+    // Se for objeto (map), converte valores para array
     if (typeof images === 'object') {
-      return Object.values(images)
+      const vals = Object.values(images as Record<string, any>)
+      return vals.map(v => {
+        if (typeof v === 'string') return { name: v }
+        if (typeof v === 'object' && v !== null) return { name: String(v.name ?? ''), cover: !!v.cover }
+        return { name: String(v) }
+      })
     }
-    
+
     return []
   }
-  
-  const [posts, setPosts] = useState<PostType[]>([])
-  const [selectedPost, setSelectedPost] = useState<PostType | null>(null)
-  const [isCreatingNew, setIsCreatingNew] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [postToDelete, setPostToDelete] = useState<PostType | null>(null)
-  
-  // Form fields
-  const [title, setTitle] = useState('')
-  const [text, setText] = useState('')
-  const [slug, setSlug] = useState('')
-  const [status, setStatus] = useState<'draft' | 'published'>('draft')
-  const [images, setImages] = useState<string[]>([])
-  const [mainImageIndex, setMainImageIndex] = useState<number>(0)
-  const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all')
 
   const loadPosts = async () => {
     if (!selectedWebsite) {
@@ -96,10 +111,12 @@ export function Posts() {
       const apiService = new ApiService()
       const postsData = await apiService.getPostsByWebsiteId(selectedWebsite.id)
       setPosts(postsData || [])
+      return postsData || []
     } catch (err) {
       console.error('Erro ao carregar posts:', err)
       setError('Erro ao carregar posts')
       setPosts([])
+      return []
     } finally {
       setLoading(false)
     }
@@ -120,10 +137,18 @@ export function Posts() {
     setText(post.text)
     setSlug(post.slug)
     setStatus(post.status)
-    console.log('Post images:', post.images)
+    
+    // Filtra imagens inexistentes (removidas do S3)
     const parsedImages = parseImages(post.images)
-    setImages(parsedImages)
-    setMainImageIndex(post.main_image_index ?? 0)
+    // Opcional: checar existência da imagem no S3 via HEAD request, mas aqui só filtra nomes vazios ou nulos
+    const filteredImages = parsedImages.filter(img => !!img.name)
+    const defaultIndex = post.main_image_index ?? 0
+    const hasCover = filteredImages.some(img => !!img.cover)
+    const normalized = filteredImages.map((img, idx) => ({ ...img, cover: hasCover ? !!img.cover : idx === defaultIndex }))
+    setImages(normalized)
+    // alinhar mainImageIndex com a imagem marcada como cover, se existir
+    const coverIndex = normalized.findIndex(img => !!img.cover)
+    setMainImageIndex(coverIndex >= 0 ? coverIndex : defaultIndex)
     setError(null)
     setSuccess(null)
   }
@@ -143,7 +168,6 @@ export function Posts() {
 
   const handleSavePost = async () => {
     if (!selectedWebsite || !token) return
-    
     if (!title.trim() || !text.trim()) {
       setError('Título e texto são obrigatórios')
       return
@@ -155,11 +179,99 @@ export function Posts() {
 
     try {
       const apiService = new ApiService()
-      const imagesArray = images.length > 0 ? images : null
 
+      const now = new Date()
+      const pad = (n: number, len = 3) => n.toString().padStart(len, '0')
+      let imageIndex = 1
+      const imagesToUpload: Array<{ file: File; newName: string; cover?: boolean; index?: number }> = []
+      const imagesArray: { [key: string]: { name: string; cover: boolean } } = {}
+
+      for (let i = 0; i < images.length; i++) {
+        const img = images[i]
+        const isBlob = typeof img.name === 'string' && img.name.startsWith('blob:')
+        let newName = img.name
+        const isCover = i === mainImageIndex
+            if (isBlob) {
+          const fileInput = document.getElementById('imageInput') as HTMLInputElement | null
+          if (fileInput && fileInput.files) {
+            for (let f = 0; f < fileInput.files.length; f++) {
+              const file = fileInput.files[f]
+              if (!imagesToUpload.some(u => u.file === file)) {
+                let ext = (file.name.split('.').pop() || 'jpg').toLowerCase()
+                if (ext === 'jpeg') ext = 'jpg'
+                newName = `${now.getFullYear()}${pad(now.getMonth()+1,2)}${pad(now.getDate(),2)}_${pad(now.getHours(),2)}${pad(now.getMinutes(),2)}${pad(now.getSeconds(),2)}${pad(now.getMilliseconds(),3)}_${pad(imageIndex,3)}.${ext}`
+                    imagesToUpload.push({ file, newName, cover: isCover, index: i })
+                imageIndex++
+                break
+              }
+            }
+          }
+        }
+        imagesArray[i] = { name: newName, cover: isCover }
+      }
+
+      // 2. Enviar imagens para API de upload
+      console.log('TESTE1', imagesToUpload)
+      if (imagesToUpload.length > 0) {
+        const formData = new FormData()
+        imagesToUpload.forEach(obj => {
+          formData.append('files', obj.file, obj.newName)
+        })
+        formData.append('folder', 'noisdevbr')
+        // Ajuste a URL abaixo para o endpoint correto de upload
+        const uploadUrl = import.meta.env.VITE_SERVICE_FILEUPLOADER + '/upload/images'
+        const uploadResp = await fetch(uploadUrl, {
+          method: 'POST',
+          body: formData
+        })
+        if (!uploadResp.ok) {
+          throw new Error('Erro ao fazer upload das imagens')
+        }
+
+        // tenta obter os nomes reais retornados pelo servidor para manter consistência
+        let uploadedFiles: string[] = []
+        try {
+          const json = await uploadResp.json()
+          if (Array.isArray(json)) uploadedFiles = json
+          else if (Array.isArray(json.files)) uploadedFiles = json.files
+          else if (Array.isArray(json.data?.files)) uploadedFiles = json.data.files
+          else if (Array.isArray(json.savedFiles)) uploadedFiles = json.savedFiles
+        } catch (e) {
+          // fallback: usa os newName que enviamos
+          uploadedFiles = imagesToUpload.map(u => u.newName)
+        }
+
+        // mapa do índice original da imagem -> nome final no servidor
+        const indexToStoredName = new Map<number, string>()
+        for (let j = 0; j < imagesToUpload.length; j++) {
+          const itm = imagesToUpload[j]
+          const stored = uploadedFiles[j] || itm.newName
+          if (typeof itm.index === 'number') indexToStoredName.set(itm.index, stored)
+        }
+
+        // Atualiza imagesArray com os nomes reais
+        Object.keys(imagesArray).forEach(k => {
+          const idx = Number(k)
+          if (indexToStoredName.has(idx)) {
+            imagesArray[k] = { ...imagesArray[k], name: indexToStoredName.get(idx)! }
+          }
+        })
+
+        // Atualiza o estado images substituindo blobs pelos nomes retornados
+        setImages(prevImages => prevImages.map((img, i) => {
+          if (indexToStoredName.has(i)) {
+            return { ...img, name: indexToStoredName.get(i)!, cover: !!img.cover }
+          }
+          return img
+        }))
+
+        // Limpa temporários
+        imagesToUpload.length = 0
+      }
+
+      // 3. Enviar post para API Service
       if (isCreatingNew) {
-        // Create new post
-        const postData: CreatePostData = {
+        const postData: any = {
           website_id: selectedWebsite.id,
           title: title.trim(),
           text: text.trim(),
@@ -168,13 +280,11 @@ export function Posts() {
           main_image_index: images.length > 0 ? mainImageIndex : undefined,
           status
         }
-        
         await apiService.createPost(postData, token)
         setSuccess('Post criado com sucesso!')
         setIsCreatingNew(false)
       } else if (selectedPost) {
-        // Update existing post
-        const updates: UpdatePostData = {
+        const updates: any = {
           title: title.trim(),
           text: text.trim(),
           slug: slug.trim() || undefined,
@@ -182,25 +292,36 @@ export function Posts() {
           main_image_index: images.length > 0 ? mainImageIndex : undefined,
           status
         }
-        
         await apiService.updatePost(selectedPost.id, updates, token)
         setSuccess('Post atualizado com sucesso!')
       }
 
-      // Reload posts
-      await loadPosts()
-      
-      // Clear form after a delay
-      setTimeout(() => {
-        setTitle('')
-        setText('')
-        setSlug('')
-        setStatus('draft')
-        setImages([])
-        setMainImageIndex(0)
-        setSelectedPost(null)
-        setIsCreatingNew(false)
-      }, 1500)
+      // Atualiza o estado local de imagens para refletir os nomes finais gerados
+      try {
+        const imagesFinal = Object.values(imagesArray).map((v: any) => ({ name: String(v.name), cover: !!v.cover }))
+        if (imagesFinal.length > 0) {
+          setImages(imagesFinal)
+          setMainImageIndex(Math.min(mainImageIndex, imagesFinal.length - 1))
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      // Reload posts and, se possível, seleciona o post atualizado para sincronizar o estado
+      const reloaded = await loadPosts()
+      if (!isCreatingNew && selectedPost) {
+        const updated = Array.isArray(reloaded) ? reloaded.find(p => p.id === selectedPost.id) : undefined
+        if (updated) {
+          handleSelectPost(updated)
+        }
+      } else if (isCreatingNew) {
+        // tenta selecionar o post recém-criado (se encontrado por título/slug mais recente)
+        if (Array.isArray(reloaded) && reloaded.length > 0) {
+          const found = reloaded.find(p => p.title === title && p.website_id === selectedWebsite?.id) || reloaded[0]
+          if (found) handleSelectPost(found)
+        }
+      }
+      // Não limpar o formulário nem sair do modo de edição após salvar
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao salvar post')
       console.error(err)
@@ -253,33 +374,101 @@ export function Posts() {
     const files = e.target.files
     if (!files) return
 
-    const newImageUrls: string[] = []
+    const newImageObjects: Array<{ name: string; cover?: boolean }> = []
     Array.from(files).forEach(file => {
       // Cria URL temporária para preview
       const imageUrl = URL.createObjectURL(file)
-      newImageUrls.push(imageUrl)
+      newImageObjects.push({ name: imageUrl })
     })
 
-    setImages([...images, ...newImageUrls])
+    setImages([...images, ...newImageObjects])
   }
 
   const handleRemoveImage = (index: number) => {
     const imageToRemove = images[index]
-    // Libera memória da URL temporária
-    if (imageToRemove.startsWith('blob:')) {
-      URL.revokeObjectURL(imageToRemove)
+    const isBlob = imageToRemove && typeof imageToRemove.name === 'string' && imageToRemove.name.startsWith('blob:')
+    const newImages = images.filter((_, i) => i !== index)
+
+    // Sempre libera memória se for blob
+    if (imageToRemove && typeof imageToRemove.name === 'string' && imageToRemove.name.startsWith('blob:')) {
+      URL.revokeObjectURL(imageToRemove.name)
     }
-    setImages(images.filter((_, i) => i !== index))
-    
-    // Ajusta o índice da imagem principal se necessário
-    if (mainImageIndex === index) {
-      setMainImageIndex(0) // Se remover a imagem principal, seleciona a primeira
-    } else if (mainImageIndex > index) {
-      setMainImageIndex(mainImageIndex - 1) // Ajusta o índice se remover uma imagem anterior
+
+    const updateImagesState = (updatedImagesDb?: Array<{ name: string; cover?: boolean }>) => {
+      setImages(newImages)
+      // Atualiza selectedPost.images localmente para refletir o banco
+      if (selectedPost && updatedImagesDb) {
+        setSelectedPost({ ...selectedPost, images: updatedImagesDb })
+        // Atualiza também o array de posts para refletir na listagem
+        setPosts(prevPosts => prevPosts.map(p =>
+          p.id === selectedPost.id ? { ...p, images: updatedImagesDb } : p
+        ))
+      }
+      // Ajusta o índice da imagem principal se necessário
+      if (mainImageIndex === index) {
+        setMainImageIndex(0)
+      } else if (mainImageIndex > index) {
+        setMainImageIndex(mainImageIndex - 1)
+      }
     }
+
+    if (isBlob) {
+      updateImagesState()
+      return
+    }
+
+    // Se não for blob, remover do S3 e atualizar banco
+    (async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const apiService = new ApiService()
+        // Chama API de remoção do arquivo
+        const removeUrl = import.meta.env.VITE_SERVICE_FILEUPLOADER + '/upload/file'
+        const resp = await fetch(removeUrl, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename: imageToRemove.name, folder: 'noisdevbr' })
+        })
+        if (!resp.ok) throw new Error('Erro ao remover imagem do servidor')
+
+        // Atualiza banco de dados (remove do array e faz update)
+        if (selectedPost && token) {
+          // Busca o array real do banco (pode ser string ou array de objetos)
+          let dbImages: Array<{ name: string; cover?: boolean }> = []
+          if (Array.isArray(selectedPost.images)) {
+            dbImages = selectedPost.images as Array<{ name: string; cover?: boolean }>
+          } else if (typeof selectedPost.images === 'string') {
+            try {
+              dbImages = JSON.parse(selectedPost.images)
+            } catch {
+              dbImages = []
+            }
+          }
+          // Remove pelo nome
+          const updatedImages = dbImages.filter(img => img.name !== imageToRemove.name)
+          // Ajusta main_image_index
+          let newMainIndex = mainImageIndex
+          if (mainImageIndex === index) newMainIndex = 0
+          else if (mainImageIndex > index) newMainIndex = mainImageIndex - 1
+          const updates = {
+            images: updatedImages,
+            main_image_index: updatedImages.length > 0 ? newMainIndex : undefined
+          }
+          await apiService.updatePost(selectedPost.id, updates, token)
+          // Atualiza selectedPost.images localmente para refletir o banco
+          updateImagesState(updatedImages)
+          return
+        }
+        updateImagesState()
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Erro ao remover imagem')
+      } finally {
+        setLoading(false)
+      }
+    })()
   }
 
-  // Filter posts by status
   const filteredPosts = Array.isArray(posts) ? posts.filter(post => {
     if (filterStatus === 'all') return true
     return post.status === filterStatus
@@ -308,7 +497,7 @@ export function Posts() {
               ) : (
               <Col lg={12}>
                 <Row>
-                  <Col lg={4} className='pe-0'>
+                  <Col lg={4} className='pe-md-0 mb-md-0 mb-2'>
                     <div style={{ border: '1px solid var(--blue1)', borderRadius: '8px', padding: '10px' }}>
                       <Row>
                         <Col lg={12} className='mb-3 text-center'>
@@ -324,6 +513,7 @@ export function Posts() {
                               boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                               transition: 'all 0.2s'
                             }}
+                            className='tiktok-sans fw-100'
                             disabled={loading}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.transform = 'translateY(-2px)'
@@ -378,7 +568,7 @@ export function Posts() {
                                 onClick={() => handleSelectPost(post)}
                               >
                                 <div>
-                                  <div style={{ fontWeight: 'bold' }}>
+                                  <div className='mb-2' style={{ fontWeight: 'bold' }}>
                                     {post.title}
                                   </div>
                                   
@@ -387,16 +577,19 @@ export function Posts() {
                                     flexDirection: 'row',
                                     justifyContent: 'space-between'
                                   }}>
-                                    <div style={{ 
-                                      fontSize: '0.75em', 
-                                      color: '#666',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      gap: '4px'
-                                    }}>
+                                    <div>
+                                      <span style={{ 
+                                        fontSize: '0.7em', 
+                                        padding: '2px 8px',
+                                        borderRadius: '12px',
+                                        color: '#000',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '4px',
+                                        backgroundColor: '#CCC'
+                                      }}>
                                       {(() => {
                                         try {
-                                          // Handle date object from API (PHP format)
                                           const dateValue = typeof post.createdAt === 'object' && post.createdAt !== null && 'date' in post.createdAt
                                             ? post.createdAt.date 
                                             : post.createdAt
@@ -416,6 +609,7 @@ export function Posts() {
                                           return String(post.createdAt)
                                         }
                                       })()}
+                                      </span>
                                     </div>
                                     
                                     <div>
@@ -427,7 +621,14 @@ export function Posts() {
                                         color: post.status === 'published' ? 'white' : '#333',
                                         fontWeight: '500'
                                       }}>
-                                        {post.status === 'published' ? 'Publicado' : 'Rascunho'}
+                                        {post.status === 'published' ? 
+                                          <>
+                                            Publicado
+                                          </> : 
+                                          <>
+                                            Rascunho
+                                          </>
+                                        }
                                       </span>
                                     </div>
                                   </div>
@@ -538,7 +739,21 @@ export function Posts() {
                               </Form.Group>
                             </Col>
 
-                            <Col lg={6} className="mb-3">
+                            <Col lg={4} className="mb-3">
+                              <Form.Group>
+                                <Form.Label><b>Status</b></Form.Label>
+                                <Form.Select
+                                  value={status}
+                                  onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}
+                                  disabled={loading}
+                                >
+                                  <option value="draft">Rascunho</option>
+                                  <option value="published">Publicado</option>
+                                </Form.Select>
+                              </Form.Group>
+                            </Col>
+
+                            <Col lg={8} className="mb-3">
                               <Form.Group>
                                 <Form.Label>
                                   <b>Slug</b>
@@ -574,20 +789,6 @@ export function Posts() {
                               </Form.Group>
                             </Col>
 
-                            <Col lg={6} className="mb-3">
-                              <Form.Group>
-                                <Form.Label><b>Status</b></Form.Label>
-                                <Form.Select
-                                  value={status}
-                                  onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}
-                                  disabled={loading}
-                                >
-                                  <option value="draft">Rascunho</option>
-                                  <option value="published">Publicado</option>
-                                </Form.Select>
-                              </Form.Group>
-                            </Col>
-
                             <Col lg={12} className="mb-3">
                               <Form.Group>
                                 <Form.Label>
@@ -596,9 +797,9 @@ export function Posts() {
                                     placement="bottom"
                                     overlay={
                                       <Tooltip>
-                                        <strong>Imagem Principal</strong><br />
-                                        Clique em uma imagem para defini-la como principal.<br />
-                                        A imagem principal será exibida nas listagens de posts.
+                                        <strong>Imagem em Destaque</strong><br />
+                                        Clique em uma imagem para defini-la como 'Destaque'.<br />
+                                        A imagem em 'Destaque' será exibida nas listagens de posts.
                                       </Tooltip>
                                     }
                                   >
@@ -608,7 +809,7 @@ export function Posts() {
                                   </OverlayTrigger>
                                 </Form.Label>
                                 <Row>
-                                  <Col lg={2} className="mb-2">
+                                  <Col lg={2} sm={6} xs={6} className="mb-2">
                                     <div style={{
                                       border: '2px dashed #CCC',
                                       borderRadius: '8px',
@@ -643,12 +844,12 @@ export function Posts() {
                                       />
                                       <LiaPlusSolid size={32} style={{ color: 'var(--blue3)', marginBottom: '5px' }} />
                                       <div style={{ fontSize: '1em', color: '#666' }}>
-                                        Clique para adicionar imagens
+                                        Adicionar imagens
                                       </div>
                                     </div>
                                   </Col>
-                                    {Array.isArray(images) && images.length > 0 && images.map((imageUrl, index) => (
-                                      <Col lg={2} className="mb-3" key={index}>
+                                    {Array.isArray(images) && images.length > 0 && images.map((image, index) => (
+                                      <Col lg={2} sm={6} xs={6} className="mb-3" key={index}>
                                         <div
                                           style={{
                                             position: 'relative',
@@ -661,22 +862,25 @@ export function Posts() {
                                             transition: 'all 0.2s',
                                             boxShadow: mainImageIndex === index ? '0 0 15px rgba(0, 123, 255, 0.3)' : 'none'
                                           }}
-                                          onClick={() => setMainImageIndex(index)}
+                                          onClick={() => {
+                                            setMainImageIndex(index)
+                                            setImages(images.map((img, i) => ({ ...img, cover: i === index })))
+                                          }}
                                           onMouseEnter={(e) => {
-                                            if (mainImageIndex !== index) {
+                                            if (image.cover && mainImageIndex !== index) {
                                               e.currentTarget.style.borderColor = 'var(--blue3)'
                                               e.currentTarget.style.opacity = '0.8'
                                             }
                                           }}
                                           onMouseLeave={(e) => {
-                                            if (mainImageIndex !== index) {
+                                            if (image.cover && mainImageIndex !== index) {
                                               e.currentTarget.style.borderColor = '#CCC'
                                               e.currentTarget.style.opacity = '1'
                                             }
                                           }}
                                         >
                                           <img
-                                            src={getImageUrl(imageUrl)}
+                                            src={getImageUrl(image.name)}
                                             alt={`Preview ${index + 1}`}
                                             style={{
                                               width: '100%',
@@ -684,7 +888,7 @@ export function Posts() {
                                               objectFit: 'cover'
                                             }}
                                           />
-                                          {mainImageIndex === index && (
+                                          {image.cover && mainImageIndex === index && (
                                             <div
                                               style={{
                                                 position: 'absolute',
@@ -749,17 +953,12 @@ export function Posts() {
                         </Form>
                       ) : (
                         <div className="text-center text-muted py-5" style={{
-                          border: '2px dashed var(--blue1)',
                           borderRadius: '12px',
                           padding: '60px 20px',
-                          backgroundColor: 'rgba(0, 123, 255, 0.02)'
                         }}>
-                          <LiaBookSolid size={80} opacity={0.15} className="mb-3" />
-                          <h6 style={{ color: '#666', fontWeight: '500' }}>
-                            Nenhum post selecionado
-                          </h6>
-                          <p className="mt-2" style={{ fontSize: '0.9em', color: '#999' }}>
-                            Selecione um post da lista ao lado para editar<br />ou crie um novo post
+                          <LiaBookSolid size={80} opacity={0.15} />
+                          <p className='tiktok-sans fw-100' style={{ fontSize: '0.9em', color: '#999' }}>
+                            CRIE UM NOVO POST OU<br />SELECIONE UM PARA EDITAR
                           </p>
                         </div>
                       )}
@@ -772,8 +971,6 @@ export function Posts() {
           </div>
         </Col>
       </Row>
-
-      {/* Delete Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmar Exclusão</Modal.Title>

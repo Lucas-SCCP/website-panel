@@ -198,7 +198,7 @@ export function Users() {
               </Col>
               <Col lg={12}>
                 <Row>
-                  <Col lg={3} className='pe-md-0'>
+                  <Col lg={3} className='pe-md-0 mb-md-0 mb-2'>
                     <div style={{ border: '1px solid var(--blue1)', borderRadius: '5px', padding: '10px' }}>
                       <Row>
                         <Col lg={12} className='mb-2 text-center'>
