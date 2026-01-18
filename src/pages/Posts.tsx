@@ -223,7 +223,14 @@ export function Posts() {
         imagesToUpload.forEach(obj => {
           formData.append('files', obj.file, obj.newName)
         })
-        formData.append('folder', 'noisdevbr')
+
+        const websiteDomain = import.meta.env.VITE_WEBSITE_DOMAIN
+        const domainFormatted = websiteDomain
+          .replace(/^https?:\/\//, '')
+          .replace(/^www\./, '')
+          .replace(/\./g, '')
+          .replace(/-/g, '')
+        formData.append('folder', domainFormatted)
         // Ajuste a URL abaixo para o endpoint correto de upload
         const uploadUrl = import.meta.env.VITE_SERVICE_FILEUPLOADER + '/upload/images'
         const uploadResp = await fetch(uploadUrl, {
@@ -428,13 +435,20 @@ export function Posts() {
       try {
         setLoading(true)
         setError(null)
+        const websiteDomain = import.meta.env.VITE_WEBSITE_DOMAIN
+        const domainFormatted = websiteDomain
+          .replace(/^https?:\/\//, '')
+          .replace(/^www\./, '')
+          .replace(/\./g, '')
+          .replace(/-/g, '')
+
         const apiService = new ApiService()
         // Chama API de remoção do arquivo
         const removeUrl = import.meta.env.VITE_SERVICE_FILEUPLOADER + '/upload/file'
         const resp = await fetch(removeUrl, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ filename: imageToRemove.name, folder: 'noisdevbr' })
+          body: JSON.stringify({ filename: imageToRemove.name, folder: domainFormatted })
         })
         if (!resp.ok) throw new Error('Erro ao remover imagem do servidor')
 
