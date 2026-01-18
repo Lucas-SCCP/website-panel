@@ -6,7 +6,7 @@ import { FaTrash, FaInfoCircle } from 'react-icons/fa'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { UseUserStore } from '../stores/UseUserStore'
 import { ApiService } from '../services/ApiService'
-import type { PostType } from '../types/PostsType'
+import type { UpdatePostData, CreatePostData, PostType } from '../types/PostsType'
 
 export function Posts() {
   
@@ -277,12 +277,12 @@ export function Posts() {
 
       // 3. Enviar post para API Service
       if (isCreatingNew) {
-        const postData: any = {
+        const postData: CreatePostData = {
           website_id: selectedWebsite.id,
           title: title.trim(),
           text: text.trim(),
           slug: slug.trim() || undefined,
-          images: imagesArray,
+          images: Object.values(imagesArray).map((v: { name: string }) => v.name),
           main_image_index: images.length > 0 ? mainImageIndex : undefined,
           status
         }
@@ -290,11 +290,11 @@ export function Posts() {
         setSuccess('Post criado com sucesso!')
         setIsCreatingNew(false)
       } else if (selectedPost) {
-        const updates: any = {
+        const updates: UpdatePostData = {
           title: title.trim(),
           text: text.trim(),
           slug: slug.trim() || undefined,
-          images: imagesArray,
+          images: Object.values(imagesArray).map((v: { name: string }) => v.name),
           main_image_index: images.length > 0 ? mainImageIndex : undefined,
           status
         }
@@ -304,7 +304,7 @@ export function Posts() {
 
       // Atualiza o estado local de imagens para refletir os nomes finais gerados
       try {
-        const imagesFinal = Object.values(imagesArray).map((v: any) => ({ name: String(v.name), cover: !!v.cover }))
+        const imagesFinal = Object.values(imagesArray).map((v: { name: string; cover?: boolean }) => ({ name: String(v.name), cover: !!v.cover }))
         if (imagesFinal.length > 0) {
           setImages(imagesFinal)
           setMainImageIndex(Math.min(mainImageIndex, imagesFinal.length - 1))
@@ -404,10 +404,10 @@ export function Posts() {
       setImages(newImages)
       // Atualiza selectedPost.images localmente para refletir o banco
       if (selectedPost && updatedImagesDb) {
-        setSelectedPost({ ...selectedPost, images: updatedImagesDb })
+        setSelectedPost({ ...selectedPost, images: updatedImagesDb.map(img => img.name) })
         // Atualiza também o array de posts para refletir na listagem
         setPosts(prevPosts => prevPosts.map(p =>
-          p.id === selectedPost.id ? { ...p, images: updatedImagesDb } : p
+          p.id === selectedPost.id ? { ...p, images: updatedImagesDb.map(img => img.name) } : p
         ))
       }
       // Ajusta o índice da imagem principal se necessário
@@ -442,14 +442,10 @@ export function Posts() {
         if (selectedPost && token) {
           // Busca o array real do banco (pode ser string ou array de objetos)
           let dbImages: Array<{ name: string; cover?: boolean }> = []
-          if (Array.isArray(selectedPost.images)) {
-            dbImages = selectedPost.images as Array<{ name: string; cover?: boolean }>
-          } else if (typeof selectedPost.images === 'string') {
-            try {
-              dbImages = JSON.parse(selectedPost.images)
-            } catch {
-              dbImages = []
-            }
+          if (Array.isArray(selectedPost.images) || typeof selectedPost.images === 'string' || typeof selectedPost.images === 'object') {
+            dbImages = parseImages(selectedPost.images)
+          } else {
+            dbImages = []
           }
           // Remove pelo nome
           const updatedImages = dbImages.filter(img => img.name !== imageToRemove.name)
@@ -458,7 +454,7 @@ export function Posts() {
           if (mainImageIndex === index) newMainIndex = 0
           else if (mainImageIndex > index) newMainIndex = mainImageIndex - 1
           const updates = {
-            images: updatedImages,
+            images: updatedImages.map(img => img.name),
             main_image_index: updatedImages.length > 0 ? newMainIndex : undefined
           }
           await apiService.updatePost(selectedPost.id, updates, token)
