@@ -63,6 +63,18 @@ export function Menu() {
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
   const setSelectedPage = UseWebsiteStore((state) => state.setSelectedPage)
 
+  const { user } = UseUserStore()
+
+  let accessLevelId: number = 3;
+  if (
+    selectedWebsiteId &&
+    user &&
+    user.accessLevel &&
+    (user.accessLevel as { [key: number]: number })[selectedWebsiteId] !== undefined
+  ) {
+    accessLevelId = (user.accessLevel as { [key: number]: number })[selectedWebsiteId]
+  }
+
   const hasUnsavedChanges = UseWebsiteStore((state) => state.hasUnsavedChanges)
   const changes = UseWebsiteStore.getState().getChanges()
 
@@ -222,18 +234,20 @@ export function Menu() {
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
-                  <Nav.Link style={{ cursor: 'auto' }}>
-                    <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Usuários</Tooltip>}>
-                      <div
-                        onClick={goToUsersClick}
-                        className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/users' ? 'active' : ''}`}
-                        style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
-                      >
-                        <LiaUserLockSolid size={30} />
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>USUÁRIOS</div>
-                      </div>
-                    </OverlayTrigger>
-                  </Nav.Link>
+                  {accessLevelId === 99 && (
+                    <Nav.Link style={{ cursor: 'auto' }}>
+                      <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Usuários</Tooltip>}>
+                        <div
+                          onClick={goToUsersClick}
+                          className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/users' ? 'active' : ''}`}
+                          style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
+                        >
+                          <LiaUserLockSolid size={30} />
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>USUÁRIOS</div>
+                        </div>
+                      </OverlayTrigger>
+                    </Nav.Link>
+                  )}
 
                   <Nav.Link style={{ cursor: 'auto', display: 'none' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Configurações</Tooltip>}>

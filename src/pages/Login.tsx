@@ -35,7 +35,7 @@ export function Login() {
         setLoading(false)
 
         // adicionar tratamento para caso nao tenha website default definir algum para nao ficar sem nenhum
-        const selectedWebsiteFound = websites.find((website) => website.id === user?.default_website_id)
+        const selectedWebsiteFound = websites.find((website) => website.id === user?.defaultWebsiteId)
         if (selectedWebsiteFound) {
           setSelectedWebsite(selectedWebsiteFound)
           setSelectedWebsiteId(selectedWebsiteFound.id)

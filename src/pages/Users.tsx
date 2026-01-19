@@ -173,11 +173,13 @@ export function Users() {
 
     if (websiteId !== null && user !== null) {
       const fetchUsers = async () => {
-        // console.log('user store', user)
         setLoadingUsers(true)
         const apiService = new ApiService()
         const usersData = await apiService.getUsersByWebsiteId(websiteId)
-        setUsers(Array.isArray(usersData) ? usersData : [usersData])
+        let usersArray = Array.isArray(usersData) ? usersData : [usersData]
+        // Filtrar usuários com accessLevelId 99, exceto o próprio usuário
+        usersArray = usersArray.filter(u => u.accessLevelId !== 99 || u.id === user.id)
+        setUsers(usersArray)
         setLoadingUsers(false)
       }
       fetchUsers()
