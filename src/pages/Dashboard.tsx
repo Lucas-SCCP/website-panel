@@ -5,26 +5,19 @@ import { ApiService } from '../services/ApiService'
 import { LineCharts } from '../charts/LineCharts'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { GoGraph, GoEye, GoCloud } from "react-icons/go";
-import { LiaStar } from "react-icons/lia";
-//import type { WebsiteType } from 'website-lib'
+import { LiaGlobeAmericasSolid, LiaStar } from "react-icons/lia";
 import type { DashboardType } from '../types/DashboardType'
 
 export function Dashboard() {
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
   const websiteId = UseWebsiteStore((s) => s.selectedWebsiteId)
   const allWebsite = UseWebsiteStore((s) => s.allWebsites)
-  //const [websiteSelected, setWebsiteSelected] = useState<WebsiteType | null>(null)
   const [dashboard, setDashboard] = useState<DashboardType | null>(null)
   const [loadingPlan, setLoadingPlan] = useState(false)
   
   useEffect(() => {
     setSelectedPageId(null)
     if (websiteId !== null) {
-      console.log('All website', allWebsite)
-      const selected = allWebsite.find(w => w.id === websiteId)
-      console.log('Website Selected', selected)
-      //setWebsiteSelected(selected || null)
-
       const fetchDashboardInfo = async () => {
         setLoadingPlan(true)
         setDashboard(null)
@@ -192,6 +185,7 @@ export function Dashboard() {
             textAlign: 'center'
           }}
         >
+          <LiaGlobeAmericasSolid size={100} />
           <div className='tiktok-sans fw-700' style={{ fontSize: '40px' }}>
             SELECIONE UM SITE
           </div>

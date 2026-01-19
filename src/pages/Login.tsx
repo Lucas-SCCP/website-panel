@@ -5,7 +5,7 @@ import { ApiService } from '../services/ApiService'
 import { UseUserStore } from '../stores/UseUserStore'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { AuthenticateException } from '../exceptions/AuthenticateException'
-import type { AuthenticateResponseType } from 'website-lib'
+import type { AuthenticateResponseType, UserType } from 'website-lib'
 
 export function Login() {
   const navigate = useNavigate()
@@ -26,7 +26,7 @@ export function Login() {
       const response: AuthenticateResponseType = await apiService.authenticate(email, password)
 
       if (response.status) {
-        const user = response.data
+        const user: UserType = response.data
         UseUserStore.getState().setUser(user, user.token)
 
         const websites = await apiService.getAllWebsiteByUserId(user.id, user.token)
@@ -34,7 +34,6 @@ export function Login() {
         setAllWebsites(websites)
         setLoading(false)
 
-        // adicionar tratamento para caso nao tenha website default definir algum para nao ficar sem nenhum
         const selectedWebsiteFound = websites.find((website) => website.id === user?.defaultWebsiteId)
         if (selectedWebsiteFound) {
           setSelectedWebsite(selectedWebsiteFound)

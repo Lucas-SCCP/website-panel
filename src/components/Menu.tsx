@@ -210,7 +210,7 @@ export function Menu() {
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>
-                  <Nav.Link style={{ cursor: 'auto' }}>
+                  {selectedWebsiteId && <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Leads</Tooltip>}>
                       <div
                         onClick={goToLeadsClick}
@@ -221,8 +221,8 @@ export function Menu() {
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>LEADS</div>
                       </div>
                     </OverlayTrigger>
-                  </Nav.Link>
-                  <Nav.Link style={{ cursor: 'auto' }}>
+                  </Nav.Link>}
+                  {selectedWebsiteId && <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Posts</Tooltip>}>
                       <div
                         onClick={goToPostsClick}
@@ -233,8 +233,8 @@ export function Menu() {
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>POSTS</div>
                       </div>
                     </OverlayTrigger>
-                  </Nav.Link>
-                  {accessLevelId === 99 && (
+                  </Nav.Link>}
+                  {selectedWebsiteId && accessLevelId === 99 && (
                     <Nav.Link style={{ cursor: 'auto' }}>
                       <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Usuários</Tooltip>}>
                         <div
