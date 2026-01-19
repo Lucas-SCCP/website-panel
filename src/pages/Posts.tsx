@@ -32,8 +32,6 @@ export function Posts() {
   const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all')
 
   const getImageUrl = (imageUrl: string): string => {
-    console.log('imageUrl input:', imageUrl)
-    console.log('getImageUrl', imageUrl)
     // Se for uma URL blob (imagem local temporária), retorna diretamente
     if (imageUrl.startsWith('blob:')) {
       return imageUrl
@@ -46,9 +44,7 @@ export function Posts() {
     
     // Constrói a URL do S3
     const s3BucketUrl = import.meta.env.VITE_S3_IMAGES_BUCKET_URL
-    console.log('S3 Bucket URL:', s3BucketUrl)
     if (!s3BucketUrl) {
-      console.error('VITE_S3_IMAGES_BUCKET_URL não está definida')
       return imageUrl // Retorna a URL relativa como fallback
     }
 
@@ -217,7 +213,6 @@ export function Posts() {
       }
 
       // 2. Enviar imagens para API de upload
-      console.log('TESTE1', imagesToUpload)
       if (imagesToUpload.length > 0) {
         const formData = new FormData()
         imagesToUpload.forEach(obj => {
@@ -289,7 +284,7 @@ export function Posts() {
           title: title.trim(),
           text: text.trim(),
           slug: slug.trim() || undefined,
-          images: Object.values(imagesArray).map((v: { name: string }) => v.name),
+          images: Object.values(imagesArray).map((v: { name: string; cover?: boolean }) => ({ name: v.name, cover: !!v.cover })),
           main_image_index: images.length > 0 ? mainImageIndex : undefined,
           status
         }
@@ -301,7 +296,7 @@ export function Posts() {
           title: title.trim(),
           text: text.trim(),
           slug: slug.trim() || undefined,
-          images: Object.values(imagesArray).map((v: { name: string }) => v.name),
+          images: Object.values(imagesArray).map((v: { name: string; cover?: boolean }) => ({ name: v.name, cover: !!v.cover })),
           main_image_index: images.length > 0 ? mainImageIndex : undefined,
           status
         }
@@ -468,7 +463,7 @@ export function Posts() {
           if (mainImageIndex === index) newMainIndex = 0
           else if (mainImageIndex > index) newMainIndex = mainImageIndex - 1
           const updates = {
-            images: updatedImages.map(img => img.name),
+            images: updatedImages.length > 0 ? updatedImages : null,
             main_image_index: updatedImages.length > 0 ? newMainIndex : undefined
           }
           await apiService.updatePost(selectedPost.id, updates, token)

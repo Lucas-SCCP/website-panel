@@ -19,7 +19,7 @@ export interface CreatePostData {
   title: string
   text: string
   slug?: string
-  images?: string[] | null
+  images?: Array<{ name: string; cover?: boolean }> | null
   main_image_index?: number
   status?: 'published' | 'draft'
 }
@@ -28,7 +28,7 @@ export interface UpdatePostData {
   title?: string
   text?: string
   slug?: string
-  images?: string[] | null
+  images?: Array<{ name: string; cover?: boolean }> | null
   main_image_index?: number
   status?: 'published' | 'draft'
 }
