@@ -13,7 +13,6 @@ export function Posts() {
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
   const selectedWebsite = UseWebsiteStore((state) => state.selectedWebsite)
   const token = UseUserStore((state) => state.token)
-  
   const [posts, setPosts] = useState<PostType[]>([])
   const [selectedPost, setSelectedPost] = useState<PostType | null>(null)
   const [isCreatingNew, setIsCreatingNew] = useState(false)
@@ -48,7 +47,11 @@ export function Posts() {
       return imageUrl // Retorna a URL relativa como fallback
     }
 
-    const websiteDomain = import.meta.env.VITE_WEBSITE_DOMAIN
+    if (!selectedWebsite) {
+      return imageUrl // Retorna a URL relativa como fallback
+    }
+
+    const websiteDomain = selectedWebsite.domain
     const domainFormatted = websiteDomain
       .replace(/^https?:\/\//, '')
       .replace(/^www\./, '')
@@ -102,7 +105,7 @@ export function Posts() {
 
   const loadPosts = async () => {
     if (!selectedWebsite) {
-      console.log('No website selected')
+      console.error('No website selected')
       setPosts([])
       return
     }
@@ -219,7 +222,7 @@ export function Posts() {
           formData.append('files', obj.file, obj.newName)
         })
 
-        const websiteDomain = import.meta.env.VITE_WEBSITE_DOMAIN
+        const websiteDomain = selectedWebsite.domain
         const domainFormatted = websiteDomain
           .replace(/^https?:\/\//, '')
           .replace(/^www\./, '')
@@ -430,7 +433,12 @@ export function Posts() {
       try {
         setLoading(true)
         setError(null)
-        const websiteDomain = import.meta.env.VITE_WEBSITE_DOMAIN
+
+        if (!selectedWebsite) {
+          throw new Error('Nenhum website selecionado')
+        }
+ 
+        const websiteDomain = selectedWebsite.domain
         const domainFormatted = websiteDomain
           .replace(/^https?:\/\//, '')
           .replace(/^www\./, '')
