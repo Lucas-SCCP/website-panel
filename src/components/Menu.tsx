@@ -63,18 +63,6 @@ export function Menu() {
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
   const setSelectedPage = UseWebsiteStore((state) => state.setSelectedPage)
 
-  const { user } = UseUserStore()
-
-  let accessLevelId: number = 3;
-  if (
-    selectedWebsiteId &&
-    user &&
-    user.accessLevel &&
-    (user.accessLevel as { [key: number]: number })[selectedWebsiteId] !== undefined
-  ) {
-    accessLevelId = (user.accessLevel as { [key: number]: number })[selectedWebsiteId]
-  }
-
   const hasUnsavedChanges = UseWebsiteStore((state) => state.hasUnsavedChanges)
   const changes = UseWebsiteStore.getState().getChanges()
 
@@ -234,7 +222,7 @@ export function Menu() {
                       </div>
                     </OverlayTrigger>
                   </Nav.Link>}
-                  {selectedWebsiteId && accessLevelId === 99 && (
+                  {selectedWebsiteId && (
                     <Nav.Link style={{ cursor: 'auto' }}>
                       <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Usuários</Tooltip>}>
                         <div

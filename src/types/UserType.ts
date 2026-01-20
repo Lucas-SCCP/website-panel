@@ -7,7 +7,7 @@ export interface UserType {
   websiteId: number
   roleId: number
   accessLevelId: number
-  isDefaultWebsite: boolean
+  defaultWebsiteId: number
   enabled: boolean
   createdAt: string
   updatedAt: string
@@ -21,7 +21,7 @@ export interface CreateUserData {
   websiteId: number
   roleId?: number
   accessLevelId: number
-  websiteDefault: boolean
+  websiteDefault: number | null
   enabled?: boolean
 }
 
@@ -32,6 +32,6 @@ export interface UpdateUserData {
   email?: string
   roleId?: number
   accessLevelId?: number
-  websiteDefault?: boolean
+  websiteDefault?: number | null
   enabled?: boolean
 }

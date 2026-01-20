@@ -17,6 +17,7 @@ type Option = {
 
 export function Users() {
   const websiteId = UseWebsiteStore((s) => s.selectedWebsiteId)
+  const selectedWebsiteId = UseWebsiteStore((state) => state.selectedWebsiteId)
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
   const [newUser, setNewUser] = useState(false)
   const [editUser, setEditUser] = useState(false)
@@ -24,6 +25,18 @@ export function Users() {
   const [loadingUsers, setLoadingUsers] = useState(false)
   const [isOwnProfile, setIsOwnProfile] = useState(false)
   const { user } = UseUserStore()
+
+  let loggedUserAccessLevelId: number = 3;
+  if (
+    selectedWebsiteId &&
+    user &&
+    user.accessLevel &&
+    (user.accessLevel as { [key: number]: number })[selectedWebsiteId] !== undefined
+  ) {
+    loggedUserAccessLevelId = (user.accessLevel as { [key: number]: number })[selectedWebsiteId]
+  }
+  
+  const isAdmin = loggedUserAccessLevelId === 99 || loggedUserAccessLevelId === 1
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -38,7 +51,6 @@ export function Users() {
   const [loading, setLoading] = useState(false)
 
   function isValidEmail(email: string) {
-    // console.log('isValidEmail')
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
   
@@ -55,17 +67,14 @@ export function Users() {
 
     const timeout = setTimeout(async () => {
       setLoading(true)
-      // console.log('Buscando usuário por email:', inputValue)
 
       const api = new ApiService()
       const userData = await api.getUserByEmail(websiteId, inputValue)
 
       if (userData) {
-        // Verificar se o usuário já está vinculado ao site
         const isAlreadyLinked = users.some(u => u.id === userData.id)
         
         if (isAlreadyLinked) {
-          // console.log('Usuário já vinculado ao site')
           setOptions([
             {
               label: `${userData.email} - Já vinculado`,
@@ -75,7 +84,6 @@ export function Users() {
             }
           ])
         } else {
-          // console.log('userData', userData)
           setFirstName(userData.firstName)
           setLastName(userData.lastName)
           setEmail(userData.email)
@@ -113,7 +121,7 @@ export function Users() {
         lastName,
         email,
         accessLevelId,
-        websiteDefault: isDefaultWebsite
+        websiteDefault: isDefaultWebsite ? selectedWebsiteId : null
       }
       apiService.createUser(createData)
     } else {
@@ -127,7 +135,7 @@ export function Users() {
         lastName,
         email,
         accessLevelId,
-        websiteDefault: isDefaultWebsite
+        websiteDefault: isDefaultWebsite ? selectedWebsiteId : null
       }
       apiService.updateUser(updateData)
     }
@@ -159,13 +167,12 @@ export function Users() {
       isExisting: true
     })
     setAccessLevelId(users.find(u => u.id === id)?.accessLevelId || 3)
-    setIsDefaultWebsite(users.find(u => u.id === id)?.isDefaultWebsite || false)
+    setIsDefaultWebsite(users.find(u => u.id === id)?.defaultWebsiteId === selectedWebsiteId)
     if (id === user?.id) {
       setIsOwnProfile(true)
     } else {
       setIsOwnProfile(false)
     }
-      
   }
 
   useEffect(() => {
@@ -177,7 +184,6 @@ export function Users() {
         const apiService = new ApiService()
         const usersData = await apiService.getUsersByWebsiteId(websiteId)
         let usersArray = Array.isArray(usersData) ? usersData : [usersData]
-        // Filtrar usuários com accessLevelId 99, exceto o próprio usuário
         usersArray = usersArray.filter(u => u.accessLevelId !== 99 || u.id === user.id)
         setUsers(usersArray)
         setLoadingUsers(false)
@@ -370,7 +376,7 @@ export function Users() {
                             <Col lg={6}>
                               <Form.Group className="mb-3">
                                 <Form.Label>Nível de acesso</Form.Label>
-                                <Form.Select>
+                                <Form.Select disabled={!isAdmin} onChange={(e) => setAccessLevelId(parseInt(e.target.value))}>
                                   <option value="1" selected={editUser ? accessLevelId === 1 : true}>
                                     Administrador
                                   </option>
@@ -406,11 +412,11 @@ export function Users() {
                                     </span>
                                   </OverlayTrigger>
                                 </Form.Label>
-                                <Form.Select disabled={editUser && !isOwnProfile}>
-                                  <option value="1" selected={editUser ? isDefaultWebsite : true}>
+                                <Form.Select disabled={editUser && !isOwnProfile} onChange={() => setIsDefaultWebsite(!isDefaultWebsite)}>
+                                  <option selected={editUser ? isDefaultWebsite : true}>
                                     Sim
                                   </option>
-                                  <option value="2" selected={editUser ? !isDefaultWebsite : true}>
+                                  <option selected={editUser ? !isDefaultWebsite : true}>
                                     Não
                                   </option>
                                 </Form.Select>
@@ -424,7 +430,7 @@ export function Users() {
                                   {newUser ? 'Adicionar usuário' : 'Salvar alterações'}
                                 </Tooltip>}
                               >
-                                <Button variant="primary" onClick={handleSaveUser} style={{ background: 'var(--blue3)', border: 'none' }}>
+                                <Button variant="primary" onClick={handleSaveUser} style={{ background: 'var(--blue3)', border: 'none', display: isOwnProfile || isAdmin ? 'block' : 'none' }}>
                                   <LiaSave size={26} />
                                 </Button>
                               </OverlayTrigger>
@@ -432,7 +438,7 @@ export function Users() {
                                 placement="bottom"
                                 overlay={<Tooltip id="tooltip-delete-component">Remover usuário</Tooltip>}
                               >
-                                <Button variant="primary" type="submit" style={{ display: editUser ? 'block' : 'none', background: 'var(--orange)', border: 'none' }}>
+                                <Button variant="primary" type="submit" style={{ display: isAdmin && editUser ? 'block' : 'none', background: 'var(--orange)', border: 'none' }}>
                                   <LiaTrashAlt size={26} />
                                 </Button>
                               </OverlayTrigger>
