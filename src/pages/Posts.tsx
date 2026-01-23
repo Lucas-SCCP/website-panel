@@ -570,7 +570,7 @@ export function Posts() {
                             <Spinner animation="border" size="sm" />
                           </Col>
                         ) : (
-                          <Col lg={12} style={{ maxHeight: '600px', overflowY: 'auto' }}>
+                          <Col lg={12}>
                             {filteredPosts.map((post) => (
                               <div 
                                 key={post.id} 
@@ -590,7 +590,6 @@ export function Posts() {
                                   <div className='mb-2' style={{ fontWeight: 'bold' }}>
                                     {post.title}
                                   </div>
-                                  
                                   <div style={{ 
                                     display: 'flex', 
                                     flexDirection: 'row',
@@ -630,7 +629,6 @@ export function Posts() {
                                       })()}
                                       </span>
                                     </div>
-                                    
                                     <div>
                                       <span style={{ 
                                         fontSize: '0.7em',
@@ -640,65 +638,36 @@ export function Posts() {
                                         color: post.status === 'published' ? 'white' : '#333',
                                         fontWeight: '500'
                                       }}>
-                                        {post.status === 'published' ? 
-                                          <>
-                                            Publicado
-                                          </> : 
-                                          <>
-                                            Rascunho
-                                          </>
-                                        }
+                                        {post.status === 'published' ? <>Publicado</> : <>Rascunho</>}
                                       </span>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             ))}
-                            {filteredPosts.length === 0 && !loading && (
-                              <div className="text-center text-muted p-4" style={{
-                                border: '2px dashed var(--blue1)',
-                                borderRadius: '8px',
-                                backgroundColor: 'rgba(0, 123, 255, 0.02)'
-                              }}>
-                                <LiaBookSolid size={56} opacity={0.2} className="mb-3" />
-                                <p className="mb-2" style={{ fontSize: '0.95em', fontWeight: '500' }}>
-                                  {filterStatus === 'all' 
-                                    ? 'Nenhum post encontrado' 
-                                    : `Nenhum post ${filterStatus === 'published' ? 'publicado' : 'em rascunho'}`
-                                  }
-                                </p>
-                                <small style={{ fontSize: '0.85em' }}>
-                                  {filterStatus === 'all' 
-                                    ? (<>Clique em <b>"CRIAR NOVO POST"</b> para começar</>)
-                                    : 'Tente alterar o filtro ou criar um novo post'
-                                  }
-                                </small>
-                              </div>
-                            )}
                           </Col>
                         )}
                       </Row>
                     </div>
                   </Col>
                   <Col lg={8}>
-                    <div style={{ 
-                      border: '1px solid var(--blue1)', 
-                      borderRadius: '8px', 
-                      padding: '10px',
-                      backgroundColor: '#fff'
-                    }}>
-                      {error && (
-                        <Alert variant="danger" onClose={() => setError(null)} dismissible>
-                          {error}
-                        </Alert>
-                      )}
-                      {success && (
-                        <Alert variant="success" onClose={() => setSuccess(null)} dismissible>
-                          {success}
-                        </Alert>
-                      )}
-
-                      {(selectedPost || isCreatingNew) ? (
+                    {error && (
+                      <Alert variant="danger" onClose={() => setError(null)} dismissible>
+                        {error}
+                      </Alert>
+                    )}
+                    {success && (
+                      <Alert variant="success" onClose={() => setSuccess(null)} dismissible>
+                        {success}
+                      </Alert>
+                    )}
+                    {(selectedPost || isCreatingNew) ? (
+                      <div style={{ 
+                        border: '1px solid var(--blue1)', 
+                        borderRadius: '8px', 
+                        padding: '10px',
+                        backgroundColor: '#fff'
+                      }}>
                         <Form>
                           <Row>
                             <Col lg={12} className="mb-3">
@@ -724,7 +693,6 @@ export function Posts() {
                                     onClick={handleSavePost}
                                     disabled={loading}
                                     className="d-flex align-items-center"
-                                    style={{ boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}
                                   >
                                     <LiaSave className="me-1" size={18} />
                                     Salvar
@@ -734,17 +702,13 @@ export function Posts() {
                                       variant="danger" 
                                       onClick={() => confirmDelete(selectedPost)}
                                       disabled={loading}
-                                      className="d-flex align-items-center"
-                                      style={{ boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}
                                     >
-                                      <LiaTrashAlt className="me-2" size={18} />
-                                      Excluir
+                                      <LiaTrashAlt size={18} />
                                     </Button>
                                   )}
                                 </div>
                               </div>
                             </Col>
-                            
                             <Col lg={12} className="mb-3">
                               <Form.Group>
                                 <Form.Label><b>Título</b></Form.Label>
@@ -757,7 +721,6 @@ export function Posts() {
                                 />
                               </Form.Group>
                             </Col>
-
                             <Col lg={4} className="mb-3">
                               <Form.Group>
                                 <Form.Label><b>Status</b></Form.Label>
@@ -771,7 +734,6 @@ export function Posts() {
                                 </Form.Select>
                               </Form.Group>
                             </Col>
-
                             <Col lg={8} className="mb-3">
                               <Form.Group>
                                 <Form.Label>
@@ -807,7 +769,6 @@ export function Posts() {
                                 />
                               </Form.Group>
                             </Col>
-
                             <Col lg={12} className="mb-3">
                               <Form.Group>
                                 <Form.Label>
@@ -953,7 +914,6 @@ export function Posts() {
                                 </Row>
                               </Form.Group>
                             </Col>
-
                             <Col lg={12} className="mb-3">
                               <Form.Group>
                                 <Form.Label><b>Texto</b></Form.Label>
@@ -970,18 +930,8 @@ export function Posts() {
                             </Col>
                           </Row>
                         </Form>
-                      ) : (
-                        <div className="text-center text-muted py-5" style={{
-                          borderRadius: '12px',
-                          padding: '60px 20px',
-                        }}>
-                          <LiaBookSolid size={80} opacity={0.15} />
-                          <p className='tiktok-sans fw-100' style={{ fontSize: '0.9em', color: '#999' }}>
-                            CRIE UM NOVO POST OU<br />SELECIONE UM PARA EDITAR
-                          </p>
-                        </div>
-                      )}
-                    </div>
+                      </div>
+                    ) : null}
                   </Col>
                 </Row>
               </Col>

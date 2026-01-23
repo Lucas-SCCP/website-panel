@@ -15,6 +15,7 @@ import type { LeadsType } from '../types/LeadsType'
 import type { ValidateTokenResponseType } from '../types/ValidateTokenType'
 import type { PostType, CreatePostData, UpdatePostData } from '../types/PostsType'
 import type { UserType, CreateUserData, UpdateUserData } from '../types/UserType'
+import type { ResponseType } from '../types/ResponseType'
 import { AuthenticateException } from '../exceptions/AuthenticateException'
 
 interface CreatePasswordResponse {
@@ -545,7 +546,7 @@ class ApiService {
     }
   }
 
-  async createUser(userData: CreateUserData): Promise<void>{
+  async createUser(userData: CreateUserData): Promise<ResponseType>{
     const response = await fetch(`${import.meta.env.VITE_API}/users/create`, {
       method: 'POST',
       headers: {
@@ -557,9 +558,11 @@ class ApiService {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`)
     }
+
+    return await response.json()
   }
 
-  async updateUser(userData: UpdateUserData): Promise<void>{
+  async updateUser(userData: UpdateUserData): Promise<ResponseType>{
     const response = await fetch(`${import.meta.env.VITE_API}/users/update`, {
       method: 'PUT',
       headers: {
@@ -571,6 +574,20 @@ class ApiService {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`)
     }
+
+    return await response.json()
+  }
+
+  async deleteUser(userId: number): Promise<ResponseType>{
+    const response = await fetch(`${import.meta.env.VITE_API}/users/delete/${userId}`, {
+      method: 'DELETE',
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    return await response.json()
   }
 
   async validateToken(token: string): Promise<ValidateTokenResponseType> {
