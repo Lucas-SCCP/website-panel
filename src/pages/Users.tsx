@@ -310,7 +310,7 @@ export function Users() {
                   <Col lg={4} className='pe-md-0 mb-md-0 mb-2'>
                     <div style={{ border: '1px solid var(--blue1)', borderRadius: '5px', padding: '10px' }}>
                       <Row>
-                        <Col lg={12} className='mb-3 text-center' style={{ display: 'none' }}>
+                        <Col lg={12} className='mb-3 text-center' style={{ display: loggedUserAccessLevelId === 99 ? 'block' : 'none' }}>
                           <Button 
                             onClick={handleNewUser}
                             style={{ 
@@ -338,7 +338,7 @@ export function Users() {
                             CRIAR NOVO USUÁRIO
                           </Button>
                         </Col>
-                        <Col lg={12} className='mb-3' style={{ display: 'none' }}>
+                        <Col lg={12} className='mb-3' style={{ display: loggedUserAccessLevelId === 99 ? 'block' : 'none', position: 'relative' }}>
                           <Form.Group>
                             <Form.Control
                               type="text"
@@ -437,7 +437,7 @@ export function Users() {
                                 </>
                               )}
                             </h5>
-                            <div className="align-items-center gap-2" style={{ display: 'none' }}>
+                            <div className="align-items-center gap-2" style={{ display: loggedUserAccessLevelId === 99 ? 'flex' : 'none' }}>
                               <Button 
                                 variant="success" 
                                 onClick={handleSaveUser}
