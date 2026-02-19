@@ -268,6 +268,7 @@ export function Users() {
       
       const planService = new PlanService()
       const limit = planService.getLimitUsersByPlan(website?.planId || 0)
+      console.log('Plano ID', website?.planId)
       setLimitUsers(limit)
       const total = usersArray.filter(u => u.accessLevelId !== 99).length
       setTotalUsers(total)
