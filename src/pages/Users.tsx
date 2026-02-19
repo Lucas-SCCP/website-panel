@@ -6,7 +6,9 @@ import CreatableSelect from 'react-select/creatable'
 import { LiaUserLockSolid, LiaSave, LiaTrashAlt, LiaInfoCircleSolid, LiaPlusSolid, LiaEditSolid } from 'react-icons/lia'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { UseUserStore } from '../stores/UseUserStore'
+import { PlanService } from '../services/PlanService'
 import type { UserType } from '../types/UserType'
+import { AccessLevelEnum } from '../enums/AcessLevelEnum'
 
 type Option = {
   label: string
@@ -15,10 +17,17 @@ type Option = {
   isDisabled?: boolean
 }
 
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
 export function Users() {
-  const websiteId = UseWebsiteStore((s) => s.selectedWebsiteId)
   const selectedWebsiteId = UseWebsiteStore((state) => state.selectedWebsiteId)
+  const allWebsites = UseWebsiteStore((state) => state.allWebsites)
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
+  
+  const [website] = useState(allWebsites.find(w => w.id === selectedWebsiteId) || null)
+
   const [newUser, setNewUser] = useState(false)
   const [editUser, setEditUser] = useState(false)
   const [users, setUsers] = useState<UserType[]>([])
@@ -31,21 +40,9 @@ export function Users() {
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null)
   const { user } = UseUserStore()
 
-  let loggedUserAccessLevelId: number = 3;
-  if (
-    selectedWebsiteId &&
-    user &&
-    user.accessLevel &&
-    (user.accessLevel as { [key: number]: number })[selectedWebsiteId] !== undefined
-  ) {
-    loggedUserAccessLevelId = (user.accessLevel as { [key: number]: number })[selectedWebsiteId]
-  }
-
   if (!user) {
     throw new Error('User not found in store')
   }
-  
-  const isAdmin = loggedUserAccessLevelId === 99 || loggedUserAccessLevelId === 1
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -54,35 +51,32 @@ export function Users() {
   const [accessLevelId, setAccessLevelId] = useState(3)
   const [isDefaultWebsite, setIsDefaultWebsite] = useState(false)
   
-  const [inputValue, setInputValue] = useState('')
+  const [searchInputValue, setSearchInputValue] = useState('') // Para Form.Control
+  const [emailInputValue, setEmailInputValue] = useState('') // Para CreatableSelect
   const [options, setOptions] = useState<Option[]>([])
   const [value, setValue] = useState<Option | null>(null)
   const [loading, setLoading] = useState(false)
+  const [totalUsers, setTotalUsers] = useState<number>(0)
+  const [limitUsers, setLimitUsers] = useState<number>(0)
+  const [limitUserExceeded, setLimitUserExceeded] = useState<boolean | undefined>(undefined)
 
-  function isValidEmail(email: string) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  }
-  
   useEffect(() => {
     setSelectedPageId(null)
     
   }, [setSelectedPageId])
 
   useEffect(() => {
-    if (!isValidEmail(inputValue) || websiteId === null) {
+    if (!isValidEmail(emailInputValue) || selectedWebsiteId === null) {
       setOptions([])
       return
     }
 
     const timeout = setTimeout(async () => {
-      setLoading(true)
-
       const api = new ApiService()
-      const userData = await api.getUserByEmail(websiteId, inputValue)
+      const userData = await api.getUserByEmail(selectedWebsiteId, emailInputValue)
 
       if (userData) {
         const isAlreadyLinked = users.some(u => u.id === userData.id)
-        
         if (isAlreadyLinked) {
           setOptions([
             {
@@ -93,9 +87,6 @@ export function Users() {
             }
           ])
         } else {
-          setFirstName(userData.firstName)
-          setLastName(userData.lastName)
-          setEmail(userData.email)
           setOptions([
             {
               label: userData.email,
@@ -108,20 +99,17 @@ export function Users() {
       } else {
         setOptions([])
       }
-
-      setLoading(false)
     }, 500)
 
     return () => clearTimeout(timeout)
-  }, [inputValue, users, websiteId])
+  }, [emailInputValue, users, selectedWebsiteId])
 
   async function handleSaveUser() {
-    if (!websiteId) {
+    if (!selectedWebsiteId) {
       console.error('Website ID is required')
       return
     }
 
-    console.log('Saving 1')
     setLoading(true)
 
     const apiService = new ApiService()
@@ -130,7 +118,7 @@ export function Users() {
     
     if (newUser) {
       const createData = {
-        websiteId,
+        websiteId: selectedWebsiteId,
         firstName,
         lastName,
         email,
@@ -154,8 +142,7 @@ export function Users() {
       response = await apiService.updateUser(updateData)
     }
     setLoading(false)
-    console.log('Saving 2', response)
-    if (response && response.status === 'success') {
+    if (response?.status === 'success') {
       setSuccess(newUser ? 'Usuário criado com sucesso!' : 'Usuário atualizado com sucesso!')
       setNewUser(false)
       setEditUser(false)
@@ -163,22 +150,24 @@ export function Users() {
       setFirstName('')
       setLastName('')
       setEmail('')
-      setAccessLevelId(3)
+      setAccessLevelId(AccessLevelEnum.Administrador)
       setIsDefaultWebsite(false)
       setValue(null)
       await loadUsers()
     } else {
-      setError(response && response.message ? response.message : 'Erro ao salvar usuário')
+      setError(response?.message ? response.message : 'Erro ao salvar usuário')
     }
   }
 
-  const confirmDelete = (user: UserType) => {
+  function confirmDelete(user: UserType) {
+    console.log('Usuário selecionado para exclusao', user)
     setUserToDelete(user)
     setShowDeleteModal(true)
   }
 
-  const handleDeleteUser = async () => {
-    if (!userToDelete) return
+  async function handleDeleteUser() {
+    console.log('Deletando usuário', userToDelete)
+    if (!userToDelete || selectedWebsiteId === null) return
 
     setLoading(true)
     setError(null)
@@ -186,22 +175,20 @@ export function Users() {
 
     try {
       const apiService = new ApiService()
-      await apiService.deleteUser(userToDelete.id)
-      setSuccess('Usuário deletado com sucesso!')
+      await apiService.deleteUserFromWebsite(userToDelete.id, selectedWebsiteId)
+      setSuccess('Usuário removido com sucesso!')
       setShowDeleteModal(false)
       setUserToDelete(null)
-      
-      // Clear form if deleted user was selected
-      if (selectedUser?.id === userToDelete.id) {
-        setSelectedUser(null)
-        setFirstName('')
-        setLastName('')
-        setEmail('')
-        setAccessLevelId(3)
-        setIsDefaultWebsite(false)
-      }
 
-      // Reload users
+      setNewUser(false)
+      setEditUser(false)
+      setSelectedUser(null)
+      setFirstName('')
+      setLastName('')
+      setEmail('')
+      setAccessLevelId(AccessLevelEnum.Administrador)
+      setIsDefaultWebsite(false)
+
       await loadUsers()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao deletar usuário')
@@ -220,7 +207,7 @@ export function Users() {
     setFirstName('')
     setLastName('')
     setEmail('')
-    setAccessLevelId(3)
+    setAccessLevelId(AccessLevelEnum.Administrador)
     setIsDefaultWebsite(false)
   }
 
@@ -228,6 +215,7 @@ export function Users() {
     setEditUser(true)
     setNewUser(false)
     setUserId(id)
+    setSelectedUser(users.find(u => u.id === id) || null)
     setFirstName(users.find(u => u.id === id)?.firstName || '')
     setLastName(users.find(u => u.id === id)?.lastName || '')
     setEmail(users.find(u => u.id === id)?.email || '')
@@ -236,7 +224,7 @@ export function Users() {
       value: id.toString(),
       isExisting: true
     })
-    setAccessLevelId(users.find(u => u.id === id)?.accessLevelId || 3)
+    setAccessLevelId(users.find(u => u.id === id)?.accessLevelId || AccessLevelEnum.Administrador)
     setIsDefaultWebsite(users.find(u => u.id === id)?.defaultWebsiteId === selectedWebsiteId)
     if (id === user?.id) {
       setIsOwnProfile(true)
@@ -248,18 +236,24 @@ export function Users() {
   useEffect(() => {
     setSelectedPageId(null)
 
-    if (websiteId !== null && user !== null) {
+    if (selectedWebsiteId !== null && user !== null) {
       const fetchUsers = async () => {
         await loadUsers()
       }
       fetchUsers()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [websiteId, user])
+  }, [selectedWebsiteId, user])
 
-  const loadUsers = async () => {
-    if (!websiteId) {
+  async function loadUsers() {
+    if (!selectedWebsiteId) {
       console.error('No website selected')
+      setUsers([])
+      return
+    }
+
+    if (!user) {
+      console.error('User not found in store')
       setUsers([])
       return
     }
@@ -268,12 +262,25 @@ export function Users() {
     setError(null)
     try {
       const apiService = new ApiService()
-      const usersData = await apiService.getUsersByWebsiteId(websiteId)
+      const usersData = await apiService.getUsersByWebsiteId(selectedWebsiteId)
       let usersArray = Array.isArray(usersData) ? usersData : [usersData]
       usersArray = usersArray.filter(u => u.accessLevelId !== 99 || u.id === user.id)
+      
+      const planService = new PlanService()
+      const limit = planService.getLimitUsersByPlan(website?.planId || 0)
+      setLimitUsers(limit)
+      const total = usersArray.filter(u => u.accessLevelId !== 99).length
+      setTotalUsers(total)
+      console.log('Total usuarios', total)
+      console.log('Limite usuarios', limit)
+      const calculo = total >= limit
+      console.log('Calculo', calculo)
+      setLimitUserExceeded(calculo)
+
       setUsers(usersArray)
       return usersArray
-    } catch (err) {
+    } catch (err) {      
+      
       console.error('Erro ao carregar usuários:', err)
       setError('Erro ao carregar usuários')
       setUsers([])
@@ -310,7 +317,7 @@ export function Users() {
                   <Col lg={4} className='pe-md-0 mb-md-0 mb-2'>
                     <div style={{ border: '1px solid var(--blue1)', borderRadius: '5px', padding: '10px' }}>
                       <Row>
-                        <Col lg={12} className='mb-3 text-center' style={{ display: loggedUserAccessLevelId === 99 ? 'block' : 'none' }}>
+                        <Col lg={12} className='mb-3 text-center'>
                           <Button 
                             onClick={handleNewUser}
                             style={{ 
@@ -324,7 +331,7 @@ export function Users() {
                               transition: 'all 0.2s'
                             }}
                             className='tiktok-sans fw-100'
-                            disabled={loading}
+                            disabled={loading || limitUserExceeded}
                             onMouseEnter={(e) => {
                               e.currentTarget.style.transform = 'translateY(-2px)'
                               e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)'
@@ -338,13 +345,13 @@ export function Users() {
                             CRIAR NOVO USUÁRIO
                           </Button>
                         </Col>
-                        <Col lg={12} className='mb-3' style={{ display: loggedUserAccessLevelId === 99 ? 'block' : 'none', position: 'relative' }}>
+                        <Col lg={12} className='mb-2' style={{ display: 'none', position: 'relative' }}>
                           <Form.Group>
                             <Form.Control
                               type="text"
                               placeholder="Buscar usuário pelo nome ou e-mail"
-                              value={inputValue}
-                              onChange={(e) => setInputValue(e.target.value)}
+                              value={searchInputValue}
+                              onChange={(e) => setSearchInputValue(e.target.value)}
                             />
                           </Form.Group>
                         </Col>
@@ -365,9 +372,14 @@ export function Users() {
                           </div>
                         )}
                         <Col lg={12}>
-                          {users && users.map((u) => (
-                            <div
+                          <div className='mb-2'>
+                            {totalUsers} de {limitUsers} usuários
+                          </div>
+                          {users?.map((u) => (
+                            <button
                               key={u.id}
+                              type="button"
+                              aria-pressed={u.id === userId}
                               onClick={() => handleEditUser(u.id)}
                               className='mb-3'
                               style={{ 
@@ -377,7 +389,9 @@ export function Users() {
                                 cursor: 'pointer',
                                 backgroundColor: u?.id === userId ? 'rgba(0, 123, 255, 0.05)' : 'transparent',
                                 transition: 'all 0.2s',
-                                boxShadow: u?.id === userId ? '0 2px 8px rgba(0, 123, 255, 0.15)' : 'none'
+                                boxShadow: u?.id === userId ? '0 2px 8px rgba(0, 123, 255, 0.15)' : 'none',
+                                width: '100%',
+                                textAlign: 'left'
                               }}
                             >
                               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -401,7 +415,7 @@ export function Users() {
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </button>
                           ))}
                         </Col>
                       </Row>
@@ -437,7 +451,7 @@ export function Users() {
                                 </>
                               )}
                             </h5>
-                            <div className="align-items-center gap-2" style={{ display: loggedUserAccessLevelId === 99 ? 'flex' : 'none' }}>
+                            <div className="align-items-center gap-2" style={{ display: UseUserStore.getState().userAccessLevelId === AccessLevelEnum.SuperUsuario ? 'flex' : 'none' }}>
                               <Button 
                                 variant="success" 
                                 onClick={handleSaveUser}
@@ -526,12 +540,12 @@ export function Users() {
                               formatCreateLabel={(inputValue) => `Criar novo usuário: ${inputValue}`}
                               onInputChange={(newValue, meta) => {
                                 if (meta.action === 'input-change') {
-                                  setInputValue(newValue.trim())
+                                  setEmailInputValue(newValue.trim())
                                 }
                               }}
                               onChange={(newValue) => {
                                 // Não permitir selecionar usuários já vinculados
-                                if (newValue && newValue.isDisabled) {
+                                if (newValue?.isDisabled) {
                                   return
                                 }
                                 setValue(newValue)
@@ -540,6 +554,14 @@ export function Users() {
                                     ? newValue.label.match(/\((.+)\)/)?.[1] || newValue.value
                                     : newValue.value
                                   )
+                                  // Atualizar outros campos apenas ao selecionar
+                                  if (newValue.isExisting) {
+                                    const foundUser = users.find(u => u.id.toString() === newValue.value)
+                                    if (foundUser) {
+                                      setFirstName(foundUser.firstName)
+                                      setLastName(foundUser.lastName)
+                                    }
+                                  }
                                 }
                               }}
                               isOptionDisabled={(option) => option.isDisabled === true}
@@ -583,14 +605,14 @@ export function Users() {
                         <Col lg={6}>
                           <Form.Group className="mb-3">
                             <Form.Label>Nível de acesso</Form.Label>
-                            <Form.Select disabled={!isAdmin} onChange={(e) => setAccessLevelId(parseInt(e.target.value))}>
-                              <option value="1" selected={editUser ? accessLevelId === 1 : true}>
+                            <Form.Select disabled={!UseUserStore.getState().isAdmin} onChange={(e) => setAccessLevelId(parseInt(e.target.value))}>
+                              <option value="1" selected={editUser ? UseUserStore.getState().userAccessLevelId === AccessLevelEnum.Administrador : true}>
                                 Administrador
                               </option>
-                              <option value="2" selected={editUser ? accessLevelId === 2 : true}>
+                              <option value="2" selected={editUser ? UseUserStore.getState().userAccessLevelId === AccessLevelEnum.Editor : true}>
                                 Editor
                               </option>
-                              <option value="3" selected={editUser ? accessLevelId === 3 : true}>
+                              <option value="3" selected={editUser ? UseUserStore.getState().userAccessLevelId === AccessLevelEnum.Visualizador : true}>
                                 Visualizador
                               </option>
                             </Form.Select>
@@ -637,7 +659,7 @@ export function Users() {
                               {newUser ? 'Adicionar usuário' : 'Salvar alterações'}
                             </Tooltip>}
                           >
-                            <Button variant="primary" onClick={handleSaveUser} style={{ background: 'var(--blue3)', border: 'none', display: isOwnProfile || isAdmin ? 'block' : 'none' }}>
+                            <Button variant="primary" onClick={handleSaveUser} style={{ background: 'var(--blue3)', border: 'none', display: isOwnProfile || UseUserStore.getState().isAdmin ? 'block' : 'none' }}>
                               <LiaSave size={26} />
                             </Button>
                           </OverlayTrigger>
@@ -645,7 +667,7 @@ export function Users() {
                             placement="bottom"
                             overlay={<Tooltip id="tooltip-delete-component">Remover usuário</Tooltip>}
                           >
-                            <Button variant="primary" type="submit" style={{ display: isAdmin && editUser ? 'block' : 'none', background: 'var(--orange)', border: 'none' }}>
+                            <Button variant="primary" type="submit" style={{ display: UseUserStore.getState().isAdmin && editUser ? 'block' : 'none', background: 'var(--orange)', border: 'none' }}>
                               <LiaTrashAlt size={26} />
                             </Button>
                           </OverlayTrigger>
@@ -694,19 +716,17 @@ export function Users() {
       </Row>
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirmar Exclusão</Modal.Title>
+          <Modal.Title>Remover Acesso</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Tem certeza que deseja deletar o usuário <b>{userToDelete?.name}</b>?
-          <br />
-          Esta ação não pode ser desfeita.
+          Deseja remover acesso do usuário?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)} disabled={loading}>
-            Cancelar
+            Não
           </Button>
           <Button variant="danger" onClick={handleDeleteUser} disabled={loading}>
-            {loading ? <Spinner animation="border" size="sm" /> : 'Deletar'}
+            {loading ? <Spinner animation="border" size="sm" /> : 'Sim'}
           </Button>
         </Modal.Footer>
       </Modal>

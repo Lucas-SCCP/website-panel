@@ -6,6 +6,7 @@ import { UseUserStore } from '../stores/UseUserStore'
 import { UseWebsiteStore } from '../stores/UseWebsiteStore'
 import { AuthenticateException } from '../exceptions/AuthenticateException'
 import type { AuthenticateResponseType, UserType } from 'website-lib'
+import { AccessLevelEnum } from '../enums/AcessLevelEnum'
 
 export function Login() {
   const navigate = useNavigate()
@@ -17,7 +18,7 @@ export function Login() {
 
   const { setAllWebsites, setSelectedWebsiteId, setSelectedWebsite } = UseWebsiteStore((state) => state)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault()
 
     try {
@@ -27,18 +28,23 @@ export function Login() {
 
       if (response.status) {
         const user: UserType = response.data
-        UseUserStore.getState().setUser(user, user.token)
 
         const websites = await apiService.getAllWebsiteByUserId(user.id, user.token)
 
         setAllWebsites(websites)
-        setLoading(false)
 
         const selectedWebsiteFound = websites.find((website) => website.id === user?.defaultWebsiteId)
         if (selectedWebsiteFound) {
           setSelectedWebsite(selectedWebsiteFound)
           setSelectedWebsiteId(selectedWebsiteFound.id)
         }
+
+        const userAccessLevelId = (user.accessLevel as { [key: number]: number })[selectedWebsiteFound?.id || AccessLevelEnum.Visualizador]
+        const isAdmin = userAccessLevelId === AccessLevelEnum.Administrador || userAccessLevelId === AccessLevelEnum.SuperUsuario
+
+        UseUserStore.getState().setUser(user, user.token, userAccessLevelId, isAdmin)
+
+        setLoading(false)
 
         navigate('/')
       }

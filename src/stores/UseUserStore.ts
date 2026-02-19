@@ -5,7 +5,9 @@ import type { UserType } from 'website-lib'
 interface UserStore {
   user: UserType | null
   token: string | null
-  setUser: (user: UserType, token: string) => void
+  userAccessLevelId: number | null
+  isAdmin: boolean
+  setUser: (user: UserType, token: string, userAccessLevelId: number, isAdmin: boolean) => void
   clearUser: () => void
   updateUserField: <K extends keyof UserType>(key: K, value: UserType[K]) => void
 }
@@ -15,11 +17,13 @@ export const UseUserStore = create<UserStore>()(
     (set, get) => ({
       user: null,
       token: null,
+      userAccessLevelId: null,
+      isAdmin: false,
 
-      setUser: (user, token) => set({ user, token }),
+      setUser: (user, token, userAccessLevelId, isAdmin) => set({ user, token, userAccessLevelId, isAdmin }),
 
       clearUser: () => {
-        set({ user: null, token: null })
+        set({ user: null, token: null, userAccessLevelId: null, isAdmin: false })
         sessionStorage.removeItem('user-storage')
       },
 

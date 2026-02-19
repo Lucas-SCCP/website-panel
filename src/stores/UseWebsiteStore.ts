@@ -115,7 +115,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
 
       selectedWebsite: null,
       setSelectedWebsite: (website) => {
-        const websiteCopy = JSON.parse(JSON.stringify(website))
+        const websiteCopy = structuredClone(website)
         set({ 
           selectedWebsiteId: website.id,
           selectedWebsite: websiteCopy,
@@ -139,7 +139,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
 
         if (oldValue === newValue) {
           // Se os valores são iguais, remover do objeto de changes
-          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+          if (currentChanges?.websiteId === currentSelectedWebsite.id) {
             updatedChanges = { ...currentChanges }
             
             if (updatedChanges.changes) {
@@ -169,7 +169,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
           }
         } else {
           // Valores diferentes, criar/atualizar change
-          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+          if (currentChanges?.websiteId === currentSelectedWebsite.id) {
             // Se já existe um change para este website, vamos adicionar/atualizar o field
             updatedChanges = { ...currentChanges }
             
@@ -250,7 +250,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
 
         if (oldValue === newValue) {
           // Se os valores são iguais, remover do objeto de changes
-          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+          if (currentChanges?.websiteId === currentSelectedWebsite.id) {
             updatedChanges = { ...currentChanges }
             
             if (updatedChanges.page?.changes) {
@@ -270,7 +270,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
           }
         } else {
           // Valores diferentes, criar/atualizar change
-          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+          if (currentChanges?.websiteId === currentSelectedWebsite.id) {
             // Se já existe um change para este website, vamos adicionar/atualizar a página
             updatedChanges = { ...currentChanges }
             
@@ -383,7 +383,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
 
         if (oldValue === newValue) {
           // Se os valores são iguais, remover do objeto de changes
-          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+          if (currentChanges?.websiteId === currentSelectedWebsite.id) {
             updatedChanges = { ...currentChanges }
             
             if (updatedChanges.page?.component) {
@@ -414,7 +414,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
           const currentChanges = get().changes
           let updatedChanges: ChangeDetail
 
-          if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+          if (currentChanges?.websiteId === currentSelectedWebsite.id) {
             // Se já existe um change para este website, vamos adicionar/atualizar o componente
             updatedChanges = { ...currentChanges }
             
@@ -588,7 +588,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
               
               if (normalizedOldValue === normalizedNewValue) {
                 // Se os valores são iguais, remover do objeto de changes
-                if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+                if (currentChanges?.websiteId === currentSelectedWebsite.id) {
                   updatedChanges = { ...currentChanges }
                   
                   if (updatedChanges.page?.component) {
@@ -624,7 +624,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
                 }
               } else {
                 // Valores diferentes, adicionar/atualizar change
-                if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+                if (currentChanges?.websiteId === currentSelectedWebsite.id) {
                   // Se já existe um change para este website, vamos adicionar/atualizar o elemento
                   updatedChanges = { ...currentChanges }
                   
@@ -701,7 +701,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
           
           if (String(oldValue) === String(newChangeValue)) {
             // Se os valores são iguais, remover do objeto de changes
-            if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+            if (currentChanges?.websiteId === currentSelectedWebsite.id) {
               updatedChanges = { ...currentChanges }
               
               if (updatedChanges.page?.component) {
@@ -737,7 +737,7 @@ export const UseWebsiteStore = create<WebsiteStore>()(
             }
           } else {
             // Valores diferentes, adicionar/atualizar change
-            if (currentChanges && currentChanges.websiteId === currentSelectedWebsite.id) {
+            if (currentChanges?.websiteId === currentSelectedWebsite.id) {
               // Se já existe um change para este website, vamos adicionar/atualizar o elemento
               updatedChanges = { ...currentChanges }
               

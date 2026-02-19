@@ -25,6 +25,8 @@ interface CreatePasswordResponse {
 }
 
 class ApiService {
+  // Users API methods
+  
   // Primeira requisição, para realizar o login
   async authenticate(email: string, password: string): Promise<AuthenticateResponseType> {
     const data = {
@@ -52,6 +54,126 @@ class ApiService {
     return responseJson
   }
 
+  async getUsersByWebsiteId(websiteId: number): Promise<UserType[]>{
+    const response = await fetch(`${import.meta.env.VITE_API}/users/website/${websiteId}`)
+
+    if (!response.ok) {
+      throw new Error('')
+    }
+
+    const json = await response.json()
+    return json.data as UserType[]
+  }
+
+  async getUserByEmail(websiteId: number, email: string): Promise<UserType | null>{
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API}/users/website/${websiteId}/email/${encodeURIComponent(email)}`)
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null
+        }
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const json = await response.json()
+      return json.data as UserType
+    } catch (error) {
+      console.error('Erro ao buscar usuário por email:', error)
+      return null
+    }
+  }
+
+  async createUser(userData: CreateUserData): Promise<ResponseType>{
+    const response = await fetch(`${import.meta.env.VITE_API}/users/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    return await response.json()
+  }
+
+  async updateUser(userData: UpdateUserData): Promise<ResponseType>{
+    const response = await fetch(`${import.meta.env.VITE_API}/users/update`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    return await response.json()
+  }
+
+  async deleteUser(userId: number): Promise<ResponseType>{
+    const response = await fetch(`${import.meta.env.VITE_API}/users/delete/${userId}`, {
+      method: 'DELETE',
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    return await response.json()
+  }
+
+  async deleteUserFromWebsite(userId: number, websiteId: number): Promise<ResponseType>{
+    const response = await fetch(`${import.meta.env.VITE_API}/users/${userId}/website/${websiteId}`, {
+      method: 'DELETE',
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    return await response.json()
+  }
+
+  async validateToken(token: string): Promise<ValidateTokenResponseType> {
+    const response = await fetch(`${import.meta.env.VITE_API}/users/token/validate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token }),
+    })
+    if (!response.ok) {
+      return { isValid: false }
+    }
+    const responseJson = await response.json()
+    return responseJson.data
+  }
+
+  async createPassword(userId: number, password: string): Promise<CreatePasswordResponse> {
+    const response = await fetch(`${import.meta.env.VITE_API}/users/password/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        userId,
+        password
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+    return await response.json()
+  }
+
+  // Website API methods
   async getStructure(id: string | number): Promise<WebsiteType> {
     try {
       const response = await fetch(`${import.meta.env.VITE_API}/website/${id}/structure`)
@@ -261,6 +383,7 @@ class ApiService {
       createdAt: rawWebsite.createdAt,
       updatedAt: rawWebsite.updatedAt,
       deletedAt: rawWebsite.deletedAt,
+      planId: rawWebsite.planId,
       pages: rawWebsite.pages.map(
         (rawPage): PageType => ({
           id: rawPage.id,
@@ -465,6 +588,7 @@ class ApiService {
     return website
   }
 
+  // Notifications API methods
   async getNotificationByWebsiteId(websiteId: number): Promise<NotificationType[]> {
     try {
       const response = await fetch(`${import.meta.env.VITE_API}/notifications/website/${websiteId}`)
@@ -483,6 +607,7 @@ class ApiService {
     }
   }
 
+  // Dashboard API methods
   async getDashboardInfoByWebsiteId(websiteId: number): Promise<DashboardType>{
     const response = await fetch(`${import.meta.env.VITE_API}/website/dashboard/${websiteId}`)
 
@@ -494,6 +619,7 @@ class ApiService {
     return json.data as DashboardType
   }
 
+  // Forms API methods
   async getFormsByWebsiteId(websiteId: number): Promise<FormsType>{
     const response = await fetch(`${import.meta.env.VITE_API}/website/${websiteId}/forms`)
 
@@ -505,6 +631,7 @@ class ApiService {
     return json.data as FormsType
   }
 
+  // Leads API methods
   async getLeadsByWebsiteId(websiteId: number): Promise<LeadsType>{
     const response = await fetch(`${import.meta.env.VITE_API}/website/${websiteId}/leads`)
 
@@ -514,113 +641,6 @@ class ApiService {
 
     const json = await response.json()
     return json.data as LeadsType
-  }
-
-  async getUsersByWebsiteId(websiteId: number): Promise<UserType[]>{
-    const response = await fetch(`${import.meta.env.VITE_API}/users/website/${websiteId}`)
-
-    if (!response.ok) {
-      throw new Error('')
-    }
-
-    const json = await response.json()
-    return json.data as UserType[]
-  }
-
-  async getUserByEmail(websiteId: number, email: string): Promise<UserType | null>{
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API}/users/website/${websiteId}/email/${encodeURIComponent(email)}`)
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          return null
-        }
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-
-      const json = await response.json()
-      return json.data as UserType
-    } catch (error) {
-      console.error('Erro ao buscar usuário por email:', error)
-      return null
-    }
-  }
-
-  async createUser(userData: CreateUserData): Promise<ResponseType>{
-    const response = await fetch(`${import.meta.env.VITE_API}/users/create`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
-    }
-
-    return await response.json()
-  }
-
-  async updateUser(userData: UpdateUserData): Promise<ResponseType>{
-    const response = await fetch(`${import.meta.env.VITE_API}/users/update`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
-    }
-
-    return await response.json()
-  }
-
-  async deleteUser(userId: number): Promise<ResponseType>{
-    const response = await fetch(`${import.meta.env.VITE_API}/users/delete/${userId}`, {
-      method: 'DELETE',
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
-    }
-
-    return await response.json()
-  }
-
-  async validateToken(token: string): Promise<ValidateTokenResponseType> {
-    const response = await fetch(`${import.meta.env.VITE_API}/users/token/validate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token }),
-    })
-    if (!response.ok) {
-      return { isValid: false }
-    }
-    const responseJson = await response.json()
-    return responseJson.data
-  }
-
-  async createPassword(userId: number, password: string): Promise<CreatePasswordResponse> {
-    const response = await fetch(`${import.meta.env.VITE_API}/users/password/create`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ 
-        userId,
-        password
-      }),
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
-    }
-    return await response.json()
   }
 
   // Posts API methods
