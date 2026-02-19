@@ -160,13 +160,11 @@ export function Users() {
   }
 
   function confirmDelete(user: UserType) {
-    console.log('Usuário selecionado para exclusao', user)
     setUserToDelete(user)
     setShowDeleteModal(true)
   }
 
   async function handleDeleteUser() {
-    console.log('Deletando usuário', userToDelete)
     if (!userToDelete || selectedWebsiteId === null) return
 
     setLoading(true)
@@ -264,20 +262,14 @@ export function Users() {
       const apiService = new ApiService()
       const usersData = await apiService.getUsersByWebsiteId(selectedWebsiteId)
       let usersArray = Array.isArray(usersData) ? usersData : [usersData]
-      usersArray = usersArray.filter(u => u.accessLevelId !== 99 || u.id === user.id)
+      usersArray = usersArray.filter(u => u.accessLevelId !== AccessLevelEnum.SuperUsuario || u.id === user.id)
       
       const planService = new PlanService()
       const limit = planService.getLimitUsersByPlan(website?.planId || 0)
-      console.log('Plano ID', website?.planId)
+      const total = usersArray.filter(u => u.accessLevelId !== AccessLevelEnum.SuperUsuario).length
       setLimitUsers(limit)
-      const total = usersArray.filter(u => u.accessLevelId !== 99).length
       setTotalUsers(total)
-      console.log('Total usuarios', total)
-      console.log('Limite usuarios', limit)
-      const calculo = total >= limit
-      console.log('Calculo', calculo)
-      setLimitUserExceeded(calculo)
-
+      setLimitUserExceeded(total >= limit)
       setUsers(usersArray)
       return usersArray
     } catch (err) {      

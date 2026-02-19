@@ -89,24 +89,20 @@ export function CreatePassword() {
   }
 
   const changePassword = (value: string) => {
-    // console.log('changePassword', value)
     setPassword(value)
     validatePasswordFunction(value, confirmPassword)
   }
 
   const changeConfirmPassword = (value: string) => {
-    // console.log('changeConfirmPassword', value)
     setConfirmPassword(value)
     validatePasswordFunction(password, value)
   }
 
   const validatePasswordFunction = (password: string, confirmPassword: string) => {
-    // console.log('validatePasswordFunction', password, confirmPassword)
     setIsValidPassword(true)
     setValidatePasswordMessage('Senha válida')
     setBackgroundAlert('#eeffdeff')
     if (password !== confirmPassword) {
-      // console.log('As senhas não coincidem')
       setIsValidPassword(false)
       setValidatePasswordMessage('As senhas não coincidem')
       setBackgroundAlert('#ffddddff')
