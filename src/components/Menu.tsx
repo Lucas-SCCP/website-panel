@@ -120,7 +120,7 @@ export function Menu() {
     console.log('Detalhes das mudanças:', changes)
   }
 
-  const handleOpenModalSaveClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+  const handleOpenModalSaveClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     event.preventDefault()
     setShowModalSave(true)
     console.log('handleOpenModalSaveClick', changes)
@@ -188,65 +188,65 @@ export function Menu() {
                       placement="bottom"
                       overlay={<Tooltip id={'tooltip-bottom'}>Página inicial</Tooltip>}
                     >
-                      <div 
+                      <button 
                         onClick={goToDashboardClick} 
                         className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/' ? 'active' : ''}`}
                         style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
                       >
                         <LiaHomeSolid size={30} />
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>INICIO</div>
-                      </div>
+                      </button>
                     </OverlayTrigger>
                   </Nav.Link>
                   {selectedWebsiteId && <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Leads</Tooltip>}>
-                      <div
+                      <button
                         onClick={goToLeadsClick}
                         className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/leads' ? 'active' : ''}`}
                         style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
                       >
                         <LiaUserFriendsSolid size={30} />
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>LEADS</div>
-                      </div>
+                      </button>
                     </OverlayTrigger>
                   </Nav.Link>}
                   {selectedWebsiteId && <Nav.Link style={{ cursor: 'auto' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Posts</Tooltip>}>
-                      <div
+                      <button
                         onClick={goToPostsClick}
                         className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/posts' ? 'active' : ''}`}
                         style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
                       >
                         <LiaBookSolid size={30} />
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>POSTS</div>
-                      </div>
+                      </button>
                     </OverlayTrigger>
                   </Nav.Link>}
                   {selectedWebsiteId && (
                     <Nav.Link style={{ cursor: 'auto' }}>
                       <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Usuários</Tooltip>}>
-                        <div
+                        <button
                           onClick={goToUsersClick}
                           className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/users' ? 'active' : ''}`}
                           style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
                         >
                           <LiaUserLockSolid size={30} />
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>USUÁRIOS</div>
-                        </div>
+                        </button>
                       </OverlayTrigger>
                     </Nav.Link>
                   )}
 
                   <Nav.Link style={{ cursor: 'auto', display: 'none' }}>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Configurações</Tooltip>}>
-                      <div
+                      <button
                         onClick={goToSettingsClick}
                         className={`website-navbar-button website-navbar-button-icon ${location.pathname === '/settings' ? 'active' : ''}`}
                         style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}
                       >
                         <LiaCogSolid size={30} />
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>CONFIGURAÇÕES</div>
-                      </div>
+                      </button>
                     </OverlayTrigger>
                   </Nav.Link>
                   <Nav.Link style={{ cursor: 'auto', display: 'none' }} id='aSerDesenvolvido'>
@@ -282,9 +282,9 @@ export function Menu() {
                             </Tooltip>
                           }
                         >
-                          <div className="website-navbar-action-buttons website-navbar-action-buttons-success" onClick={handleShowModalComponent}>
+                          <button className="website-navbar-action-buttons website-navbar-action-buttons-success" onClick={handleShowModalComponent}>
                             <LiaPlusCircleSolid size={30} />
-                          </div>
+                          </button>
                         </OverlayTrigger>
                       </Nav.Link>
                       <Nav.Link style={{ cursor: 'auto', display: hasUnsavedChanges ? 'block' : 'none' }}>
@@ -296,9 +296,9 @@ export function Menu() {
                             </Tooltip>
                           }
                         >
-                          <div className="website-navbar-action-buttons website-navbar-action-buttons-success" onClick={handleOpenModalSaveClick}>
+                          <button className="website-navbar-action-buttons website-navbar-action-buttons-success" onClick={handleOpenModalSaveClick}>
                             <LiaSave size={30} />
-                          </div>
+                          </button>
                         </OverlayTrigger>
                       </Nav.Link>
                       <Nav.Link style={{ cursor: 'auto' }}>
@@ -337,9 +337,9 @@ export function Menu() {
                     </NavDropdown>
                     <Nav.Link>
                       <OverlayTrigger placement="bottom" overlay={<Tooltip id={'tooltip-bottom'}>Sair</Tooltip>}>
-                        <div onClick={handleExit} className="website-navbar-action-exit website-navbar-button-icon">
+                        <button onClick={handleExit} className="website-navbar-action-exit website-navbar-button-icon">
                           <LiaSignOutAltSolid size={30} />
-                        </div>
+                        </button>
                       </OverlayTrigger>
                     </Nav.Link>
                   </div>
