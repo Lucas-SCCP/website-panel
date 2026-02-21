@@ -16,7 +16,8 @@ export function Login() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const { setAllWebsites, setSelectedWebsiteId, setSelectedWebsite } = UseWebsiteStore((state) => state)
+  const { setAllWebsites, setSelectedWebsiteId } = UseWebsiteStore((state) => state)
+  const setSelectedWebsite = UseWebsiteStore((state) => state.setSelectedWebsite)
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault()
@@ -35,6 +36,7 @@ export function Login() {
 
         const selectedWebsiteFound = websites.find((website) => website.id === user?.defaultWebsiteId)
         if (selectedWebsiteFound) {
+          console.log('Website selecionado 1:', selectedWebsiteFound)
           setSelectedWebsite(selectedWebsiteFound)
           setSelectedWebsiteId(selectedWebsiteFound.id)
         }

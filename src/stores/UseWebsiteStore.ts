@@ -61,7 +61,7 @@ interface WebsiteStore {
   clearSelectedPageId: () => void
 
   selectedWebsite: WebsiteType | null
-  setSelectedWebsite: (website: WebsiteType) => void
+  setSelectedWebsite: (website: WebsiteType | null) => void
   updateSelectedWebsiteField: <K extends keyof WebsiteType>(key: K, value: WebsiteType[K]) => void
 
   selectedPage: PageType | null
@@ -115,9 +115,9 @@ export const UseWebsiteStore = create<WebsiteStore>()(
 
       selectedWebsite: null,
       setSelectedWebsite: (website) => {
-        const websiteCopy = structuredClone(website)
+        const websiteCopy = JSON.parse(JSON.stringify(website))
         set({ 
-          selectedWebsiteId: website.id,
+          selectedWebsiteId: website?.id || null,
           selectedWebsite: websiteCopy,
           changes: null,
           hasUnsavedChanges: false

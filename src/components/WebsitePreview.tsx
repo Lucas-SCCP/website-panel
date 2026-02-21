@@ -21,13 +21,13 @@ export function WebsitePreview() {
   return (
     <>
       <Row>
-        <Col lg={12} className="mb-3">
+        <Col lg={12} className="mb-2">
           <div
-            className="krona"
             style={{
-              backgroundColor: '#FFF',
+              color: '#FFF',
+              backgroundColor: 'var(--blue3)',
               borderRadius: '5px',
-              padding: '14px',
+              padding: '10px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
@@ -35,17 +35,15 @@ export function WebsitePreview() {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <MdOutlineFindInPage size={18} />
-              <b>PRÉ-VISUALIZAÇÃO DA PÁGINA</b>
+              <b>PRÉ-VISUALIZAÇÃO</b>
             </div>
             <OverlayTrigger
               placement="left"
               overlay={<Tooltip id="tooltip-initial-page">Visualizar a página em tela cheia</Tooltip>}
             >
-              <div onClick={handleShow} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                <span onClick={handleShow}>
-                  <FaSearchPlus size={20} />
-                </span>
-              </div>
+              <button onClick={handleShow} className='website-navbar-button' style={{ color: '#FFF', border: 'none' }}>
+                <FaSearchPlus size={20} />
+              </button>
             </OverlayTrigger>
           </div>
         </Col>

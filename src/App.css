@@ -185,10 +185,6 @@ body {
 }
 
 /** ACCORDION **/
-.website-accordion-selected {
-  border: 3px solid #eee !important;
-}
-
 .website-accordion-header-border-radius {
   border-radius: 5px !important;
 }
@@ -226,8 +222,13 @@ body {
 }
 
 .accordion-button[aria-expanded="true"] {
-  background-color: #BBBBBB;
-  color: #000000;
+  background-color: var(--blue3);
+  color: #FFF;
+}
+
+.accordion-button[aria-expanded="false"] {
+  background-color: var(--blue1);
+  color: #FFF;
 }
 
 .accordion-button:focus {
