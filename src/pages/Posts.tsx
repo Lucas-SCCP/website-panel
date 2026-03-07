@@ -106,6 +106,47 @@ export function Posts() {
     return []
   }
 
+  const extractFilename = (value: unknown): string | null => {
+    if (typeof value === 'string') {
+      const cleaned = value.split('?')[0]
+      const name = cleaned.split('/').pop() ?? cleaned
+      return name || null
+    }
+
+    if (typeof value !== 'object' || value === null) return null
+
+    const fileObj = value as Record<string, unknown>
+    const directKeys = ['name', 'filename', 'fileName', 'newName', 'savedName', 'storedName', 'key', 'path', 'url']
+
+    for (const key of directKeys) {
+      const maybeName = extractFilename(fileObj[key])
+      if (maybeName) return maybeName
+    }
+
+    return null
+  }
+
+  const extractUploadedFiles = (payload: unknown): string[] => {
+    if (Array.isArray(payload)) {
+      return payload
+        .map(item => extractFilename(item))
+        .filter((name): name is string => !!name)
+    }
+
+    if (typeof payload !== 'object' || payload === null) return []
+
+    const obj = payload as Record<string, unknown>
+    const candidateKeys = ['files', 'savedFiles', 'uploadedFiles', 'data', 'result', 'payload']
+
+    for (const key of candidateKeys) {
+      const extracted = extractUploadedFiles(obj[key])
+      if (extracted.length > 0) return extracted
+    }
+
+    const fallback = extractFilename(obj)
+    return fallback ? [fallback] : []
+  }
+
   const loadPosts = async () => {
     if (!selectedWebsite) {
       console.error('No website selected')
@@ -255,12 +296,13 @@ export function Posts() {
         let uploadedFiles: string[] = []
         try {
           const json = await uploadResp.json()
-          if (Array.isArray(json)) uploadedFiles = json
-          else if (Array.isArray(json.files)) uploadedFiles = json.files
-          else if (Array.isArray(json.data?.files)) uploadedFiles = json.data.files
-          else if (Array.isArray(json.savedFiles)) uploadedFiles = json.savedFiles
+          uploadedFiles = extractUploadedFiles(json)
         } catch {
           // fallback: usa os newName que enviamos
+          uploadedFiles = imagesToUpload.map(u => u.newName)
+        }
+
+        if (uploadedFiles.length === 0) {
           uploadedFiles = imagesToUpload.map(u => u.newName)
         }
 
