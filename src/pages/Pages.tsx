@@ -117,9 +117,14 @@ export function Pages() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setSelectedWebsite(allWebsites.find((w) => w.id === selectedWebsiteId) || null)
-      const pages = selectedWebsite?.pages || []
+      console.log('PAGES INICIO')
+      console.log('SELECTED WEBSITE ID', selectedWebsiteId)
+      console.log('ALL WEBSITES', allWebsites)
+      const website = allWebsites.find((w) => w.id === selectedWebsiteId) || null
+      setSelectedWebsite(website)
+      const pages = website?.pages || []
       setPages(pages)
+      console.log('PAGES', pages)
       if (pages) {
         // Estou pegando a primeira página. Pensar e refatorar para uma melhor abordagem
         setPage(pages[0])
