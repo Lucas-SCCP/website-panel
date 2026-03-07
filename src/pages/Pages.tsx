@@ -29,7 +29,6 @@ export function Pages() {
   const [pages, setPages] = useState<PageType[]>([])
  
   const allWebsites = UseWebsiteStore((state) => state.allWebsites)
-  const selectedWebsite = UseWebsiteStore((state) => state.selectedWebsite)
   const selectedWebsiteId = UseWebsiteStore((state) => state.selectedWebsiteId)
   const selectedPageId = UseWebsiteStore((state) => state.selectedPageId)
 

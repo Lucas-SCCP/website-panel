@@ -11,6 +11,9 @@ import type { UpdatePostData, CreatePostData, PostType } from '../types/PostsTyp
 export function Posts() {
   
   const setSelectedPageId = UseWebsiteStore((state) => state.setSelectedPageId)
+  const setSelectedWebsite = UseWebsiteStore((state) => state.setSelectedWebsite)
+  const allWebsites = UseWebsiteStore((state) => state.allWebsites)
+  const selectedWebsiteId = UseWebsiteStore((state) => state.selectedWebsiteId)
   const selectedWebsite = UseWebsiteStore((state) => state.selectedWebsite)
   const token = UseUserStore((state) => state.token)
   const [posts, setPosts] = useState<PostType[]>([])
@@ -126,6 +129,15 @@ export function Posts() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (!selectedWebsite && selectedWebsiteId) {
+      const website = allWebsites.find((w) => w.id === selectedWebsiteId) || null
+      if (website) {
+        setSelectedWebsite(website)
+      }
+    }
+  }, [allWebsites, selectedWebsite, selectedWebsiteId, setSelectedWebsite])
 
   useEffect(() => {
     setSelectedPageId(null)
