@@ -147,6 +147,11 @@ export function Posts() {
     return fallback ? [fallback] : []
   }
 
+  const normalizeToJpg = (filename: string): string => {
+    const safeName = filename.split('?')[0]
+    return safeName.replace(/\.[^.]+$/, '.jpg')
+  }
+
   const loadPosts = async () => {
     if (!selectedWebsite) {
       console.error('No website selected')
@@ -255,9 +260,7 @@ export function Posts() {
             for (let f = 0; f < fileInput.files.length; f++) {
               const file = fileInput.files[f]
               if (!imagesToUpload.some(u => u.file === file)) {
-                let ext = (file.name.split('.').pop() || 'jpg').toLowerCase()
-                if (ext === 'jpeg') ext = 'jpg'
-                newName = `${now.getFullYear()}${pad(now.getMonth()+1,2)}${pad(now.getDate(),2)}_${pad(now.getHours(),2)}${pad(now.getMinutes(),2)}${pad(now.getSeconds(),2)}${pad(now.getMilliseconds(),3)}_${pad(imageIndex,3)}.${ext}`
+                newName = `${now.getFullYear()}${pad(now.getMonth()+1,2)}${pad(now.getDate(),2)}_${pad(now.getHours(),2)}${pad(now.getMinutes(),2)}${pad(now.getSeconds(),2)}${pad(now.getMilliseconds(),3)}_${pad(imageIndex,3)}.jpg`
                     imagesToUpload.push({ file, newName, cover: isCover, index: i })
                 imageIndex++
                 break
@@ -310,7 +313,7 @@ export function Posts() {
         const indexToStoredName = new Map<number, string>()
         for (let j = 0; j < imagesToUpload.length; j++) {
           const itm = imagesToUpload[j]
-          const stored = uploadedFiles[j] || itm.newName
+          const stored = normalizeToJpg(uploadedFiles[j] || itm.newName)
           if (typeof itm.index === 'number') indexToStoredName.set(itm.index, stored)
         }
 
